@@ -195,7 +195,7 @@ test("run receipts detect decision or evidence-reference changes", () => {
   assert.equal(verifyAttestation(run), false);
 });
 
-test("benchmark receipts bind the exact release source and commit", () => {
+test("benchmark receipts bind the exact release source, commit and archive", () => {
   const certification = {
     complete: true,
     suites: [{ id: "booking-v1", verified: true }],
@@ -207,16 +207,36 @@ test("benchmark receipts bind the exact release source and commit", () => {
     commit: "1111111111111111111111111111111111111111",
     commitSource:
       "https://github.com/example/release-witness/commit/1111111111111111111111111111111111111111",
+    archiveSha256:
+      "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+    archiveSource:
+      "https://github.com/example/release-witness/releases/download/v0.1.28/source.tar.gz",
   });
-  const second = attestBenchmark(certification, {
+  const changedCommit = attestBenchmark(certification, {
     version: "0.1.28",
     source: "https://github.com/example/release-witness/releases/tag/v0.1.28",
     commit: "2222222222222222222222222222222222222222",
     commitSource:
       "https://github.com/example/release-witness/commit/2222222222222222222222222222222222222222",
+    archiveSha256:
+      "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+    archiveSource:
+      "https://github.com/example/release-witness/releases/download/v0.1.28/source.tar.gz",
   });
-  assert.notEqual(first.digest, second.digest);
-  assert.match(first.scope, /exact release source and commit/);
+  const changedArchive = attestBenchmark(certification, {
+    version: "0.1.28",
+    source: "https://github.com/example/release-witness/releases/tag/v0.1.28",
+    commit: "1111111111111111111111111111111111111111",
+    commitSource:
+      "https://github.com/example/release-witness/commit/1111111111111111111111111111111111111111",
+    archiveSha256:
+      "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+    archiveSource:
+      "https://github.com/example/release-witness/releases/download/v0.1.28/source.tar.gz",
+  });
+  assert.notEqual(first.digest, changedCommit.digest);
+  assert.notEqual(first.digest, changedArchive.digest);
+  assert.match(first.scope, /source archive hash/);
 });
 
 test("benchmark pairs require a matching persisted relationship", () => {
@@ -543,6 +563,8 @@ test("server-managed pairs persist their relationship and comparison", async (t)
     port,
     directory: dir,
     sourceCommit: "0123456789abcdef0123456789abcdef01234567",
+    sourceArchiveSha256:
+      "abcdefabcdefabcdefabcdefabcdefabcdefabcdefabcdefabcdefabcdefabcd",
     runnerOptions: { providerOptions: { transport } },
   });
   t.after(() => {
@@ -595,10 +617,10 @@ test("server-managed pairs persist their relationship and comparison", async (t)
     (suite) => suite.id === "booking-v1",
   );
   assert.equal(benchmark.complete, false);
-  assert.equal(benchmark.release.version, "0.1.30");
+  assert.equal(benchmark.release.version, "0.1.31");
   assert.equal(
     benchmark.release.source,
-    "https://github.com/K1Andayesh/release-witness/releases/tag/v0.1.30",
+    "https://github.com/K1Andayesh/release-witness/releases/tag/v0.1.31",
   );
   assert.equal(
     benchmark.release.commit,
@@ -607,6 +629,14 @@ test("server-managed pairs persist their relationship and comparison", async (t)
   assert.equal(
     benchmark.release.commitSource,
     "https://github.com/K1Andayesh/release-witness/commit/0123456789abcdef0123456789abcdef01234567",
+  );
+  assert.equal(
+    benchmark.release.archiveSha256,
+    "abcdefabcdefabcdefabcdefabcdefabcdefabcdefabcdefabcdefabcdefabcd",
+  );
+  assert.equal(
+    benchmark.release.archiveSource,
+    "https://github.com/K1Andayesh/release-witness/releases/download/v0.1.31/release-witness-publication-ready-v0.1.31-r1.tar.gz",
   );
   assert.equal(bookingBenchmark.verified, true);
   assert.equal(bookingBenchmark.defectsDetected, 2);
@@ -629,8 +659,9 @@ test("server-managed pairs persist their relationship and comparison", async (t)
   assert.match(benchmarkReportText, /<main class="benchmark-report">/);
   assert.match(benchmarkReportText, /Portfolio certified: no/);
   assert.match(benchmarkReportText, /data-status="not-certified"/);
-  assert.match(benchmarkReportText, /Release 0\.1\.30 source/);
+  assert.match(benchmarkReportText, /Release 0\.1\.31 source/);
   assert.match(benchmarkReportText, /Commit 01234567/);
+  assert.match(benchmarkReportText, /Source archive SHA-256 abcdefabcdef/);
   assert.match(benchmarkReportText, new RegExp(`data-pair-id="${pair.id}"`));
   assert.match(benchmarkReportText, /Open Harbour Appointments comparison/);
   assert.match(benchmarkReportText, /aria-label="defects detected: 2\/2"/);
@@ -1045,9 +1076,9 @@ test("the judge-tour comparison survives a browser reload", async (t) => {
   );
   assert.equal(
     await benchmarkPage
-      .getByRole("link", { name: "Release 0.1.30 source ↗" })
+      .getByRole("link", { name: "Release 0.1.31 source ↗" })
       .getAttribute("href"),
-    "https://github.com/K1Andayesh/release-witness/releases/tag/v0.1.30",
+    "https://github.com/K1Andayesh/release-witness/releases/tag/v0.1.31",
   );
   assert.equal(
     await benchmarkPage
@@ -1204,7 +1235,7 @@ test("public demo mode excludes local projects and model spending", async (t) =>
   );
   const status = await (await fetch(`${base}/api/status`)).json();
   assert.equal(status.modelConfigured, false);
-  assert.equal(status.version, "0.1.30");
+  assert.equal(status.version, "0.1.31");
   assert.equal(status.publicDemo, true);
   const integrity = await (
     await fetch(`${base}/api/runs/${receiptId}/integrity`)

@@ -21,6 +21,7 @@ export async function startServer({
   publicBaseUrl = process.env.PUBLIC_BASE_URL || "",
   publicDemo = process.env.PUBLIC_DEMO_MODE === "true",
   sourceCommit = process.env.RELEASE_COMMIT || "",
+  sourceArchiveSha256 = process.env.RELEASE_ARCHIVE_SHA256 || "",
   directory = new URL("./artifacts/runs/", import.meta.url),
   runnerOptions = {},
 } = {}) {
@@ -32,6 +33,11 @@ export async function startServer({
   const sourceRepository = "https://github.com/K1Andayesh/release-witness";
   const normalizedSourceCommit = /^[a-f0-9]{40}$/.test(sourceCommit)
     ? sourceCommit
+    : null;
+  const normalizedSourceArchiveSha256 = /^[a-f0-9]{64}$/i.test(
+    sourceArchiveSha256,
+  )
+    ? sourceArchiveSha256.toLowerCase()
     : null;
   const allowedHosts = new Set([
     `127.0.0.1:${port}`,
@@ -411,6 +417,10 @@ export async function startServer({
       commitSource: normalizedSourceCommit
         ? `${sourceRepository}/commit/${normalizedSourceCommit}`
         : null,
+      archiveSha256: normalizedSourceArchiveSha256,
+      archiveSource: normalizedSourceArchiveSha256
+        ? `${sourceRepository}/releases/download/v${packageMetadata.version}/release-witness-publication-ready-v${packageMetadata.version}-r1.tar.gz`
+        : null,
     };
     const certification = {
       complete,
@@ -670,7 +680,7 @@ export async function startServer({
         return reply(
           res,
           200,
-          `<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="description" content="Server-verified Release Witness benchmark evidence"><title>Release Witness benchmark verification</title><link rel="stylesheet" href="/style.css"></head><body class="benchmark-report-page"><div class="benchmark-report-shell"><a class="report-back" href="/">← Back to Release Witness</a><header class="benchmark-report-hero"><div class="report-provenance"><a href="${escapeHtml(benchmark.release.source)}" target="_blank" rel="noopener">Release ${escapeHtml(benchmark.release.version)} source ↗</a>${benchmark.release.commitSource ? `<a href="${escapeHtml(benchmark.release.commitSource)}" target="_blank" rel="noopener">Commit ${escapeHtml(benchmark.release.commit.slice(0, 8))} ↗</a>` : ""}<span class="certification-status ${benchmark.complete ? "verified" : "invalid"}" data-status="${benchmark.complete ? "certified" : "not-certified"}">Portfolio certified: ${benchmark.complete ? "yes" : "no"}</span></div><p class="eyebrow">SERVER-VERIFIED BENCHMARK</p><h1>Evidence a judge can trace.</h1><p>The aggregate below is derived from manifest ground truth, durable pair identity, comparison states, four run receipts and every referenced screenshot.</p><div class="portfolio-receipt"><span>Portfolio receipt</span><code>SHA-256 ${escapeHtml(benchmark.attestation.digest)}</code><small>${escapeHtml(benchmark.attestation.scope)}</small></div></header><main class="benchmark-report"><section aria-labelledby="portfolio-summary"><div class="report-section-heading"><div><span class="eyebrow">CONTROLLED RESULT</span><h2 id="portfolio-summary">Verified portfolio</h2></div><p>Generated <time datetime="${escapeHtml(benchmark.generatedAt)}">${escapeHtml(benchmark.generatedAt)}</time></p></div><div class="benchmark-metrics">
+          `<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="description" content="Server-verified Release Witness benchmark evidence"><title>Release Witness benchmark verification</title><link rel="stylesheet" href="/style.css"></head><body class="benchmark-report-page"><div class="benchmark-report-shell"><a class="report-back" href="/">← Back to Release Witness</a><header class="benchmark-report-hero"><div class="report-provenance"><a href="${escapeHtml(benchmark.release.source)}" target="_blank" rel="noopener">Release ${escapeHtml(benchmark.release.version)} source ↗</a>${benchmark.release.commitSource ? `<a href="${escapeHtml(benchmark.release.commitSource)}" target="_blank" rel="noopener">Commit ${escapeHtml(benchmark.release.commit.slice(0, 8))} ↗</a>` : ""}${benchmark.release.archiveSource ? `<a href="${escapeHtml(benchmark.release.archiveSource)}">Source archive ↗</a>` : ""}<span class="certification-status ${benchmark.complete ? "verified" : "invalid"}" data-status="${benchmark.complete ? "certified" : "not-certified"}">Portfolio certified: ${benchmark.complete ? "yes" : "no"}</span></div><p class="eyebrow">SERVER-VERIFIED BENCHMARK</p><h1>Evidence a judge can trace.</h1><p>The aggregate below is derived from manifest ground truth, durable pair identity, comparison states, four run receipts and every referenced screenshot.</p><div class="portfolio-receipt"><span>Portfolio receipt</span><code>SHA-256 ${escapeHtml(benchmark.attestation.digest)}</code><small>${escapeHtml(benchmark.attestation.scope)}</small>${benchmark.release.archiveSha256 ? `<small>Source archive SHA-256 ${escapeHtml(benchmark.release.archiveSha256)}</small>` : ""}</div></header><main class="benchmark-report"><section aria-labelledby="portfolio-summary"><div class="report-section-heading"><div><span class="eyebrow">CONTROLLED RESULT</span><h2 id="portfolio-summary">Verified portfolio</h2></div><p>Generated <time datetime="${escapeHtml(benchmark.generatedAt)}">${escapeHtml(benchmark.generatedAt)}</time></p></div><div class="benchmark-metrics">
 ${metric(`${benchmark.totals.defectsDetected}/${benchmark.totals.knownDefects}`, "defects detected", `Defects detected: ${benchmark.totals.defectsDetected}/${benchmark.totals.knownDefects}`)}
 ${metric(`${benchmark.totals.repairsResolved}/${benchmark.totals.knownDefects}`, "repairs resolved", `Repairs resolved: ${benchmark.totals.repairsResolved}/${benchmark.totals.knownDefects}`)}
 ${metric(benchmark.totals.invariantsPreserved, "invariants preserved", `Passing invariants preserved: ${benchmark.totals.invariantsPreserved}`)}
@@ -702,6 +712,7 @@ ${metric(modelDuration(benchmark.totals.modelDurationMsVerified), "verified mode
           model: process.env.NEBIUS_MODEL || "nvidia/Nemotron-3_5-Lightning",
           version: packageMetadata.version,
           releaseCommit: normalizedSourceCommit,
+          releaseArchiveSha256: normalizedSourceArchiveSha256,
         });
       if (/^\/api\/pairs\/[a-f0-9-]+$/.test(url.pathname)) {
         const pair = pairs.get(url.pathname.split("/").pop());

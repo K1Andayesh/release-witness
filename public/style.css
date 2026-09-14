@@ -1135,6 +1135,9 @@ footer {
   color: #b9cbbf;
   font-size: 10px;
 }
+.portfolio-receipt small {
+  overflow-wrap: anywhere;
+}
 .portfolio-receipt code {
   overflow-wrap: anywhere;
   color: #e7f9bb;

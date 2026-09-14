@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.1.31 — 2026-09-14
+
+- Bind the SHA-256 of the exact downloadable source archive into the aggregate benchmark receipt.
+- Publish the source archive link and digest beside the release and immutable commit provenance.
+- Expose the deployed archive digest through the status API for machine verification.
+
 ## 0.1.30 — 2026-09-14
 
 - Resolve the landing page's source shortcut to the immutable commit deployed behind the public demo.
