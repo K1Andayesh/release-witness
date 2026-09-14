@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.1.11 — 2026-09-14
+
+- Added a reviewer-first architecture and trust-boundary map.
+- Documented authority, target restrictions, evidence verification and fail-closed behavior by component.
+- Linked the map from the README and judging guide so technical reviewers can assess it before reading implementation details.
+
 ## 0.1.10 — 2026-09-14
 
 - Named the initial audience and demonstrated release-review value directly in the public hero.

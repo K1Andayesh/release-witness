@@ -18,6 +18,8 @@ On the included ground-truth benchmark, Release Witness detected **2/2 known def
 
 The competition case is mapped directly to the four equally weighted judging criteria in [`docs/JUDGING.md`](docs/JUDGING.md).
 
+The [`architecture and trust-boundary map`](docs/ARCHITECTURE.md) shows the full path from change description and bounded Nemotron planning to isolated Chrome assertions, durable receipts and a freshly verified release comparison.
+
 ## Run
 
 Requires Node.js 22+ and installed Google Chrome.
