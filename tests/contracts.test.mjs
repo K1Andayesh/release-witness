@@ -569,10 +569,10 @@ test("server-managed pairs persist their relationship and comparison", async (t)
     (suite) => suite.id === "booking-v1",
   );
   assert.equal(benchmark.complete, false);
-  assert.equal(benchmark.release.version, "0.1.25");
+  assert.equal(benchmark.release.version, "0.1.26");
   assert.equal(
     benchmark.release.source,
-    "https://github.com/K1Andayesh/release-witness/releases/tag/v0.1.25",
+    "https://github.com/K1Andayesh/release-witness/releases/tag/v0.1.26",
   );
   assert.equal(bookingBenchmark.verified, true);
   assert.equal(bookingBenchmark.defectsDetected, 2);
@@ -595,7 +595,7 @@ test("server-managed pairs persist their relationship and comparison", async (t)
   assert.match(benchmarkReportText, /<main class="benchmark-report">/);
   assert.match(benchmarkReportText, /Portfolio certified: no/);
   assert.match(benchmarkReportText, /data-status="not-certified"/);
-  assert.match(benchmarkReportText, /Release 0\.1\.25 source/);
+  assert.match(benchmarkReportText, /Release 0\.1\.26 source/);
   assert.match(benchmarkReportText, new RegExp(`data-pair-id="${pair.id}"`));
   assert.match(benchmarkReportText, /Open Harbour Appointments comparison/);
   assert.match(benchmarkReportText, /aria-label="defects detected: 2\/2"/);
@@ -652,6 +652,7 @@ test("the judge-tour comparison survives a browser reload", async (t) => {
   const dir = await directory();
   const baselineId = "11111111-1111-4111-8111-111111111111";
   const candidateId = "22222222-2222-4222-8222-222222222222";
+  const pairId = "77777777-7777-4777-8777-777777777777";
   const createdAt = new Date("2026-09-14T00:00:00.000Z");
   const checks = (repaired) => [
     {
@@ -732,15 +733,29 @@ test("the judge-tour comparison survives a browser reload", async (t) => {
       usage: { total_tokens: 1 },
     },
   });
+  const bookingBaseline = {
+    ...run(baselineId, "baseline", createdAt, false),
+    pairId,
+    pairPosition: "baseline",
+  };
   await writeFile(
     new URL(`${baselineId}.json`, dir),
-    JSON.stringify(run(baselineId, "baseline", createdAt, false)),
+    JSON.stringify(bookingBaseline),
   );
+  const bookingCandidate = {
+    ...run(
+      candidateId,
+      "candidate",
+      new Date(createdAt.getTime() + 1000),
+      true,
+    ),
+    pairId,
+    pairPosition: "candidate",
+    comparisonBaselineId: baselineId,
+  };
   await writeFile(
     new URL(`${candidateId}.json`, dir),
-    JSON.stringify(
-      run(candidateId, "candidate", new Date(createdAt.getTime() + 1000), true),
-    ),
+    JSON.stringify(bookingCandidate),
   );
   const notesBaselineId = "44444444-4444-4444-8444-444444444444";
   const notesCandidateId = "55555555-5555-4555-8555-555555555555";
@@ -856,16 +871,13 @@ test("the judge-tour comparison survives a browser reload", async (t) => {
   );
   for (let index = 0; index < 6; index += 1) {
     const archiveId = `33333333-3333-4333-8333-${String(index).padStart(12, "0")}`;
+    const archiveTime =
+      index === 0
+        ? new Date(createdAt.getTime() + 500)
+        : new Date(createdAt.getTime() - (index + 1) * 1000);
     await writeFile(
       new URL(`${archiveId}.json`, dir),
-      JSON.stringify(
-        run(
-          archiveId,
-          "baseline",
-          new Date(createdAt.getTime() - (index + 1) * 1000),
-          false,
-        ),
-      ),
+      JSON.stringify(run(archiveId, "baseline", archiveTime, false)),
     );
   }
 
@@ -891,6 +903,14 @@ test("the judge-tour comparison survives a browser reload", async (t) => {
     /nvidia\/Nemotron-3_5-Lightning via Nebius Token Factory/,
   );
   assert.match(await page.locator("#runtime-meta").innerText(), /1 tokens/);
+  await page.locator("#comparison-result .comparison-callout").waitFor();
+  assert.equal(new URL(page.url()).hash, `#${candidateId}~${baselineId}`);
+  assert.equal(await page.locator("#baseline").inputValue(), baselineId);
+  assert.equal(await page.locator("#build").inputValue(), "candidate");
+  assert.match(
+    await page.locator("#comparison-summary").innerText(),
+    /2 concerns resolved[\s\S]*0 regressions/,
+  );
   assert.match(
     await page.locator(".report-actions").innerText(),
     /Saved in demo evidence store · available after reload/,
@@ -978,9 +998,9 @@ test("the judge-tour comparison survives a browser reload", async (t) => {
   );
   assert.equal(
     await benchmarkPage
-      .getByRole("link", { name: "Release 0.1.25 source ↗" })
+      .getByRole("link", { name: "Release 0.1.26 source ↗" })
       .getAttribute("href"),
-    "https://github.com/K1Andayesh/release-witness/releases/tag/v0.1.25",
+    "https://github.com/K1Andayesh/release-witness/releases/tag/v0.1.26",
   );
   assert.equal(
     await benchmarkPage
@@ -1137,7 +1157,7 @@ test("public demo mode excludes local projects and model spending", async (t) =>
   );
   const status = await (await fetch(`${base}/api/status`)).json();
   assert.equal(status.modelConfigured, false);
-  assert.equal(status.version, "0.1.25");
+  assert.equal(status.version, "0.1.26");
   assert.equal(status.publicDemo, true);
   const integrity = await (
     await fetch(`${base}/api/runs/${receiptId}/integrity`)

@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.1.26 — 2026-09-14
+
+- Open a clean public-demo visit on the strongest verified model-backed comparison instead of the newest arbitrary saved run.
+- Resolve the judge tour through the candidate's exact server-managed baseline relationship.
+- Prevent the guided comparison from drifting to an unrelated older baseline as saved history grows.
+
 ## 0.1.25 — 2026-09-14
 
 - Remove a load-sensitive fixed delay from interrupted-run recovery verification.

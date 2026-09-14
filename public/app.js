@@ -35,6 +35,34 @@ const label = (status) =>
     : status[0].toUpperCase() + status.slice(1);
 const planRisk = (run, checkId) =>
   run.plan?.risks?.find((risk) => risk.checkId === checkId)?.hypothesis;
+function strongestJudgePair() {
+  const candidates = all
+    .filter(
+      (run) =>
+        run.suite === "booking-v1" &&
+        run.build === "candidate" &&
+        run.state === "complete" &&
+        run.pairId &&
+        run.pairPosition === "candidate" &&
+        run.comparisonBaselineId &&
+        run.plan?.state === "complete" &&
+        run.analysis?.state === "complete",
+    )
+    .sort((a, b) => b.createdAt.localeCompare(a.createdAt));
+  for (const candidate of candidates) {
+    const baseline = all.find(
+      (run) =>
+        run.id === candidate.comparisonBaselineId &&
+        run.suite === candidate.suite &&
+        run.build === "baseline" &&
+        run.state === "complete" &&
+        run.pairId === candidate.pairId &&
+        run.pairPosition === "baseline",
+    );
+    if (baseline) return { candidate, baseline };
+  }
+  return null;
+}
 function renderBenchmark(benchmark) {
   const fieldnotes = benchmark.suites?.find(
     (suite) => suite.id === "notes-v1" && suite.verified,
@@ -242,26 +270,13 @@ $("#run-pair").addEventListener("click", async () => {
   }
 });
 $("#judge-tour").addEventListener("click", () => {
-  const booking = all
-    .filter((run) => run.suite === "booking-v1" && run.state === "complete")
-    .sort((a, b) => b.createdAt.localeCompare(a.createdAt));
-  const candidate =
-    booking.find(
-      (run) =>
-        run.build === "candidate" &&
-        run.plan?.state === "complete" &&
-        run.analysis?.state === "complete",
-    ) || booking.find((run) => run.build === "candidate");
-  const baseline = booking.find(
-    (run) =>
-      run.build === "baseline" &&
-      (!candidate || run.createdAt < candidate.createdAt),
-  );
-  if (!candidate || !baseline) {
+  const pair = strongestJudgePair();
+  if (!pair) {
     $("#run-message").textContent =
-      "The guided comparison needs one completed baseline and candidate run.";
+      "The guided comparison needs one completed model-backed server-managed pair.";
     return;
   }
+  const { candidate, baseline } = pair;
   routeBaseline = baseline.id;
   focusReportAfterRender = true;
   const targetHash = routeHash(candidate.id, baseline.id);
@@ -472,9 +487,10 @@ async function refresh() {
     $("#start").disabled = submitting || status.busy;
     $("#run-pair").disabled = submitting || status.busy;
     if (!selected && all.length) {
-      selected = all[0].id;
-      routeBaseline = "";
-      history.replaceState(null, "", `#${selected}`);
+      const judgePair = status.publicDemo ? strongestJudgePair() : null;
+      selected = judgePair?.candidate.id || all[0].id;
+      routeBaseline = judgePair?.baseline.id || "";
+      history.replaceState(null, "", `#${routeHash(selected, routeBaseline)}`);
     }
     syncSetupFromRun(all.find((run) => run.id === selected));
     const next = JSON.stringify(all);
