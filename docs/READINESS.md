@@ -16,7 +16,7 @@ The public demo at https://release-witness.139-99-135-89.sslip.io exposes only s
 
 Before final submission:
 
-- Complete responsive, keyboard, screen-reader and non-Chrome QA.
+- Complete representative screen-reader/assistive-technology and non-Chrome QA. Automated Chrome now covers 390 × 844 reflow, the visible skip link and judge-tour focus movement.
 - Review provider credits and the configured development limit before further full model batches. Model-enabled runs require two remaining calls and remain disabled in the hosted public demo.
 - Keep the hosted test build restricted to synthetic scenarios; authentication, tenant isolation and worker hardening remain required before public multi-user use with private projects.
 - Paste the completed draft into Devpost, preview the entry and verify the public source, demo and video links before submission.

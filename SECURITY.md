@@ -2,6 +2,8 @@
 
 Release Witness is a local development tool. It binds to loopback and has no authentication, tenancy or public-hosting controls.
 
+The bounded competition deployment uses public-demo mode. It exposes only active public manifests, disables model calls, filters saved history by that manifest catalog, and blocks direct access to excluded reports, comparisons, receipts, exports and evidence. This reduces accidental exposure from a reused artifact volume; it does not provide tenant isolation.
+
 ## Supported use
 
 - Keep `.env` and `artifacts/` private. Reports can contain screenshots, target URLs and console output.

@@ -13,9 +13,10 @@ Release Witness is entered in **Best Apps and Agents**. This guide maps the ship
 ## Design
 
 - **Start 90-second tour** takes a judge directly to the strongest saved model-backed comparison without credentials or model spend.
+- A controlled-benchmark release delta places the measured two resolutions and zero regressions directly below the result metrics.
 - The comparison separates resolved, regressed, unchanged and unverified checks instead of collapsing them into one score.
 - Every decision expands into its model hypothesis, reviewed expectation, observed behavior, reproduction steps, screenshots and receipt status.
-- The responsive public UI was checked at 390 × 844 as well as desktop size, with no horizontal overflow.
+- The responsive public UI was checked at 390 × 844 as well as desktop size, with no horizontal overflow. The main keyboard path includes a visible skip link and moves focus to the judge-tour report.
 
 ## Potential impact
 

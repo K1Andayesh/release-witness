@@ -516,18 +516,50 @@ test("the judge-tour comparison survives a browser reload", async (t) => {
   });
   const page = await browser.newPage();
   await page.goto(base);
+  await page.keyboard.press("Tab");
+  assert.equal(await page.locator(":focus").getAttribute("id"), "skip-report");
+  await page.keyboard.press("Enter");
+  assert.equal(
+    await page
+      .locator("#report h2")
+      .evaluate((element) => element === document.activeElement),
+    true,
+  );
   await page.getByRole("button", { name: /Start 90-second tour/ }).click();
   await page.locator("#comparison-result .comparison-callout").waitFor();
+  assert.match(
+    await page.locator("#comparison-summary").innerText(),
+    /2 concerns resolved[\s\S]*0 regressions/,
+  );
   assert.equal(await page.locator("#baseline").inputValue(), baselineId);
+  assert.equal(await page.locator("#build").inputValue(), "candidate");
+  assert.equal(
+    await page
+      .locator("#report h2")
+      .evaluate((element) => element === document.activeElement),
+    true,
+  );
   assert.equal(new URL(page.url()).hash, `#${candidateId}~${baselineId}`);
 
   await page.reload();
   await page.locator("#comparison-result .comparison-callout").waitFor();
+  assert.match(
+    await page.locator("#comparison-summary").innerText(),
+    /2 concerns resolved[\s\S]*0 regressions/,
+  );
   assert.equal(await page.locator("#baseline").inputValue(), baselineId);
+  assert.equal(await page.locator("#build").inputValue(), "candidate");
   assert.match(
     await page.locator("#comparison-result").innerText(),
     /2 concerns resolved/,
   );
+  await page.setViewportSize({ width: 390, height: 844 });
+  const widths = await page.evaluate(() => ({
+    inner: window.innerWidth,
+    scroll: document.documentElement.scrollWidth,
+  }));
+  assert.equal(widths.inner, 390);
+  assert.ok(widths.scroll <= widths.inner);
 });
 
 test("public demo mode excludes local projects and model spending", async (t) => {
@@ -567,6 +599,18 @@ test("public demo mode excludes local projects and model spending", async (t) =>
     new URL(`${receiptId}.json`, dir),
     JSON.stringify(receiptRun),
   );
+  const hiddenId = "dddddddd-dddd-4ddd-8ddd-dddddddddddd";
+  const hiddenRun = structuredClone(receiptRun);
+  hiddenRun.id = hiddenId;
+  hiddenRun.suite = "private-preview-v1";
+  hiddenRun.checks[0].screenshots[0].url = `/evidence/${hiddenId}/hidden-after.png`;
+  hiddenRun.checks[0].screenshots[0].sha256 = createHash("sha256")
+    .update("hidden-image")
+    .digest("hex");
+  hiddenRun.attestation = attestRun(hiddenRun);
+  await mkdir(new URL(`${hiddenId}/`, dir));
+  await writeFile(new URL(`${hiddenId}/hidden-after.png`, dir), "hidden-image");
+  await writeFile(new URL(`${hiddenId}.json`, dir), JSON.stringify(hiddenRun));
   const port = 4323;
   const server = await startServer({
     port,
@@ -583,6 +627,24 @@ test("public demo mode excludes local projects and model spending", async (t) =>
   assert.deepEqual(
     catalog.map((manifest) => manifest.id),
     ["booking-v1", "notes-v1"],
+  );
+  const visibleRuns = await (await fetch(`${base}/api/runs`)).json();
+  assert.equal(
+    visibleRuns.some((run) => run.id === hiddenId),
+    false,
+  );
+  for (const path of [
+    `/api/runs/${hiddenId}`,
+    `/api/runs/${hiddenId}/integrity`,
+    `/api/runs/${hiddenId}/report`,
+    `/api/runs/${hiddenId}/export`,
+    `/evidence/${hiddenId}/hidden-after.png`,
+  ])
+    assert.equal((await fetch(`${base}${path}`)).status, 404);
+  assert.equal(
+    (await fetch(`${base}/api/compare?before=${hiddenId}&after=${receiptId}`))
+      .status,
+    404,
   );
   const status = await (await fetch(`${base}/api/status`)).json();
   assert.equal(status.modelConfigured, false);

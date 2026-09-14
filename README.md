@@ -63,4 +63,4 @@ The server binds loopback. Mutating workflows may target only included paths or 
 
 The repository includes an MIT license, CI workflow, security guidance, a Devpost draft, a sub-three-minute demo script and a publication checklist. The bounded public demo is deployed on OVHcloud.
 
-For a hosted competition test build, use the supplied `Dockerfile` and follow `docs/DEPLOYMENT.md`. Public demo mode excludes local-only manifests and disables model calls. It is suitable for the synthetic included scenarios; it is not a multi-tenant service for private projects.
+For a hosted competition test build, use the supplied `Dockerfile` and follow `docs/DEPLOYMENT.md`. Public demo mode disables model calls and hides saved runs, reports, comparisons, receipts, exports and evidence when their suite is not in the active public manifest catalog. It is suitable for the synthetic included scenarios; it is not a multi-tenant service for private projects.

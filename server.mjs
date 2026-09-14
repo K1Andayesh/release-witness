@@ -106,6 +106,7 @@ export async function startServer({
         !run.analysis
       )
         throw new Error("Invalid report");
+      if (publicDemo && !manifests.has(run.suite)) continue;
     } catch {
       console.error(`Unreadable report skipped: ${name}`);
       continue;
@@ -128,6 +129,7 @@ export async function startServer({
       const pair = JSON.parse(await readFile(new URL(name, directory), "utf8"));
       if (`${pair.id}.pair.json` !== name || !Array.isArray(pair.builds))
         throw new Error("Invalid pair");
+      if (publicDemo && !manifests.has(pair.suite)) continue;
       if (pair.state === "running") {
         pair.state = "interrupted";
         pair.error = "Server stopped before the paired review finished.";
@@ -466,11 +468,12 @@ export async function startServer({
         const run = runs.get(url.pathname.split("/").pop());
         return reply(res, run ? 200 : 404, run || { error: "Run not found." });
       }
-      if (
-        /^\/evidence\/[a-f0-9-]+\/[a-z][a-z0-9-]{1,48}-(before|after)\.png$/.test(
-          url.pathname,
-        )
-      ) {
+      const evidence = url.pathname.match(
+        /^\/evidence\/([a-f0-9-]+)\/[a-z][a-z0-9-]{1,48}-(before|after)\.png$/,
+      );
+      if (evidence) {
+        if (!runs.has(evidence[1]))
+          return reply(res, 404, { error: "Run not found." });
         const relative = url.pathname.slice("/evidence/".length);
         return reply(
           res,

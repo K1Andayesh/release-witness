@@ -21,6 +21,8 @@ let selected = initialRoute.runId,
   submitting = false,
   connected = false,
   routeBaseline = initialRoute.baselineId,
+  setupSelection = "",
+  focusReportAfterRender = false,
   currentStatus = {},
   pairProgress = "";
 const busy = (run) => ["planning", "running", "analyzing"].includes(run?.state);
@@ -96,6 +98,25 @@ function syncBuild() {
   const build = manifest?.builds.find((item) => item.id === $("#build").value);
   if (build) $("#fixture-link").href = build.path;
 }
+function syncSetupFromRun(run) {
+  if (!run || setupSelection === run.id) return;
+  const manifest = catalog.find((item) => item.id === run.suite);
+  if (!manifest) return;
+  $("#suite").value = manifest.id;
+  syncSetup();
+  if ([...$("#build").options].some((option) => option.value === run.build)) {
+    $("#build").value = run.build;
+    syncBuild();
+  }
+  $("#change").value = run.change || manifest.defaultChange;
+  setupSelection = run.id;
+}
+$("#skip-report").addEventListener("click", (event) => {
+  event.preventDefault();
+  const target = $("#report h2") || $("#report");
+  target.tabIndex = -1;
+  target.focus();
+});
 $("#suite").addEventListener("change", syncSetup);
 $("#build").addEventListener("change", syncBuild);
 $("#run-form").addEventListener("submit", async (event) => {
@@ -147,6 +168,7 @@ $("#run-pair").addEventListener("click", async () => {
       throw new Error(result.error || "The paired review was interrupted.");
     selected = result.candidateId;
     routeBaseline = result.baselineId;
+    focusReportAfterRender = true;
     location.hash = routeHash(result.candidateId, result.baselineId);
     pairProgress = "Pair complete. Opening the release comparison.";
     await refresh();
@@ -186,6 +208,7 @@ $("#judge-tour").addEventListener("click", () => {
     return;
   }
   routeBaseline = baseline.id;
+  focusReportAfterRender = true;
   const targetHash = routeHash(candidate.id, baseline.id);
   const changedRun = location.hash.slice(1) !== targetHash;
   selected = candidate.id;
@@ -197,6 +220,7 @@ window.addEventListener("hashchange", () => {
   const route = routeState();
   selected = route.runId;
   routeBaseline = route.baselineId;
+  syncSetupFromRun(all.find((run) => run.id === selected));
   render();
 });
 function render() {
@@ -243,8 +267,8 @@ function render() {
   const analysis = run.analysis;
   $("#report").innerHTML =
     `<div class="report-heading"><p class="eyebrow">02 / WITNESS REPORT <span>${esc(run.id.slice(0, 8))}</span></p><h2>${verdict}</h2><p class="muted">${esc(run.targetName || "Fieldnotes")} · ${esc(run.buildLabel || run.build)} <span> / ${esc(run.suite)} / ${esc(new Date(run.createdAt).toLocaleTimeString())}</span></p></div>
-  ${run.error ? `<p class="error">${esc(run.error)}</p>` : ""}<div class="metrics"><div><strong class="pass">${count("pass")}</strong><span>Passed</span></div><div><strong class="fail">${count("fail")}</strong><span>Failed</span></div><div><strong>${count("not-tested")}</strong><span>Not tested</span></div><div><strong>${run.checks.reduce((n, c) => n + c.screenshots.length, 0)}</strong><span>Screenshots</span></div></div>
-  ${run.attestation ? `<section class="receipt" id="integrity-result"><div><strong>VERIFYING EVIDENCE RECEIPT…</strong><span>Checking the saved report and every screenshot.</span></div><code>SHA-256 ${esc(run.attestation.digest.slice(0, 16))}…</code></section>` : ""}
+  ${run.error ? `<p class="error">${esc(run.error)}</p>` : ""}<div class="metrics"><div><strong class="pass">${count("pass")}</strong><span>Passed</span></div><div><strong class="fail">${count("fail")}</strong><span>Failed</span></div><div><strong>${count("not-tested")}</strong><span>Not tested</span></div><div><strong>${run.checks.reduce((n, c) => n + c.screenshots.length, 0)}</strong><span>Screenshots</span></div></div><div id="comparison-summary" role="status" aria-live="polite"></div>
+  ${run.attestation ? `<section class="receipt" id="integrity-result" role="status" aria-live="polite"><div><strong>VERIFYING EVIDENCE RECEIPT…</strong><span>Checking the saved report and every screenshot.</span></div><code>SHA-256 ${esc(run.attestation.digest.slice(0, 16))}…</code></section>` : ""}
   ${run.plan ? `<section class="plan"><div class="plan-title"><p class="eyebrow">${run.plan.state === "complete" ? "NEMOTRON RISK MAP" : "STANDARD RISK MAP"}</p>${run.plan.state === "complete" ? '<span class="model-proof">LIVE MODEL RECORD</span>' : ""}</div><p>${esc(run.plan.order.join(" → "))}</p><p class="fine-print">Change under review: ${esc(run.change || "Not recorded")}</p><p class="muted">${esc(run.plan.reason)}</p>${run.plan.error ? `<p class="error">${esc(run.plan.error)}</p>` : ""}${run.plan.state === "complete" ? `<p class="model-meta">${esc(run.plan.returnedModel || run.plan.model)} via ${esc(run.plan.provider)} · ${(run.plan.durationMs / 1000).toFixed(1)}s · ${run.plan.usage?.total_tokens ?? "Unknown"} tokens</p>` : ""}<p class="fine-print">Every reviewed check still runs. The model maps change risk; browser assertions determine results.</p></section>` : ""}
   <div class="checklist">${run.checks.map((c) => `<details id="check-${c.id}" class="check" ${c.status === "fail" ? "open" : ""}><summary><span class="status-symbol ${c.status}">${c.status === "pass" ? "✓" : c.status === "fail" ? "!" : "–"}</span><span class="check-name"><strong>${esc(c.title)}</strong><small>${esc(c.id)} ${c.durationMs ? `· ${(c.durationMs / 1000).toFixed(1)}s` : ""}</small></span><span class="badge ${c.status}">${label(c.status)}</span><span class="chevron">⌄</span></summary><div class="check-body">${planRisk(run, c.id) ? `<div class="risk-hypothesis"><span class="eyebrow">CHANGE RISK</span><p>${esc(planRisk(run, c.id))}</p></div>` : ""}<div class="observations"><div><span class="eyebrow">EXPECTED</span><p>${esc(c.expected)}</p></div><div><span class="eyebrow">OBSERVED</span><p>${esc(c.observed)}</p></div></div>${c.steps.length ? `<h3>Reproduce this check</h3><ol>${c.steps.map((s) => `<li>${esc(s)}</li>`).join("")}</ol>` : ""}<div class="shots">${c.screenshots.map((s) => `<a href="${s.url}" target="_blank" rel="noopener"><img src="${s.url}" alt="${esc(c.title)} — ${s.label}" loading="lazy"><span>${s.label} ↗</span></a>`).join("")}</div>${c.logs.length ? `<h3>Browser errors</h3><pre>${esc(c.logs.join("\n"))}</pre>` : ""}</div></details>`).join("")}</div>
   <section class="interpretation"><div class="section-label"><span>03 / MODEL INTERPRETATION</span><span class="tag">ADVISORY</span></div><h3>Suggested next check</h3>${analysis.state === "complete" ? `<p class="model-text">${esc(analysis.action ? analysis.text : "Historical model wording is retained in the JSON export; it predates the bounded action contract.")}</p><p class="fine-print">Evidence: ${esc((analysis.evidenceIds || []).join(", ") || "See recorded checks")}</p><p class="model-meta">${esc(analysis.model)} via Nebius · ${(analysis.durationMs / 1000).toFixed(1)}s · ${analysis.usage?.total_tokens ?? "Unknown"} tokens</p>` : analysis.state === "failed" ? `<p class="error">${esc(analysis.error)}</p>` : `<p class="muted">${analysis.state === "skipped" ? "Model interpretation was not requested. The browser results stand on their own." : "Nemotron will interpret the observations after the browser checks finish."}</p>`}<p class="fine-print">Model suggestions are not executed checks and do not change the results above.</p></section>
@@ -267,6 +291,7 @@ function render() {
   $("#baseline").disabled = run.state !== "complete";
   $("#baseline").onchange = async () => {
     const target = $("#comparison-result");
+    const summary = $("#comparison-summary");
     const baselineId = $("#baseline").value;
     routeBaseline = baselineId;
     const nextHash = routeHash(run.id, baselineId);
@@ -274,6 +299,7 @@ function render() {
       history.replaceState(null, "", `#${nextHash}`);
     if (!baselineId) {
       target.replaceChildren();
+      summary.replaceChildren();
       return;
     }
     try {
@@ -282,9 +308,11 @@ function render() {
       );
       const total = (change) =>
         diff.changes.filter((item) => item.change === change).length;
+      summary.innerHTML = `<section class="release-delta"><div><span class="eyebrow">CONTROLLED BENCHMARK · RELEASE DELTA</span><strong>${total("resolved")} concerns resolved</strong></div><span>${total("regression")} regressions · ${total("unchanged")} unchanged · ${total("unverified")} unverified</span></section>`;
       target.innerHTML = `<div class="comparison-callout"><strong>${total("resolved")} concerns resolved</strong><span>${total("regression")} regressions · ${total("unchanged")} unchanged · ${total("unverified")} unverified</span></div><table><thead><tr><th>Check</th><th>Before</th><th>Now</th><th>Change</th></tr></thead><tbody>${diff.changes.map((c) => `<tr><td>${esc(c.title)}</td><td>${esc(c.before)}</td><td>${esc(c.after)}</td><td>${esc(c.change)}</td></tr>`).join("")}</tbody></table><p class="fine-print">Only matching checks are comparable. Untested coverage stays unverified.</p>`;
     } catch (error) {
       target.textContent = error.message;
+      summary.replaceChildren();
     }
   };
   const preferredBaseline = routeBaseline || run.comparisonBaselineId;
@@ -298,6 +326,14 @@ function render() {
     $("#baseline").dispatchEvent(new Event("change"));
   }
   if (run.attestation) verifyReceipt(run);
+  if (focusReportAfterRender) {
+    const heading = $("#report h2");
+    if (heading) {
+      heading.tabIndex = -1;
+      heading.focus({ preventScroll: true });
+    }
+    focusReportAfterRender = false;
+  }
 }
 async function verifyReceipt(run) {
   let result;
@@ -360,6 +396,7 @@ async function refresh() {
       routeBaseline = "";
       history.replaceState(null, "", `#${selected}`);
     }
+    syncSetupFromRun(all.find((run) => run.id === selected));
     const next = JSON.stringify(all);
     if (next !== signature) {
       signature = next;

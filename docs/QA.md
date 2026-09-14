@@ -82,3 +82,13 @@ The receipt is a consistency proof for the stored artifact set, not an external 
 - A senior browser QA pass found that the guided model-backed candidate survived reload but its manually selected comparison baseline did not. The URL now carries both run IDs, so a copied or reloaded judge-tour link restores the exact comparison.
 - An actual Chrome regression test clicks **Start 90-second tour**, confirms the selected baseline and two resolved concerns, reloads the page, and confirms both again.
 - Existing single-run hashes remain compatible. Server-managed candidates can still recover their baseline from the persisted run relationship.
+
+## Judge-facing UX and public evidence isolation — 14 September 2026
+
+- Current browser screenshots showed that the judge tour initially left the setup panel on the baseline while displaying a candidate report. The panel now follows the selected saved run, so the workflow, build, test-app link and change description agree with the evidence on screen.
+- The measured release delta now appears directly below the report metrics: two concerns resolved, zero regressions, one unchanged check and one unverified boundary. It is explicitly labeled as a controlled benchmark.
+- Keyboard verification in actual Chrome confirms that the first Tab exposes **Skip to current report**, Enter moves focus to the report heading without changing the evidence route, and the judge tour also moves focus to its result. Receipt updates use a polite live region.
+- The same Chrome contract reloads the full candidate-and-baseline route at 390 × 844 and confirms the document does not overflow horizontally.
+- Public-demo mode now filters saved runs whose suites are outside the public manifest catalog and returns 404 for their direct JSON, report, export, receipt, comparison and evidence routes. This was verified against a deliberately seeded hidden run.
+
+Screenshot inspection found a clear entry point, coherent result hierarchy and visible boundaries. Representative screen-reader output, Windows high-contrast mode, 200% zoom and non-Chrome engines remain unverified.
