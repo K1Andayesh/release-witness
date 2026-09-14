@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.1.10 — 2026-09-14
+
+- Named the initial audience and demonstrated release-review value directly in the public hero.
+- Replaced generic social metadata with the concrete pull-request, Chrome-evidence and explicit-unknowns proposition.
+- Kept the impact claim evidence-bounded without invented adoption or productivity figures.
+
 ## 0.1.9 — 2026-09-14
 
 - Surfaced the qualifying NVIDIA Nemotron and Nebius Token Factory runtime record in the judge entry point.

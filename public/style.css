@@ -127,9 +127,12 @@ button:disabled {
   letter-spacing: -2px;
   margin: 12px 0;
 }
-.intro > p:last-child {
+.intro-copy {
   color: var(--muted);
   font-size: 15px;
+}
+.intro-copy strong {
+  color: #31443e;
 }
 .layout {
   display: grid;

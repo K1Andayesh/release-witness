@@ -121,3 +121,9 @@ No receipts are deleted or hidden from the API. A routed selected run and its co
 - Actual Chrome displays the qualifying runtime record before the workflow controls: `nvidia/Nemotron-3_5-Lightning via Nebius Token Factory`.
 - The accompanying values are read from the saved model-backed run and expose the recorded latency, token usage and route to the detailed verified evidence.
 - The real-Chrome judge-tour test asserts the runtime model/provider identity and token metadata before continuing through the comparison.
+
+## Audience and impact framing — 14 September 2026
+
+- The public hero names small product teams without dedicated QA as the initial audience.
+- The demonstrated value is stated as one path from a pull-request change to Chrome evidence, a before/after release decision and explicit unknowns.
+- No adoption, time-saving or defect-prevention numbers are presented because those outcomes have not been measured with external users.
