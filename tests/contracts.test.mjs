@@ -458,8 +458,12 @@ test("HTTP boundaries, concurrency and restart recovery", async (t) => {
   ]);
   assert.deepEqual(replies.map((r) => r.status).sort(), [202, 409]);
   const accepted = await replies.find((r) => r.status === 202).json();
-  await new Promise((r) => setTimeout(r, 250));
-  const report = await (await fetch(`${base}/api/runs/${accepted.id}`)).json();
+  let report = await (await fetch(`${base}/api/runs/${accepted.id}`)).json();
+  const recoveryDeadline = Date.now() + 5_000;
+  while (report.state === "running" && Date.now() < recoveryDeadline) {
+    await new Promise((resolve) => setTimeout(resolve, 50));
+    report = await (await fetch(`${base}/api/runs/${accepted.id}`)).json();
+  }
   assert.equal(report.state, "interrupted");
   assert.equal(report.checks.filter((c) => c.status === "pass").length, 0);
   const stored = JSON.parse(
@@ -565,10 +569,10 @@ test("server-managed pairs persist their relationship and comparison", async (t)
     (suite) => suite.id === "booking-v1",
   );
   assert.equal(benchmark.complete, false);
-  assert.equal(benchmark.release.version, "0.1.24");
+  assert.equal(benchmark.release.version, "0.1.25");
   assert.equal(
     benchmark.release.source,
-    "https://github.com/K1Andayesh/release-witness/releases/tag/v0.1.24",
+    "https://github.com/K1Andayesh/release-witness/releases/tag/v0.1.25",
   );
   assert.equal(bookingBenchmark.verified, true);
   assert.equal(bookingBenchmark.defectsDetected, 2);
@@ -591,7 +595,7 @@ test("server-managed pairs persist their relationship and comparison", async (t)
   assert.match(benchmarkReportText, /<main class="benchmark-report">/);
   assert.match(benchmarkReportText, /Portfolio certified: no/);
   assert.match(benchmarkReportText, /data-status="not-certified"/);
-  assert.match(benchmarkReportText, /Release 0\.1\.24 source/);
+  assert.match(benchmarkReportText, /Release 0\.1\.25 source/);
   assert.match(benchmarkReportText, new RegExp(`data-pair-id="${pair.id}"`));
   assert.match(benchmarkReportText, /Open Harbour Appointments comparison/);
   assert.match(benchmarkReportText, /aria-label="defects detected: 2\/2"/);
@@ -974,9 +978,9 @@ test("the judge-tour comparison survives a browser reload", async (t) => {
   );
   assert.equal(
     await benchmarkPage
-      .getByRole("link", { name: "Release 0.1.24 source ↗" })
+      .getByRole("link", { name: "Release 0.1.25 source ↗" })
       .getAttribute("href"),
-    "https://github.com/K1Andayesh/release-witness/releases/tag/v0.1.24",
+    "https://github.com/K1Andayesh/release-witness/releases/tag/v0.1.25",
   );
   assert.equal(
     await benchmarkPage
@@ -1133,7 +1137,7 @@ test("public demo mode excludes local projects and model spending", async (t) =>
   );
   const status = await (await fetch(`${base}/api/status`)).json();
   assert.equal(status.modelConfigured, false);
-  assert.equal(status.version, "0.1.24");
+  assert.equal(status.version, "0.1.25");
   assert.equal(status.publicDemo, true);
   const integrity = await (
     await fetch(`${base}/api/runs/${receiptId}/integrity`)

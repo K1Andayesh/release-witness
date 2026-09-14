@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.1.25 — 2026-09-14
+
+- Remove a load-sensitive fixed delay from interrupted-run recovery verification.
+- Poll the real run state to a bounded deadline before asserting durable interruption evidence.
+- Keep the CI gate strict while eliminating a timing race observed on one tag runner.
+
 ## 0.1.24 — 2026-09-14
 
 - Bind the machine-readable benchmark response to the deployed release version and exact GitHub release URL.
