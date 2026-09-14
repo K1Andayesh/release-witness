@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.1.27 — 2026-09-14
+
+- Verify Nebius/Nemotron planning and advice across both included workflows.
+- Surface portfolio-wide model runs, grounded hypotheses, advisories, token use and measured model time.
+- Replace the ambiguous zero-authority hero metric with the positive receipt-verified model-run total while retaining the browser-verdict boundary in plain language.
+
 ## 0.1.26 — 2026-09-14
 
 - Open a clean public-demo visit on the strongest verified model-backed comparison instead of the newest arbitrary saved run.

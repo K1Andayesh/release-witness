@@ -20,7 +20,7 @@ Small teams often review a pull request with a mix of intuition, stale checklist
 
 Release Witness turns a developer's change description into a bounded risk map, then runs a baseline and candidate build as one release-review action using reviewed JSON workflow manifests. Each check runs in a fresh Chrome context and records the risk hypothesis, reproduction steps, expected and observed behavior, screenshots and console errors. The resulting report distinguishes pass, fail and not-tested coverage. It opens a comparison that classifies each check as resolved, regressed, unchanged or unverified, places changed evidence side by side, and freshly verifies both SHA-256 receipts against the reports and every screenshot on disk.
 
-The included appointment demo starts with two seeded defects: a booking disappears after reload and a sold-out time can still be selected. The candidate repairs both while preserving required-name validation. A smaller Fieldnotes workflow demonstrates that the same runner executes another reviewed contract without scenario-specific branches.
+The included appointment demo starts with two seeded defects: a booking disappears after reload and a sold-out time can still be selected. The candidate repairs both while preserving required-name validation. A smaller Fieldnotes workflow demonstrates that the same model contract and runner execute another reviewed application without scenario-specific branches.
 
 The first users are small product teams reviewing pull requests without a dedicated QA function. The product gives the reviewer a compact answer to three questions: what risk did the change create, what did Chrome actually observe, and which claims remain untested? A one-click judge tour opens the strongest saved Nemotron-backed comparison without requiring credentials or spending credits.
 
@@ -44,10 +44,11 @@ The hardest part was keeping model assistance useful without letting it become t
 - Added a fail-closed CLI and automated contract/failure tests.
 - Integrated the required NVIDIA model through Nebius with bounded calls, no retries and a persistent development allowance.
 - Scored the controlled appointment benchmark against known ground truth: 2/2 seeded defects detected, 2/2 fixes classified as resolved, one invariant preserved and zero regressions reported. The exact server-managed pair includes two receipt-verified Nemotron runs, six grounded risk hypotheses and two allow-listed advisories. The runs completed in 3.75 and 2.96 seconds, with both receipts and all eight screenshots verified.
-- Repeated the evaluation on the independent Fieldnotes workflow: its persistence defect changed from fail to pass, two invariants stayed passing, excluded coverage remained unverified, and both receipts plus eight screenshots verified.
+- Repeated the evaluation on the independent Fieldnotes workflow: its persistence defect changed from fail to pass, two invariants stayed passing, excluded coverage remained unverified, and both receipts plus eight screenshots verified. Its two model-backed runs add six grounded risk hypotheses and two allow-listed advisories.
 - Replaced the homepage's editorial benchmark number with a server-derived portfolio verifier that checks declared ground truth, paired comparison states, four receipts and all 16 screenshot files before displaying 3/3.
 - Added a responsive, printable portfolio receipt that makes the 3/3 result, measured Nemotron contribution, exact pair IDs, four run-receipt digests and evidence limits scannable, with direct links to both comparisons. Its deterministic aggregate SHA-256 digest changes when covered benchmark evidence changes.
 - Versioned each run receipt so the returned NVIDIA model, Nebius provider, model timing and token totals are cryptographically bound alongside browser decisions and screenshots.
+- Verified the bounded Nemotron contract across both applications: four receipt-verified runs, 12 grounded risk hypotheses, four allow-listed advisories, 2,848 tokens and 7.49 seconds of measured model work.
 
 ## What we learned
 

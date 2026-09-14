@@ -5,7 +5,7 @@ Release Witness is entered in **Best Apps and Agents**. This guide maps the ship
 ## Technological implementation
 
 - NVIDIA Nemotron 3.5 Lightning runs through Nebius Token Factory in two bounded calls: a pre-run risk map and a post-run advisory action.
-- The judge view surfaces the exact benchmark pair's verified model contribution before the workflow controls: two receipted Nemotron runs, six grounded risk hypotheses, two allow-listed advisories, returned model identity, Nebius provider, token usage and 3.78 seconds of recorded model work.
+- The judge view surfaces portfolio-wide verified model contribution before the workflow controls: four receipted Nemotron runs across two applications, 12 grounded risk hypotheses, four allow-listed advisories, returned model identity, Nebius provider, 2,848 tokens and 7.49 seconds of recorded model work.
 - Strict schemas require one risk hypothesis for every allow-listed check. The model cannot omit checks, add checks or determine a verdict.
 - A server-managed job runs the reviewed contract against baseline and candidate in isolated Chrome contexts, then persists their relationship across reloads. Loading the comparison freshly verifies both receipts and every referenced screenshot file.
 - Deterministic assertions produce the verdicts. SHA-256 receipts are recomputed from each report and every stored screenshot before the UI shows verification.
@@ -15,7 +15,7 @@ Release Witness is entered in **Best Apps and Agents**. This guide maps the ship
 
 ## Design
 
-- **Start 90-second tour** takes a judge directly to the strongest saved model-backed comparison without credentials or model spend. **Second workflow proof** opens the independent Fieldnotes comparison, and **Benchmark receipt** opens the portfolio certification from the same judge strip. The entry point also links to the public source and natural 93-second walkthrough.
+- A clean public-demo visit opens directly on the strongest saved model-backed comparison without credentials or model spend. **Start 90-second tour** restores that exact pair, **Second workflow proof** opens the independent model-backed Fieldnotes comparison, and **Benchmark receipt** opens the portfolio certification from the same judge strip. The entry point also links to the public source and natural 93-second walkthrough.
 - A controlled-benchmark release delta places the measured two resolutions and zero regressions directly below the result metrics.
 - The comparison separates resolved, regressed, unchanged and unverified checks instead of collapsing them into one score.
 - Every decision expands into its model hypothesis, reviewed expectation, observed behavior, reproduction steps, screenshots and receipt status. Changed checks also place the baseline and candidate observations and screenshots side by side.
@@ -31,12 +31,12 @@ The model's useful role is deliberately narrower than the evidence system around
 
 ## Fast verification
 
-1. Open the [public demo](https://release-witness.139-99-135-89.sslip.io) and choose **Start 90-second tour**.
+1. Open the [public demo](https://release-witness.139-99-135-89.sslip.io); the exact appointment candidate and baseline are already selected.
 2. Confirm the comparison reports two resolved checks, zero regressions, one unchanged check and one unverified boundary.
 3. Open a resolved comparison check to inspect the baseline and candidate observations and screenshots together.
 4. Open **Benchmark receipt** and confirm the aggregate digest, 3/3 result, pair IDs, four run receipts and 16 screenshots. Use either workflow card to open its exact comparison.
 5. Review [`EVALUATION.md`](EVALUATION.md) for the ground-truth table and explicit limits.
-6. Open the [independent Fieldnotes comparison](https://release-witness.139-99-135-89.sslip.io/#56b5d993-1298-4272-9c68-0cf5e0356f15~223c548b-9eda-40cd-aed1-5716d6677adb) to verify the same runner and receipt path on another workflow.
+6. Open the [model-backed Fieldnotes comparison](https://release-witness.139-99-135-89.sslip.io/#ae47fe51-8953-4fd7-b096-ae9ef91df395~79e33d76-c634-44f7-aebf-534d240bfa56) to verify the same model contract, runner and receipt path on another workflow.
 
 Public source: https://github.com/K1Andayesh/release-witness
 

@@ -1,15 +1,15 @@
 # Competition evaluation — 14 September 2026
 
-This evaluation covers two independent included workflows with deliberately seeded baseline defects, repaired candidates and real isolated Chrome execution. The primary appointment pair uses two live NVIDIA Nemotron 3.5 Lightning calls per run through Nebius Token Factory. The Fieldnotes pair repeats the deterministic runner, comparison and receipt path without model calls, separating workflow reuse from the qualifying runtime proof.
+This evaluation covers two independent included workflows with deliberately seeded baseline defects, repaired candidates and real isolated Chrome execution. Both server-managed pairs use two live NVIDIA Nemotron 3.5 Lightning calls per run through Nebius Token Factory: a bounded risk map before Chrome execution and a bounded advisory afterward.
 
 The public homepage does not hard-code the portfolio result. Each workflow manifest declares its baseline, candidate, known defect IDs and invariant IDs. `/api/benchmark` selects the latest server-managed pair for each workflow, recomputes both evidence receipts, reads every screenshot from disk and checks the observed comparison states against that ground truth. The homepage shows the aggregate only when every workflow verifies. `/api/benchmark/report` renders the same verified state as a readable receipt, names all four underlying run-receipt digests and includes a deterministic SHA-256 digest over the ground truth, pair identities, comparison totals and verified run-receipt digests; its generation timestamp is intentionally outside the digest.
 
 Current portfolio-verifier evidence:
 
 - Harbour Appointments: baseline `b2998668-7680-4f95-9811-76b7e6132e6a`, candidate `790c7762-e9bf-4ab7-abdb-31854091c15d`
-- Fieldnotes: baseline `223c548b-9eda-40cd-aed1-5716d6677adb`, candidate `56b5d993-1298-4272-9c68-0cf5e0356f15`
+- Fieldnotes: baseline `79e33d76-c634-44f7-aebf-534d240bfa56`, candidate `ae47fe51-8953-4fd7-b096-ae9ef91df395`
 
-The current aggregate check completes in approximately 11 ms on the local evidence store. The separate qualifying appointment pair below preserves the live Nemotron/Nebius runtime evidence.
+The four runs contain 12 validated risk hypotheses, four allow-listed advisories, 2,848 model tokens and 7.49 seconds of receipt-covered Nemotron work. The aggregate check independently verifies both pair relationships, all four reports and all 16 screenshots.
 
 | Ground-truth result            | Harbour Appointments | Fieldnotes | Portfolio |
 | ------------------------------ | -------------------: | ---------: | --------: |
@@ -44,15 +44,14 @@ Appointment evidence IDs:
 - Baseline: `b2998668-7680-4f95-9811-76b7e6132e6a`
 - Candidate: `790c7762-e9bf-4ab7-abdb-31854091c15d`
 
-## Independent Fieldnotes pair
+## Model-backed Fieldnotes pair
 
-The current runner executed the same server-managed workflow against a separate notes application. The seeded build lost a saved note after reload; the candidate retained it. Blank-note validation and duplicate prevention passed in both builds, excluded authentication and browser coverage remained unverified, and the comparison reported one resolution with zero regressions. Both receipts and all eight screenshots verified from disk.
+The current runner executed the same server-managed and model-bounded workflow against a separate notes application. The seeded build lost a saved note after reload; the candidate retained it. Blank-note validation and duplicate prevention passed in both builds, excluded authentication and browser coverage remained unverified, and the comparison reported one resolution with zero regressions. Both receipts and all eight screenshots verified from disk.
 
-- Pair: `7fc874fb-8665-4baf-97e2-715f80757d3c`
-- Baseline: `223c548b-9eda-40cd-aed1-5716d6677adb`
-- Candidate: `56b5d993-1298-4272-9c68-0cf5e0356f15`
-- End-to-end pair time: 3.14 s
-- Model calls: none; this pair measures runner reuse rather than additional model behavior
+- Pair: `b792cb96-5b79-460c-b909-f27632f022ab`
+- Baseline: `79e33d76-c634-44f7-aebf-534d240bfa56` — 3.84 s end to end, 2.21 s model time, 701 tokens
+- Candidate: `ae47fe51-8953-4fd7-b096-ae9ef91df395` — 3.13 s end to end, 1.50 s model time, 687 tokens
+- Model evidence: six grounded risk hypotheses and two allow-listed advisories, with exact NVIDIA model and Nebius provider identity in both receipts
 
 Run receipts prove that the saved report fields and screenshots still match each captured artifact set. The portfolio receipt binds the verified run-receipt digests to the scored benchmark and changes if a covered result or receipt changes. These are integrity checks rather than third-party signatures.
 

@@ -69,15 +69,25 @@ function renderBenchmark(benchmark) {
   );
   $("#portfolio-proof").hidden = !fieldnotes?.route;
   $("#portfolio-proof").href = fieldnotes?.route || "#";
-  const modelSuite = benchmark.suites?.find(
-    (suite) => suite.modelEvidence?.verified,
-  );
-  benchmarkModelProof = modelSuite?.modelEvidence || null;
+  const modelSuites =
+    benchmark.suites?.filter((suite) => suite.modelEvidence?.verified) || [];
+  const modelSuite = modelSuites[0];
+  benchmarkModelProof = modelSuite
+    ? {
+        ...modelSuite.modelEvidence,
+        runsVerified: benchmark.totals.modelRunsVerified,
+        riskHypothesesVerified: benchmark.totals.riskHypothesesVerified,
+        advisoriesVerified: benchmark.totals.advisoriesVerified,
+        tokensVerified: benchmark.totals.modelTokensVerified,
+        durationMsVerified: benchmark.totals.modelDurationMsVerified,
+        workflowsVerified: modelSuites.length,
+      }
+    : null;
   if (benchmarkModelProof) {
     const proof = benchmarkModelProof;
     $("#runtime-model").textContent = `${proof.model} via ${proof.provider}`;
     $("#runtime-meta").textContent =
-      `${proof.runsVerified} receipt-verified runs · ${proof.riskHypothesesVerified} grounded risk hypotheses · ${proof.advisoriesVerified} allow-listed advisories · ${proof.tokensVerified.toLocaleString()} tokens`;
+      `${proof.runsVerified} receipt-verified runs across ${proof.workflowsVerified} ${proof.workflowsVerified === 1 ? "workflow" : "workflows"} · ${proof.riskHypothesesVerified} grounded risk hypotheses · ${proof.advisoriesVerified} allow-listed advisories · ${proof.tokensVerified.toLocaleString()} tokens · browser assertions own every verdict`;
   }
   if (!benchmark.complete) {
     $("#benchmark-defects").textContent = "—";
@@ -86,6 +96,9 @@ function renderBenchmark(benchmark) {
     $("#benchmark-files").textContent = "—";
     $("#benchmark-files-label").textContent =
       "screenshot receipt check incomplete";
+    $("#benchmark-model-runs").textContent = "—";
+    $("#benchmark-model-runs-label").textContent =
+      "verified model evidence unavailable";
     return;
   }
   const { totals, suites } = benchmark;
@@ -96,6 +109,9 @@ function renderBenchmark(benchmark) {
   $("#benchmark-files").textContent = totals.screenshotFilesVerified;
   $("#benchmark-files-label").textContent =
     `${totals.receiptsVerified} receipts freshly verified`;
+  $("#benchmark-model-runs").textContent = totals.modelRunsVerified;
+  $("#benchmark-model-runs-label").textContent =
+    `receipt-verified Nemotron runs across ${modelSuites.length} workflows`;
 }
 const comparisonEvidence = (change) => {
   if (["unchanged", "unverified"].includes(change.change)) return "";
