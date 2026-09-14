@@ -107,3 +107,11 @@ Screenshot inspection found a clear entry point, coherent result hierarchy and v
 - The real-Chrome judge-tour test activates forced colours and asserts that the primary tour control retains a solid border.
 
 A representative Windows OS high-contrast session, 200% browser zoom, full screen-reader operation and non-Chrome engines remain unverified.
+
+## Saved-run focus — 14 September 2026
+
+- Actual Chrome initially renders six recent saved runs instead of the full 18-record history on the prepared public dataset.
+- The `Show all 18 saved runs` control exposes the complete history, updates `aria-expanded` from `false` to `true`, and changes to `Show 6 recent runs`.
+- Automated real-Chrome coverage verifies the six-item default, complete expansion, accessible state and continued judge-tour behavior.
+
+No receipts are deleted or hidden from the API. A routed selected run and its comparison baseline stay visible even when either falls outside the six most recent records.

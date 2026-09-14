@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.1.8 — 2026-09-14
+
+- Reduced saved-run noise by showing the six most recent receipts by default.
+- Preserved access to every receipt through an accessible, reversible history control.
+- Kept the selected run and routed comparison baseline visible even when they fall outside the recent set.
+
 ## 0.1.7 — 2026-09-14
 
 - Preserved button and evidence boundaries when Chrome activates forced colours.

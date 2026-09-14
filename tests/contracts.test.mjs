@@ -523,6 +523,20 @@ test("the judge-tour comparison survives a browser reload", async (t) => {
       run(candidateId, "candidate", new Date(createdAt.getTime() + 1000), true),
     ),
   );
+  for (let index = 0; index < 6; index += 1) {
+    const archiveId = `33333333-3333-4333-8333-${String(index).padStart(12, "0")}`;
+    await writeFile(
+      new URL(`${archiveId}.json`, dir),
+      JSON.stringify(
+        run(
+          archiveId,
+          "baseline",
+          new Date(createdAt.getTime() - (index + 1) * 1000),
+          false,
+        ),
+      ),
+    );
+  }
 
   const port = 4332;
   const base = `http://127.0.0.1:${port}`;
@@ -543,6 +557,19 @@ test("the judge-tour comparison survives a browser reload", async (t) => {
       .locator("#report h2")
       .evaluate((element) => element === document.activeElement),
     true,
+  );
+  assert.equal(await page.locator(".history-item").count(), 6);
+  const historyToggle = page.getByRole("button", {
+    name: "Show all 8 saved runs",
+  });
+  assert.equal(await historyToggle.getAttribute("aria-expanded"), "false");
+  await historyToggle.click();
+  assert.equal(await page.locator(".history-item").count(), 8);
+  assert.equal(
+    await page
+      .getByRole("button", { name: "Show 6 recent runs" })
+      .getAttribute("aria-expanded"),
+    "true",
   );
   await page.getByRole("button", { name: /Start 90-second tour/ }).click();
   await page.locator("#comparison-result .comparison-callout").waitFor();
@@ -679,7 +706,7 @@ test("public demo mode excludes local projects and model spending", async (t) =>
   );
   const status = await (await fetch(`${base}/api/status`)).json();
   assert.equal(status.modelConfigured, false);
-  assert.equal(status.version, "0.1.7");
+  assert.equal(status.version, "0.1.8");
   assert.equal(status.publicDemo, true);
   const integrity = await (
     await fetch(`${base}/api/runs/${receiptId}/integrity`)

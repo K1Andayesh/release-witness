@@ -293,6 +293,20 @@ select {
   font-size: 10px;
   color: var(--muted);
 }
+.history-toggle {
+  width: 100%;
+  margin-top: 12px;
+  padding: 10px;
+  border: 1px solid var(--line);
+  border-radius: 6px;
+  background: transparent;
+  color: var(--green);
+  font-size: 10px;
+  font-weight: 700;
+}
+.history-toggle:hover {
+  background: #eef5ef;
+}
 .results {
   min-width: 0;
   background: #fff;

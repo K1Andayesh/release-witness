@@ -24,7 +24,9 @@ let selected = initialRoute.runId,
   setupSelection = "",
   focusReportAfterRender = false,
   currentStatus = {},
-  pairProgress = "";
+  pairProgress = "",
+  showAllRuns = false;
+const HISTORY_LIMIT = 6;
 const busy = (run) => ["planning", "running", "analyzing"].includes(run?.state);
 const label = (status) =>
   status === "not-tested"
@@ -230,13 +232,22 @@ window.addEventListener("hashchange", () => {
   render();
 });
 function render() {
-  $("#history").innerHTML = all.length
+  const routeRuns = new Set([selected, routeBaseline].filter(Boolean));
+  const visibleRuns = showAllRuns
     ? all
+    : all.filter(
+        (run, index) => index < HISTORY_LIMIT || routeRuns.has(run.id),
+      );
+  $("#history").innerHTML = all.length
+    ? visibleRuns
         .map(
           (run) =>
             `<button class="history-item ${run.id === selected ? "selected" : ""}" data-run="${run.id}"><span><strong>${esc(run.buildLabel || (run.build === "fixed" ? "Repaired build" : "Seeded defect"))}</strong><small>${esc(run.targetName || "Fieldnotes")} · ${new Date(run.createdAt).toLocaleString()}</small></span><span class="history-state">${busy(run) ? "Running" : run.state === "interrupted" ? "Interrupted" : run.checks.some((c) => c.status === "fail") ? "Issue found" : "Reviewed"} →</span></button>`,
         )
-        .join("")
+        .join("") +
+      (all.length > HISTORY_LIMIT
+        ? `<button class="history-toggle" id="history-toggle" type="button" aria-expanded="${showAllRuns}">${showAllRuns ? `Show ${HISTORY_LIMIT} recent runs` : `Show all ${all.length} saved runs`}</button>`
+        : "")
     : '<p class="muted">Your runs will appear here.</p>';
   document.querySelectorAll("[data-run]").forEach(
     (button) =>
@@ -245,6 +256,11 @@ function render() {
         location.hash = button.dataset.run;
       }),
   );
+  if ($("#history-toggle"))
+    $("#history-toggle").onclick = () => {
+      showAllRuns = !showAllRuns;
+      render();
+    };
   const run = all.find((item) => item.id === selected);
   if (!run) {
     if (selected)
