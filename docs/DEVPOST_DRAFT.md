@@ -71,9 +71,9 @@ Release Witness was created during the hackathon submission period. The applicat
 ## Public links
 
 - Source repository: https://github.com/K1Andayesh/release-witness
-- Verified source release: https://github.com/K1Andayesh/release-witness/releases/tag/v0.1.32
+- Verified source release: https://github.com/K1Andayesh/release-witness/releases/tag/v0.1.33
 - Working demo: https://release-witness.139-99-135-89.sslip.io
-- Demo video, under three minutes: https://youtu.be/LVYa90poYM8
+- Demo video, under three minutes: https://youtu.be/O8Ijn85__6U
 
 ## Gallery asset
 

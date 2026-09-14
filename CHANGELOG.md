@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.1.33 — 2026-09-15
+
+- Publish the synchronized 1:47 two-workflow demo with naturally paced Australian English narration.
+- Point the judge entry path, repository and submission materials to the verified public YouTube URL.
+- Preserve the exact video master, captions and source-bound portfolio receipt as publication evidence.
+
 ## 0.1.32 — 2026-09-14
 
 - Replace historical demo run IDs with the currently certified public benchmark pairs.

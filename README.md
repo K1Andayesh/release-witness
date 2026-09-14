@@ -2,7 +2,7 @@
 
 [![CI](https://github.com/K1Andayesh/release-witness/actions/workflows/ci.yml/badge.svg)](https://github.com/K1Andayesh/release-witness/actions/workflows/ci.yml)
 [![Live demo](https://img.shields.io/badge/live_demo-open-193925)](https://release-witness.139-99-135-89.sslip.io)
-[![Demo video](https://img.shields.io/badge/demo_video-watch-c4302b)](https://youtu.be/LVYa90poYM8)
+[![Demo video](https://img.shields.io/badge/demo_video-watch-c4302b)](https://youtu.be/O8Ijn85__6U)
 
 ![Release Witness — Evidence before confidence](public/assets/release-witness-cover-v1.jpg)
 
@@ -10,9 +10,9 @@ A PR-preview QA agent that turns a change description into a bounded risk map, e
 
 **Public competition demo:** https://release-witness.139-99-135-89.sslip.io
 
-**Natural-narration demo video:** https://youtu.be/LVYa90poYM8
+**Natural-narration demo video:** https://youtu.be/O8Ijn85__6U
 
-**Verified source release:** https://github.com/K1Andayesh/release-witness/releases/tag/v0.1.32
+**Verified source release:** https://github.com/K1Andayesh/release-witness/releases/tag/v0.1.33
 
 **Required runtime:** saved qualifying runs show `nvidia/Nemotron-3_5-Lightning` executing through Nebius Token Factory, including returned model identity, provider, latency and token usage. The hosted judge tour replays those verified records without requiring credentials or spending judge credits.
 

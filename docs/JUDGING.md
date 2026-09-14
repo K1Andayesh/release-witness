@@ -2,7 +2,7 @@
 
 Release Witness is entered in **Best Apps and Agents**. This guide maps the shipped evidence to the four equally weighted judging criteria in the official rules.
 
-Verified source release: https://github.com/K1Andayesh/release-witness/releases/tag/v0.1.32
+Verified source release: https://github.com/K1Andayesh/release-witness/releases/tag/v0.1.33
 
 ## Technological implementation
 
@@ -17,7 +17,7 @@ Verified source release: https://github.com/K1Andayesh/release-witness/releases/
 
 ## Design
 
-- A clean public-demo visit opens directly on the strongest saved model-backed comparison without credentials or model spend. **Start 90-second tour** restores that exact pair, **Second workflow proof** opens the independent model-backed Fieldnotes comparison, and **Benchmark receipt** opens the portfolio certification from the same judge strip. The entry point also links to the public source and natural 93-second walkthrough.
+- A clean public-demo visit opens directly on the strongest saved model-backed comparison without credentials or model spend. **Start 90-second tour** restores that exact pair, **Second workflow proof** opens the independent model-backed Fieldnotes comparison, and **Benchmark receipt** opens the portfolio certification from the same judge strip. The entry point also links to the public source and natural 1:47 two-workflow walkthrough.
 - A controlled-benchmark release delta places the measured two resolutions and zero regressions directly below the result metrics.
 - The comparison separates resolved, regressed, unchanged and unverified checks instead of collapsing them into one score.
 - Every decision expands into its model hypothesis, reviewed expectation, observed behavior, reproduction steps, screenshots and receipt status. Changed checks also place the baseline and candidate observations and screenshots side by side.
@@ -42,4 +42,4 @@ The model's useful role is deliberately narrower than the evidence system around
 
 Public source: https://github.com/K1Andayesh/release-witness
 
-Natural-narration demo: https://youtu.be/LVYa90poYM8
+Natural-narration demo: https://youtu.be/O8Ijn85__6U
