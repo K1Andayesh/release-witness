@@ -631,6 +631,7 @@ export async function startServer({
     <div><dt>Candidate</dt><dd><code>${escapeHtml(suite.candidateId || "Unavailable")}</code></dd></div>
   </dl>
   <div class="suite-metrics">
+    ${metric(`${suite.defectsDetected || 0}/${suite.knownDefects}`, "defects detected")}
     ${metric(`${suite.repairsResolved || 0}/${suite.knownDefects}`, "repairs resolved")}
     ${metric(suite.invariantsPreserved || 0, "invariants preserved")}
     ${metric(suite.regressions || 0, "regressions")}
@@ -658,12 +659,14 @@ export async function startServer({
           res,
           200,
           `<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="description" content="Server-verified Release Witness benchmark evidence"><title>Release Witness benchmark verification</title><link rel="stylesheet" href="/style.css"></head><body class="benchmark-report-page"><div class="benchmark-report-shell"><a class="report-back" href="/">← Back to Release Witness</a><header class="benchmark-report-hero"><span class="certification-status ${benchmark.complete ? "verified" : "invalid"}" data-status="${benchmark.complete ? "certified" : "not-certified"}">Portfolio certified: ${benchmark.complete ? "yes" : "no"}</span><p class="eyebrow">SERVER-VERIFIED BENCHMARK</p><h1>Evidence a judge can trace.</h1><p>The aggregate below is derived from manifest ground truth, durable pair identity, comparison states, four run receipts and every referenced screenshot.</p><div class="portfolio-receipt"><span>Portfolio receipt</span><code>SHA-256 ${escapeHtml(benchmark.attestation.digest)}</code><small>${escapeHtml(benchmark.attestation.scope)}</small></div></header><main class="benchmark-report"><section aria-labelledby="portfolio-summary"><div class="report-section-heading"><div><span class="eyebrow">CONTROLLED RESULT</span><h2 id="portfolio-summary">Verified portfolio</h2></div><p>Generated <time datetime="${escapeHtml(benchmark.generatedAt)}">${escapeHtml(benchmark.generatedAt)}</time></p></div><div class="benchmark-metrics">
+${metric(`${benchmark.totals.defectsDetected}/${benchmark.totals.knownDefects}`, "defects detected", `Defects detected: ${benchmark.totals.defectsDetected}/${benchmark.totals.knownDefects}`)}
 ${metric(`${benchmark.totals.repairsResolved}/${benchmark.totals.knownDefects}`, "repairs resolved", `Repairs resolved: ${benchmark.totals.repairsResolved}/${benchmark.totals.knownDefects}`)}
 ${metric(benchmark.totals.invariantsPreserved, "invariants preserved", `Passing invariants preserved: ${benchmark.totals.invariantsPreserved}`)}
 ${metric(benchmark.totals.regressions, "regressions", `Regressions: ${benchmark.totals.regressions}`)}
 ${metric(benchmark.totals.boundariesUnverified, "boundaries unverified", `Unverified coverage boundaries: ${benchmark.totals.boundariesUnverified}`)}
 ${metric(benchmark.totals.receiptsVerified, "run receipts", `Run receipts verified: ${benchmark.totals.receiptsVerified}`)}
 ${metric(benchmark.totals.screenshotFilesVerified, "screenshots", `Screenshot files verified: ${benchmark.totals.screenshotFilesVerified}`)}
+${metric(`${benchmark.suites.filter((suite) => suite.verified).length}/${benchmark.suites.length}`, "workflows verified", `Workflows verified: ${benchmark.suites.filter((suite) => suite.verified).length}/${benchmark.suites.length}`)}
 </div></section><section class="benchmark-model-summary" aria-labelledby="model-summary"><div><span class="eyebrow">VERIFIED NEMOTRON CONTRIBUTION</span><h2 id="model-summary">The model work is part of the receipt.</h2><p>The benchmark verifies exact model and provider identity, complete check coverage, grounded hypotheses, allow-listed advice, recorded runtime totals and intact browser evidence.</p></div><div class="model-summary-metrics">
 ${metric(benchmark.totals.modelRunsVerified, "Nemotron runs verified", `Nemotron runs verified: ${benchmark.totals.modelRunsVerified}`)}
 ${metric(benchmark.totals.riskHypothesesVerified, "grounded hypotheses", `Grounded risk hypotheses verified: ${benchmark.totals.riskHypothesesVerified}`)}

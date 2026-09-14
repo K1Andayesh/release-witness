@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.1.22 — 2026-09-14
+
+- Surface the independently verified 3/3 baseline defect-detection result in the portfolio summary.
+- Add defect-detection metrics to each workflow card and show that both workflows verify.
+- Rebalance the evidence grids for clearer desktop and mobile scanning.
+
 ## 0.1.21 — 2026-09-14
 
 - Preserve visible certification and evidence-group boundaries in Windows forced-colours mode.

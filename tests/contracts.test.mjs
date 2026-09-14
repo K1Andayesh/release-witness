@@ -587,6 +587,7 @@ test("server-managed pairs persist their relationship and comparison", async (t)
   assert.match(benchmarkReportText, /data-status="not-certified"/);
   assert.match(benchmarkReportText, new RegExp(`data-pair-id="${pair.id}"`));
   assert.match(benchmarkReportText, /Open Harbour Appointments comparison/);
+  assert.match(benchmarkReportText, /aria-label="defects detected: 2\/2"/);
   assert.ok(benchmarkReportText.includes(benchmark.attestation.digest));
   assert.ok(
     benchmarkReportText.includes(bookingBenchmark.receiptDigests.baseline),
@@ -957,6 +958,14 @@ test("the judge-tour comparison survives a browser reload", async (t) => {
   );
   assert.equal(
     await benchmarkPage
+      .locator(
+        '[data-suite-id="notes-v1"] [aria-label="defects detected: 1/1"]',
+      )
+      .getAttribute("aria-label"),
+    "defects detected: 1/1",
+  );
+  assert.equal(
+    await benchmarkPage
       .locator(".certification-status")
       .getAttribute("data-status"),
     "not-certified",
@@ -1102,7 +1111,7 @@ test("public demo mode excludes local projects and model spending", async (t) =>
   );
   const status = await (await fetch(`${base}/api/status`)).json();
   assert.equal(status.modelConfigured, false);
-  assert.equal(status.version, "0.1.21");
+  assert.equal(status.version, "0.1.22");
   assert.equal(status.publicDemo, true);
   const integrity = await (
     await fetch(`${base}/api/runs/${receiptId}/integrity`)

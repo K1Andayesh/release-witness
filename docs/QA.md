@@ -162,3 +162,4 @@ No receipts are deleted or hidden from the API. A routed selected run and its co
 - Chrome print emulation hid navigation, changed the page background to white and retained the report heading and evidence content without horizontal overflow.
 - Windows forced-colours emulation retained solid boundaries around the certification status, workflow cards, receipt groups and model evidence. The screenshot remained readable without relying on colour.
 - The real-Chrome contract verifies the report heading, fail-closed certification state, Fieldnotes comparison route, forced-colours boundaries and mobile width. The full suite remains 21 passing tests.
+- The portfolio summary now displays the separately verified 3/3 baseline detection result alongside 3/3 repair classification, and each workflow card exposes its own detection result. Chrome verifies the exact metric rather than inferring it from the repair count.
