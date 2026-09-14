@@ -133,3 +133,9 @@ No receipts are deleted or hidden from the API. A routed selected run and its co
 - The public report now says `Saved in demo evidence store · available after reload` rather than implying that hosted evidence is local to the judge.
 - Local preview mode retains `Saved locally · available after reload` because its artifact directory belongs to the local operator.
 - The real-Chrome public-demo contract asserts the hosted label before the judge tour continues.
+
+## Two-workflow benchmark — 14 September 2026
+
+- A fresh v0.1.13 server-managed Fieldnotes pair ran in Chrome 153: baseline `9f67a852` and candidate `b417a60d`.
+- The persistence check changed from fail to pass; blank-note validation and duplicate prevention remained passing; excluded coverage remained not tested. The comparison reported one resolution, two unchanged checks, zero regressions and one unverified boundary.
+- Both SHA-256 receipts and all eight Fieldnotes screenshots were freshly verified from disk. Combined with the qualifying appointment pair, the controlled portfolio detected 3/3 seeded defects, classified 3/3 repairs, preserved three invariants and reported zero regressions across two workflows.

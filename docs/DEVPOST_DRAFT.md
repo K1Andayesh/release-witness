@@ -36,14 +36,15 @@ The hardest part was keeping model assistance useful without letting it become t
 
 ## Accomplishments
 
-- Achieved 100% detection (2/2) and 100% repair classification (2/2) on the included ground-truth benchmark, with zero observed regressions and no unknown coverage converted into a pass.
-- Demonstrated two independent defects changing from fail to pass with visible screenshots and reproduction steps.
+- Achieved 100% detection (3/3) and 100% repair classification (3/3) across two included ground-truth workflows, with zero observed regressions and no unknown coverage converted into a pass.
+- Demonstrated three independent defects changing from fail to pass with visible screenshots and reproduction steps.
 - Added a one-click judge tour from live model risk to browser evidence to baseline/candidate resolution.
 - Added a durable server-managed baseline/candidate workflow and freshly verified evidence receipts with screenshot-level SHA-256 hashes.
 - Preserved explicit not-tested boundaries throughout reports and comparisons.
 - Added a fail-closed CLI and automated contract/failure tests.
 - Integrated the required NVIDIA model through Nebius with bounded calls, no retries and a persistent development allowance.
 - Scored the controlled appointment benchmark against known ground truth: 2/2 seeded defects detected, 2/2 fixes classified as resolved, one invariant preserved and zero regressions reported. Model-enabled runs completed in 3.51 and 2.85 seconds, with both receipts and all eight screenshots verified.
+- Repeated the evaluation on the independent Fieldnotes workflow: its persistence defect changed from fail to pass, two invariants stayed passing, excluded coverage remained unverified, and both receipts plus eight screenshots verified.
 
 ## What we learned
 

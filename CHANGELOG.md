@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.1.14 — 2026-09-14
+
+- Extend the controlled benchmark to the independent Fieldnotes workflow with a fresh server-managed Chrome pair.
+- Publish a two-workflow claim: 3/3 seeded defects detected and resolved, three passing invariants preserved, zero regressions and two explicit unverified boundaries.
+- Add verified Fieldnotes evidence IDs and a direct public comparison route to the evaluation and judging guides.
+
 ## 0.1.13 — 2026-09-14
 
 - Added an inspected 16:9 Release Witness project cover for Devpost, repository and social-preview use.

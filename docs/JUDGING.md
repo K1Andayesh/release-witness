@@ -22,7 +22,7 @@ Release Witness is entered in **Best Apps and Agents**. This guide maps the ship
 
 ## Potential impact
 
-The initial audience is small product teams that review pull requests without dedicated QA. Their current evidence is often split across prose, test output and screenshots. Release Witness packages the release question into a durable artifact: what changed, what Chrome observed, what improved or regressed, and what remains untested. The included controlled benchmark demonstrates the complete workflow rather than estimating productivity gains that have not yet been measured.
+The initial audience is small product teams that review pull requests without dedicated QA. Their current evidence is often split across prose, test output and screenshots. Release Witness packages the release question into a durable artifact: what changed, what Chrome observed, what improved or regressed, and what remains untested. Across the appointment and Fieldnotes workflows, the controlled benchmark detected 3/3 seeded defects, classified 3/3 repairs, preserved three invariants and reported zero regressions. This demonstrates reuse of the evidence pipeline without estimating productivity gains that have not yet been measured.
 
 ## Quality of the idea
 
@@ -35,6 +35,7 @@ The model's useful role is deliberately narrower than the evidence system around
 3. Open a resolved comparison check to inspect the baseline and candidate observations and screenshots together.
 4. Open the receipt and confirm the report and screenshot hashes verify.
 5. Review [`EVALUATION.md`](EVALUATION.md) for the ground-truth table and explicit limits.
+6. Open the [independent Fieldnotes comparison](https://release-witness.139-99-135-89.sslip.io/#b417a60d-f983-4e66-b474-4ea86834c14e~9f67a852-c07e-444d-8d4c-dcc01302a2aa) to verify the same runner and receipt path on another workflow.
 
 Public source: https://github.com/K1Andayesh/release-witness
 
