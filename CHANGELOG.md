@@ -1,5 +1,10 @@
 # Changelog
 
+## 0.1.7 — 2026-09-14
+
+- Preserved button and evidence boundaries when Chrome activates forced colours.
+- Added a real-Chrome forced-colours assertion to the judge-tour regression test.
+
 ## 0.1.6 — 2026-09-14
 
 - Linked the public source and natural 93-second demo from the judge entry point.

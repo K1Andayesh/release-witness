@@ -99,3 +99,11 @@ Screenshot inspection found a clear entry point, coherent result hierarchy and v
 - Actual Chrome opened the first resolved comparison check and displayed the failing baseline and repaired candidate side by side: `Expected count 1; observed 0.` before and `Expected count 1; observed 1.` now.
 - The same panel displayed two baseline and two candidate screenshots with descriptive link and image labels. At narrow widths, the evidence columns stack into one reading order.
 - The real-Chrome contract now expands this panel and asserts both observations. All 20 tests, syntax checks and formatting validation pass.
+
+## Forced-colour accessibility — 14 September 2026
+
+- Actual Chrome forced-colours emulation preserved the page structure, text, form controls, comparison states and evidence hierarchy.
+- The first inspection showed that the green judge-tour button lost its authored fill without gaining an explicit boundary. Forced-colour CSS now gives buttons and evidence callouts a system-colour border and uses the system highlight colour for focus.
+- The real-Chrome judge-tour test activates forced colours and asserts that the primary tour control retains a solid border.
+
+A representative Windows OS high-contrast session, 200% browser zoom, full screen-reader operation and non-Chrome engines remain unverified.

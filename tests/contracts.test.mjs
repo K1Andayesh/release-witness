@@ -583,6 +583,14 @@ test("the judge-tour comparison survives a browser reload", async (t) => {
   }));
   assert.equal(widths.inner, 390);
   assert.ok(widths.scroll <= widths.inner);
+  await page.emulateMedia({ forcedColors: "active" });
+  assert.equal(
+    await page
+      .getByRole("button", { name: /Start 90-second tour/ })
+      .evaluate((element) => getComputedStyle(element).borderStyle),
+    "solid",
+  );
+  await page.emulateMedia({ forcedColors: "none" });
 });
 
 test("public demo mode excludes local projects and model spending", async (t) => {
@@ -671,7 +679,7 @@ test("public demo mode excludes local projects and model spending", async (t) =>
   );
   const status = await (await fetch(`${base}/api/status`)).json();
   assert.equal(status.modelConfigured, false);
-  assert.equal(status.version, "0.1.6");
+  assert.equal(status.version, "0.1.7");
   assert.equal(status.publicDemo, true);
   const integrity = await (
     await fetch(`${base}/api/runs/${receiptId}/integrity`)

@@ -984,3 +984,20 @@ footer {
     border-left: 0;
   }
 }
+
+@media (forced-colors: active) {
+  button,
+  .mark,
+  .tag,
+  .model-proof,
+  .release-delta,
+  .receipt,
+  .comparison-callout,
+  .pair-receipts,
+  .comparison-evidence {
+    border: 1px solid ButtonText !important;
+  }
+  :focus-visible {
+    outline-color: Highlight;
+  }
+}
