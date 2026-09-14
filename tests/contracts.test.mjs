@@ -333,6 +333,10 @@ test("HTTP boundaries, concurrency and restart recovery", async (t) => {
   assert.equal(recovered.state, "interrupted");
   assert.equal(recovered.analysis.state, "failed");
   assert.equal((await fetch(`${base}/.env`)).status, 404);
+  const cover = await fetch(`${base}/assets/release-witness-cover-v1.jpg`);
+  assert.equal(cover.status, 200);
+  assert.match(cover.headers.get("content-type"), /^image\/jpeg/);
+  assert.ok((await cover.arrayBuffer()).byteLength > 100_000);
   const status = await (await fetch(`${base}/api/status`)).json();
   assert.equal(status.modelAllowance.remaining, 1);
   assert.equal(
@@ -715,7 +719,7 @@ test("public demo mode excludes local projects and model spending", async (t) =>
   );
   const status = await (await fetch(`${base}/api/status`)).json();
   assert.equal(status.modelConfigured, false);
-  assert.equal(status.version, "0.1.12");
+  assert.equal(status.version, "0.1.13");
   assert.equal(status.publicDemo, true);
   const integrity = await (
     await fetch(`${base}/api/runs/${receiptId}/integrity`)

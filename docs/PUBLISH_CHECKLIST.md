@@ -21,6 +21,7 @@ The local source package is ready for publication review. These remaining action
 
 - [x] Produce and inspect a naturally paced 93.29-second 1600 × 900 narrated MP4 with the verified receipt and no private data.
 - [x] Upload the natural-narration MP4 publicly: https://youtu.be/LVYa90poYM8
+- [x] Prepare and inspect a 1672 × 941 project cover for Devpost and social previews: `public/assets/release-witness-cover-v1.jpg`.
 - [x] Replace all three publication links in `DEVPOST_DRAFT.md` with verified public URLs.
 - [x] Recheck the official rules, deadline and Best Apps and Agents requirements on 14 September 2026. The deadline is 30 October 2026 at 10:00 PDT (31 October at 04:00 AEDT).
 - [ ] Paste the final copy into Devpost, preview every section and verify the source, demo and video links.

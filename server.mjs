@@ -247,6 +247,10 @@ export async function startServer({
     ["/fixture.js", "fixture.js"],
     ["/booking", "booking.html"],
     ["/booking.js", "booking.js"],
+    [
+      "/assets/release-witness-cover-v1.jpg",
+      "assets/release-witness-cover-v1.jpg",
+    ],
   ]);
   const server = http.createServer(async (req, res) => {
     try {
@@ -504,7 +508,9 @@ export async function startServer({
             ? "text/javascript"
             : file.endsWith(".css")
               ? "text/css"
-              : "text/html",
+              : file.endsWith(".jpg")
+                ? "image/jpeg"
+                : "text/html",
         );
       }
       return reply(res, 404, { error: "Not found." });

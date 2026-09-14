@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.1.13 — 2026-09-14
+
+- Added an inspected 16:9 Release Witness project cover for Devpost, repository and social-preview use.
+- Served the optimized cover as an explicit JPEG asset with Open Graph and large-card metadata.
+- Added a static-asset contract covering status, media type and non-empty image content.
+
 ## 0.1.12 — 2026-09-14
 
 - Corrected hosted receipt provenance from `Saved locally` to `Saved in demo evidence store`.

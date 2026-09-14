@@ -4,6 +4,8 @@
 [![Live demo](https://img.shields.io/badge/live_demo-open-193925)](https://release-witness.139-99-135-89.sslip.io)
 [![Demo video](https://img.shields.io/badge/demo_video-watch-c4302b)](https://youtu.be/LVYa90poYM8)
 
+![Release Witness — Evidence before confidence](public/assets/release-witness-cover-v1.jpg)
+
 A PR-preview QA agent that turns a change description into a bounded risk map, executes the same reviewed browser contract against a baseline and candidate, and compares the evidence. NVIDIA Nemotron through Nebius maps the change to every known check and chooses a constrained advisory next action; deterministic browser assertions own every verdict.
 
 **Public competition demo:** https://release-witness.139-99-135-89.sslip.io

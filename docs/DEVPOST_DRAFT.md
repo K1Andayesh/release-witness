@@ -70,3 +70,9 @@ Release Witness was created during the hackathon submission period. The applicat
 - Source repository: https://github.com/K1Andayesh/release-witness
 - Working demo: https://release-witness.139-99-135-89.sslip.io
 - Demo video, under three minutes: https://youtu.be/LVYa90poYM8
+
+## Gallery asset
+
+- Project cover: `public/assets/release-witness-cover-v1.jpg` — 1672 × 941, 16:9 landscape, 144 KB.
+- Alt text: `Release Witness — Evidence before confidence. Abstract failed and resolved evidence cards connected by a receipt trail.`
+- The cover is brand artwork rather than a product screenshot. The public demo and video remain the evidence of product behavior.
