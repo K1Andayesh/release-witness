@@ -7,7 +7,7 @@ Current deployment: https://release-witness.139-99-135-89.sslip.io on OVHcloud, 
 - application root: `/srv/release-witness`
 - persistent evidence: `/srv/release-witness/shared/artifacts`
 - browser runtime: Playwright Chromium 153.0.8010.12
-- active release: `20260914T043000Z`
+- active release: resolve `/srv/release-witness/current`; deployments use immutable timestamped directories
 
 The included container runs a deliberately bounded public demo. It exposes the synthetic Harbour Appointments and Fieldnotes suites, excludes manifests marked `localOnly`, and disables model calls even if a key is accidentally present. Saved model evidence remains available only when it is deliberately included in the deployment's artifact volume.
 

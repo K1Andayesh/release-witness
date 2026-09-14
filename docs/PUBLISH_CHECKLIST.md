@@ -6,7 +6,7 @@ The local source package is ready for publication review. These remaining action
 
 - [x] Create the public GitHub repository: https://github.com/K1Andayesh/release-witness
 - [x] Review the publication archive for secrets; `.env`, `artifacts/`, `node_modules/` and Git metadata are excluded. Remaining key-shaped values are explicitly synthetic QA fixtures.
-- [x] Confirm `npm ci` and all 19 tests pass from a clean extraction of the publication archive.
+- [x] Confirm `npm ci` and all 20 tests pass from a clean extraction of the publication archive.
 - [x] Push the source with the MIT license.
 - [x] Confirm GitHub Actions passes, including the Chrome smoke suite.
 

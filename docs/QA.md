@@ -63,7 +63,7 @@ The deployed demo still leaves authentication, payments, other browsers, screen 
 - Actual public-mode UI pair `ef194146` → `4f808250` ran baseline then candidate and opened the comparison automatically: two resolved, zero regressions, one unchanged and one unverified.
 - Actual model-enabled UI pair `75db5178` → `86f39150` used four bounded Nemotron calls. The baseline reported one pass and two failures; the candidate reported three passes. Both plans and advisory actions completed with recorded model identity, latency and token use.
 - The baseline receipt `a03a926bdb961283…` and candidate receipt `bd9b17436b261aa0…` independently verified their report content and four screenshot files each. A contract test changes a stored screenshot after attestation and confirms verification fails.
-- `npm test`: 19 passing tests. The added real-Chrome contract starts a server-managed pair, waits for both runs, checks their durable relationship, verifies the candidate receipt and confirms two resolved defects. Syntax and Prettier checks also pass.
+- `npm test`: 20 passing tests. The real-Chrome contracts start a server-managed pair, verify its durable relationship and receipt, and confirm the judge-tour comparison survives a full page reload. Syntax and Prettier checks also pass.
 
 The receipt is a consistency proof for the stored artifact set, not an external signature or proof of who created it.
 
@@ -74,5 +74,11 @@ The receipt is a consistency proof for the stored artifact set, not an external 
 - At a 390 × 844 viewport, the completed comparison measured `scrollWidth=375` within `innerWidth=390`; the setup and results stacked within the viewport.
 - The request snapshots suite, change and analysis settings at start, so edits during execution cannot split a pair across different inputs.
 - Publication scope now contains only the self-contained Harbour Appointments and Fieldnotes fixtures.
-- `npm test`: 19 passing tests. `npm run check` and Prettier validation pass.
+- `npm test`: 20 passing tests. `npm run check` and Prettier validation pass.
 - Deployed release `20260914T072600Z` to the OVH demo. Public UI pair `665addd5` → `d042418f` completed over HTTPS, freshly verified the candidate receipt, displayed the expected 2 resolved / 0 regression comparison, and restored that exact comparison after reload.
+
+## Judge-tour route persistence — 14 September 2026
+
+- A senior browser QA pass found that the guided model-backed candidate survived reload but its manually selected comparison baseline did not. The URL now carries both run IDs, so a copied or reloaded judge-tour link restores the exact comparison.
+- An actual Chrome regression test clicks **Start 90-second tour**, confirms the selected baseline and two resolved concerns, reloads the page, and confirms both again.
+- Existing single-run hashes remain compatible. Server-managed candidates can still recover their baseline from the persisted run relationship.

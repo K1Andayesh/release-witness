@@ -5,6 +5,7 @@ import { mkdtemp, mkdir, writeFile, readFile } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { pathToFileURL } from "node:url";
+import { chromium } from "playwright";
 import {
   attestRun,
   compareRuns,
@@ -406,6 +407,126 @@ test("server-managed pairs persist their relationship and comparison", async (t)
   assert.equal(
     comparison.changes.filter((item) => item.change === "resolved").length,
     2,
+  );
+});
+
+test("the judge-tour comparison survives a browser reload", async (t) => {
+  const dir = await directory();
+  const baselineId = "11111111-1111-4111-8111-111111111111";
+  const candidateId = "22222222-2222-4222-8222-222222222222";
+  const createdAt = new Date("2026-09-14T00:00:00.000Z");
+  const checks = (repaired) => [
+    {
+      id: "booking-persistence",
+      title: "Booking survives reload",
+      status: repaired ? "pass" : "fail",
+      expected: "The booking remains after reload.",
+      observed: repaired ? "Booking remained." : "Booking disappeared.",
+      durationMs: 1,
+      steps: [],
+      logs: [],
+      screenshots: [],
+    },
+    {
+      id: "sold-out-slot",
+      title: "Sold-out slot cannot be selected",
+      status: repaired ? "pass" : "fail",
+      expected: "The sold-out slot is disabled.",
+      observed: repaired ? "Slot was disabled." : "Slot was selectable.",
+      durationMs: 1,
+      steps: [],
+      logs: [],
+      screenshots: [],
+    },
+    {
+      id: "required-name",
+      title: "Customer name is required",
+      status: "pass",
+      expected: "A name is required.",
+      observed: "Blank name was rejected.",
+      durationMs: 1,
+      steps: [],
+      logs: [],
+      screenshots: [],
+    },
+    {
+      id: "coverage",
+      title: "Authentication, payments and other browsers",
+      status: "not-tested",
+      expected: "Outside this suite.",
+      observed: "Not tested.",
+      durationMs: 0,
+      steps: [],
+      logs: [],
+      screenshots: [],
+    },
+  ];
+  const run = (id, build, time, repaired) => ({
+    id,
+    suite: "booking-v1",
+    build,
+    buildLabel:
+      build === "baseline"
+        ? "Baseline · Two seeded defects"
+        : "Candidate · Repairs applied",
+    targetName: "Harbour Appointments",
+    change: "Verify both booking rules.",
+    createdAt: time.toISOString(),
+    state: "complete",
+    checks: checks(repaired),
+    plan: {
+      state: "complete",
+      order: ["booking-persistence", "sold-out-slot", "required-name"],
+      risks: [],
+      reason: "Reviewed model record.",
+      model: "nvidia/Nemotron-3_5-Lightning",
+      provider: "Nebius Token Factory",
+      durationMs: 1,
+      usage: { total_tokens: 1 },
+    },
+    analysis: {
+      state: "complete",
+      action: "expand-coverage",
+      text: "Expand the explicitly unverified coverage.",
+      evidenceIds: ["coverage"],
+      model: "nvidia/Nemotron-3_5-Lightning",
+      durationMs: 1,
+      usage: { total_tokens: 1 },
+    },
+  });
+  await writeFile(
+    new URL(`${baselineId}.json`, dir),
+    JSON.stringify(run(baselineId, "baseline", createdAt, false)),
+  );
+  await writeFile(
+    new URL(`${candidateId}.json`, dir),
+    JSON.stringify(
+      run(candidateId, "candidate", new Date(createdAt.getTime() + 1000), true),
+    ),
+  );
+
+  const port = 4332;
+  const base = `http://127.0.0.1:${port}`;
+  const server = await startServer({ port, directory: dir, publicDemo: true });
+  const browser = await chromium.launch({ channel: "chrome", headless: true });
+  t.after(async () => {
+    await browser.close();
+    server.closeAllConnections();
+    server.close();
+  });
+  const page = await browser.newPage();
+  await page.goto(base);
+  await page.getByRole("button", { name: /Start 90-second tour/ }).click();
+  await page.locator("#comparison-result .comparison-callout").waitFor();
+  assert.equal(await page.locator("#baseline").inputValue(), baselineId);
+  assert.equal(new URL(page.url()).hash, `#${candidateId}~${baselineId}`);
+
+  await page.reload();
+  await page.locator("#comparison-result .comparison-callout").waitFor();
+  assert.equal(await page.locator("#baseline").inputValue(), baselineId);
+  assert.match(
+    await page.locator("#comparison-result").innerText(),
+    /2 concerns resolved/,
   );
 });
 

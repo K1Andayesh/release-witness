@@ -7,12 +7,20 @@ const esc = (value) =>
         c
       ],
   );
-let selected = location.hash.slice(1),
+function routeState() {
+  const [runId = "", baselineId = ""] = location.hash.slice(1).split("~", 2);
+  return { runId, baselineId };
+}
+function routeHash(runId, baselineId = "") {
+  return baselineId ? `${runId}~${baselineId}` : runId;
+}
+const initialRoute = routeState();
+let selected = initialRoute.runId,
   all = [],
   catalog = [],
   submitting = false,
   connected = false,
-  tourBaseline = "",
+  routeBaseline = initialRoute.baselineId,
   currentStatus = {},
   pairProgress = "";
 const busy = (run) => ["planning", "running", "analyzing"].includes(run?.state);
@@ -100,6 +108,7 @@ $("#run-form").addEventListener("submit", async (event) => {
     const run = await startRun($("#build").value, currentRequest());
     all = [run, ...all.filter((item) => item.id !== run.id)];
     selected = run.id;
+    routeBaseline = "";
     location.hash = selected;
     await refresh();
   } catch (error) {
@@ -137,11 +146,11 @@ $("#run-pair").addEventListener("click", async () => {
     if (result.state !== "complete")
       throw new Error(result.error || "The paired review was interrupted.");
     selected = result.candidateId;
-    location.hash = result.candidateId;
-    tourBaseline = result.baselineId;
+    routeBaseline = result.baselineId;
+    location.hash = routeHash(result.candidateId, result.baselineId);
     pairProgress = "Pair complete. Opening the release comparison.";
     await refresh();
-    if (tourBaseline) render();
+    render();
     document.querySelector(".results")?.scrollIntoView({ behavior: "smooth" });
   } catch (error) {
     pairProgress = error.message;
@@ -176,15 +185,18 @@ $("#judge-tour").addEventListener("click", () => {
       "The guided comparison needs one completed baseline and candidate run.";
     return;
   }
-  tourBaseline = baseline.id;
-  const changedRun = location.hash.slice(1) !== candidate.id;
+  routeBaseline = baseline.id;
+  const targetHash = routeHash(candidate.id, baseline.id);
+  const changedRun = location.hash.slice(1) !== targetHash;
   selected = candidate.id;
-  if (changedRun) location.hash = candidate.id;
+  if (changedRun) location.hash = targetHash;
   else render();
   document.querySelector(".results")?.scrollIntoView({ behavior: "smooth" });
 });
 window.addEventListener("hashchange", () => {
-  selected = location.hash.slice(1);
+  const route = routeState();
+  selected = route.runId;
+  routeBaseline = route.baselineId;
   render();
 });
 function render() {
@@ -199,6 +211,7 @@ function render() {
   document.querySelectorAll("[data-run]").forEach(
     (button) =>
       (button.onclick = () => {
+        routeBaseline = "";
         location.hash = button.dataset.run;
       }),
   );
@@ -254,13 +267,18 @@ function render() {
   $("#baseline").disabled = run.state !== "complete";
   $("#baseline").onchange = async () => {
     const target = $("#comparison-result");
-    if (!$("#baseline").value) {
+    const baselineId = $("#baseline").value;
+    routeBaseline = baselineId;
+    const nextHash = routeHash(run.id, baselineId);
+    if (location.hash.slice(1) !== nextHash)
+      history.replaceState(null, "", `#${nextHash}`);
+    if (!baselineId) {
       target.replaceChildren();
       return;
     }
     try {
       const diff = await api(
-        `/api/compare?before=${$("#baseline").value}&after=${run.id}`,
+        `/api/compare?before=${baselineId}&after=${run.id}`,
       );
       const total = (change) =>
         diff.changes.filter((item) => item.change === change).length;
@@ -269,7 +287,7 @@ function render() {
       target.textContent = error.message;
     }
   };
-  const preferredBaseline = tourBaseline || run.comparisonBaselineId;
+  const preferredBaseline = routeBaseline || run.comparisonBaselineId;
   if (
     preferredBaseline &&
     [...$("#baseline").options].some(
@@ -277,7 +295,6 @@ function render() {
     )
   ) {
     $("#baseline").value = preferredBaseline;
-    tourBaseline = "";
     $("#baseline").dispatchEvent(new Event("change"));
   }
   if (run.attestation) verifyReceipt(run);
@@ -340,6 +357,7 @@ async function refresh() {
     $("#run-pair").disabled = submitting || status.busy;
     if (!selected && all.length) {
       selected = all[0].id;
+      routeBaseline = "";
       history.replaceState(null, "", `#${selected}`);
     }
     const next = JSON.stringify(all);
