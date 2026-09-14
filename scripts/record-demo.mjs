@@ -4,10 +4,23 @@ import { resolve } from "node:path";
 
 const base =
   process.env.DEMO_URL || "https://release-witness.139-99-135-89.sslip.io";
-const candidate = "86f39150-bbd6-4039-b352-959da94e3097";
-const baseline = "75db5178-f87b-4d16-88e9-3e917f9a9a19";
 const outputDirectory = resolve("artifacts/video");
-const output = resolve(outputDirectory, "release-witness-demo.webm");
+const output = resolve(outputDirectory, "release-witness-demo-v2.webm");
+
+const benchmark = await (await fetch(`${base}/api/benchmark`)).json();
+if (!benchmark.complete)
+  throw new Error("The public benchmark is not certified.");
+const appointments = benchmark.suites.find(
+  (suite) => suite.id === "booking-v1",
+);
+const fieldnotes = benchmark.suites.find((suite) => suite.id === "notes-v1");
+if (!appointments?.verified || !fieldnotes?.verified)
+  throw new Error(
+    "Both public benchmark workflows must verify before recording.",
+  );
+
+const comparisonUrl = (suite) =>
+  `${base}/#${suite.candidateId}~${suite.baselineId}`;
 
 await mkdir(outputDirectory, { recursive: true });
 const browser = await chromium.launch({ channel: "chrome", headless: true });
@@ -17,7 +30,7 @@ const context = await browser.newContext({
 });
 const page = await context.newPage();
 
-async function caption(title, text, duration = 5500) {
+async function caption(title, text, duration) {
   await page.evaluate(
     ({ title, text }) => {
       document.querySelector("#demo-caption")?.remove();
@@ -54,75 +67,92 @@ async function caption(title, text, duration = 5500) {
   await page.evaluate(() => document.querySelector("#demo-caption")?.remove());
 }
 
-try {
-  await page.goto(`${base}/#${candidate}`, { waitUntil: "networkidle" });
+async function openComparison(suite) {
+  await page.goto(comparisonUrl(suite), { waitUntil: "networkidle" });
   await page
     .getByRole("heading", { name: "The checked workflows passed." })
     .waitFor();
+}
+
+try {
+  await openComparison(appointments);
+  await page.locator(".intro").scrollIntoViewIfNeeded();
   await caption(
     "A release result needs a receipt.",
-    "Release Witness turns a change into bounded risks, runs reviewed browser checks, and preserves evidence a human can assess.",
-    6500,
+    "Release Witness turns a change into bounded risks, reviewed Chrome checks and evidence a human can assess.",
+    10_000,
   );
 
   await page.getByRole("button", { name: "Start 90-second tour →" }).click();
-  await page.locator(".comparison-callout").waitFor();
   await page.locator(".plan").scrollIntoViewIfNeeded();
   await caption(
-    "Nemotron maps change risk.",
-    "NVIDIA Nemotron 3.5 Lightning through Nebius must map every known check. It may order the catalog, but it cannot remove coverage or decide a verdict.",
-    7000,
+    "Nemotron maps every reviewed risk.",
+    "NVIDIA Nemotron 3.5 Lightning runs through Nebius Token Factory. It can prioritize the catalog, but it cannot remove coverage or decide a verdict.",
+    13_000,
   );
 
-  await page.locator("#check-booking-persistence summary").click();
-  await page.locator("#check-booking-persistence").scrollIntoViewIfNeeded();
-  await caption(
-    "Change → risk → contract → verified receipt.",
-    "The server recomputes the report receipt and every stored screenshot hash before showing verification beside the exact browser observation.",
-    7500,
-  );
-
-  await page.locator(".comparison").scrollIntoViewIfNeeded();
-  await caption(
-    "The comparison keeps uncertainty visible.",
-    "Two concerns resolved. Zero observed regressions. One invariant unchanged. Authentication, payments, and other browsers remain explicitly unverified.",
-    7500,
-  );
-
-  await page.goto(`${base}/#${baseline}`, { waitUntil: "networkidle" });
+  await page.goto(`${base}/#${appointments.baselineId}`, {
+    waitUntil: "networkidle",
+  });
   await page
     .getByRole("heading", { name: "A release concern, with evidence." })
     .waitFor();
+  await page.locator("#check-booking-persistence summary").click();
   await page.locator("#check-booking-persistence").scrollIntoViewIfNeeded();
   await caption(
-    "The baseline contains two known defects.",
-    "Release Witness found both: a booking disappears after reload, and a sold-out slot remains selectable. Required-name validation still passes.",
-    7500,
+    "The appointment baseline contains two defects.",
+    "Booking persistence and sold-out availability fail. Required-name validation remains passing.",
+    12_000,
   );
 
-  await page.goto(`${base}/#${candidate}`, { waitUntil: "networkidle" });
-  await page.getByRole("button", { name: "Start 90-second tour →" }).click();
-  await page.locator(".comparison-callout").waitFor();
-  await page.locator(".interpretation").scrollIntoViewIfNeeded();
+  await openComparison(appointments);
+  await page
+    .locator("summary")
+    .filter({ hasText: "Booking survives reload" })
+    .last()
+    .click();
+  await page.locator(".comparison-evidence").first().scrollIntoViewIfNeeded();
   await caption(
-    "Bounded advice, with provider provenance.",
-    "The saved live record shows model identity, Nebius provider, latency, and token use. Advice comes from an allow-listed action catalog and never changes browser evidence.",
-    7500,
+    "The candidate resolves both concerns.",
+    "Before-and-after observations, reproduction steps and screenshots stay together. Unknown browser, payment and authentication coverage remains visible.",
+    15_000,
   );
 
-  await page.locator(".comparison-callout").scrollIntoViewIfNeeded();
+  await openComparison(fieldnotes);
+  await page
+    .locator("summary")
+    .filter({ hasText: "Saved note survives reload" })
+    .last()
+    .click();
+  await page.locator(".comparison-evidence").first().scrollIntoViewIfNeeded();
   await caption(
-    "Measured on known ground truth.",
-    "2 of 2 seeded defects detected. 2 of 2 repairs classified as resolved. Each real model-enabled run completed in under five seconds.",
-    7000,
+    "The same contract runs on Fieldnotes.",
+    "Persistence changes from fail to pass while validation and duplicate prevention stay passing, without scenario-specific runner code.",
+    16_000,
   );
 
+  await openComparison(appointments);
+  await page.locator(".proof-points").scrollIntoViewIfNeeded();
+  await caption(
+    "Measured across two workflows.",
+    "3 of 3 defects detected. 3 of 3 repairs classified. Four receipted Nemotron runs contribute 12 grounded hypotheses and four bounded advisories.",
+    17_000,
+  );
+
+  await page.goto(`${base}/api/benchmark/report`, { waitUntil: "networkidle" });
+  await page
+    .getByRole("heading", { name: "Evidence a judge can trace." })
+    .waitFor();
+  await page.locator(".benchmark-report-hero").scrollIntoViewIfNeeded();
+  await caption(
+    "One traceable portfolio receipt.",
+    "Four run receipts and 16 screenshots verify. The aggregate binds the exact release, immutable commit and downloadable source-archive hash.",
+    16_000,
+  );
+
+  await page.goto(base, { waitUntil: "networkidle" });
   await page.locator(".intro").scrollIntoViewIfNeeded();
-  await caption(
-    "Release Witness",
-    "Evidence before confidence. Inspect the live demo and reproduce every supported result.",
-    5500,
-  );
+  await caption("Release Witness", "Evidence before confidence.", 4_000);
 } finally {
   const video = page.video();
   await context.close();

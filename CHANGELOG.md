@@ -1,5 +1,12 @@
 # Changelog
 
+## 0.1.32 — 2026-09-14
+
+- Replace historical demo run IDs with the currently certified public benchmark pairs.
+- Extend the walkthrough across both appointment and Fieldnotes workflows plus the source-bound portfolio receipt.
+- Document a synchronized 1:47 narration cut using a natural Australian English neural voice.
+- Keep exported source text on portable LF line endings so clean release archives pass the same formatting gate.
+
 ## 0.1.31 — 2026-09-14
 
 - Bind the SHA-256 of the exact downloadable source archive into the aggregate benchmark receipt.
