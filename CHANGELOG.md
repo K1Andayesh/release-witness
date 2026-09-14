@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.1.29 — 2026-09-14
+
+- Bind the immutable Git commit and its direct source link into the aggregate benchmark receipt.
+- Expose the covered commit on the judge-readable receipt and status API.
+- Verify in contract tests that changing only the source commit changes the aggregate digest.
+
 ## 0.1.28 — 2026-09-14
 
 - Bind the exact release version and GitHub source URL into the aggregate benchmark receipt.
