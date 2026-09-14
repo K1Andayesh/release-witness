@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.1.18 — 2026-09-14
+
+- Add a judge-facing benchmark receipt with the verified workflow pair IDs, totals and explicit coverage limits.
+- Generate a deterministic aggregate SHA-256 digest over portfolio ground truth, pair identity, comparison results and verified run-receipt digests.
+- Change the aggregate digest when benchmark evidence is tampered with and cover the public receipt route in the contract suite.
+
 ## 0.1.17 — 2026-09-14
 
 - Require benchmark runs to match an independently loaded, completed pair record.

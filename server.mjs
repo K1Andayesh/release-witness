@@ -334,6 +334,10 @@ export async function startServer({
         boundariesUnverified,
         receiptsVerified,
         screenshotFilesVerified,
+        receiptDigests: {
+          baseline: baselineReceipt.digest || null,
+          candidate: candidateReceipt.digest || null,
+        },
         modelBacked:
           baseline.plan?.state === "complete" &&
           baseline.analysis?.state === "complete" &&
@@ -368,14 +372,59 @@ export async function startServer({
         screenshotFilesVerified: 0,
       },
     );
+    const complete =
+      definitions.length > 0 &&
+      suites.length === definitions.length &&
+      suites.every((suite) => suite.verified);
+    const certification = {
+      complete,
+      suites: suites.map(
+        ({
+          id,
+          verified,
+          pairId,
+          baselineId,
+          candidateId,
+          knownDefects,
+          defectsDetected,
+          repairsResolved,
+          invariantsPreserved,
+          regressions,
+          boundariesUnverified,
+          receiptsVerified,
+          screenshotFilesVerified,
+          receiptDigests,
+        }) => ({
+          id,
+          verified,
+          pairId,
+          baselineId,
+          candidateId,
+          knownDefects,
+          defectsDetected,
+          repairsResolved,
+          invariantsPreserved,
+          regressions,
+          boundariesUnverified,
+          receiptsVerified,
+          screenshotFilesVerified,
+          receiptDigests,
+        }),
+      ),
+      totals,
+    };
     return {
-      complete:
-        definitions.length > 0 &&
-        suites.length === definitions.length &&
-        suites.every((suite) => suite.verified),
+      ...certification,
       generatedAt: new Date().toISOString(),
       suites,
-      totals,
+      attestation: {
+        algorithm: "SHA-256",
+        digest: createHash("sha256")
+          .update(JSON.stringify(certification))
+          .digest("hex"),
+        scope:
+          "Benchmark ground truth, pair identities, comparison totals and verified run receipts",
+      },
     };
   }
   function reply(res, code, data, type = "application/json") {
@@ -526,6 +575,60 @@ export async function startServer({
         return reply(res, 200, publicCatalog(manifests));
       if (url.pathname === "/api/benchmark")
         return reply(res, 200, await benchmarkSummary());
+      if (url.pathname === "/api/benchmark/report") {
+        const benchmark = await benchmarkSummary();
+        const lines = [
+          "# Release Witness benchmark verification",
+          `Generated: ${benchmark.generatedAt}`,
+          `Portfolio certified: ${benchmark.complete ? "yes" : "no"}`,
+          `Portfolio receipt: SHA-256 ${benchmark.attestation.digest}`,
+          "",
+          `Repairs resolved: ${benchmark.totals.repairsResolved}/${benchmark.totals.knownDefects}`,
+          `Passing invariants preserved: ${benchmark.totals.invariantsPreserved}`,
+          `Regressions: ${benchmark.totals.regressions}`,
+          `Unverified coverage boundaries: ${benchmark.totals.boundariesUnverified}`,
+          `Run receipts verified: ${benchmark.totals.receiptsVerified}`,
+          `Screenshot files verified: ${benchmark.totals.screenshotFilesVerified}`,
+          "",
+        ];
+        for (const suite of benchmark.suites) {
+          lines.push(
+            `## ${suite.name}: ${suite.verified ? "verified" : "not verified"}`,
+            `Pair: ${suite.pairId || "unavailable"}`,
+            `Baseline: ${suite.baselineId || "unavailable"}`,
+            `Candidate: ${suite.candidateId || "unavailable"}`,
+            `Baseline receipt: SHA-256 ${suite.receiptDigests?.baseline || "unavailable"}`,
+            `Candidate receipt: SHA-256 ${suite.receiptDigests?.candidate || "unavailable"}`,
+            `Defects detected: ${suite.defectsDetected || 0}/${suite.knownDefects}`,
+            `Repairs resolved: ${suite.repairsResolved || 0}/${suite.knownDefects}`,
+            `Invariants preserved: ${suite.invariantsPreserved || 0}`,
+            `Regressions: ${suite.regressions || 0}`,
+            `Receipts verified: ${suite.receiptsVerified || 0}/2`,
+            `Screenshot files verified: ${suite.screenshotFilesVerified || 0}`,
+            `Reason: ${suite.reason}`,
+            ...(suite.route
+              ? [`Review comparison: ${reportOrigin}/${suite.route}`]
+              : []),
+            "",
+          );
+        }
+        lines.push(
+          "This receipt covers the controlled included scenarios. It is not a claim about all production defects or a third-party signature.",
+        );
+        const escaped = lines
+          .join("\n")
+          .replace(
+            /[&<>]/g,
+            (character) =>
+              ({ "&": "&amp;", "<": "&lt;", ">": "&gt;" })[character],
+          );
+        return reply(
+          res,
+          200,
+          `<!doctype html><html lang="en"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Release Witness benchmark verification</title><link rel="stylesheet" href="/style.css"><main><a href="/">Back to Release Witness</a><pre class="export-text">${escaped}</pre></main></html>`,
+          "text/html; charset=utf-8",
+        );
+      }
       if (url.pathname === "/api/status")
         return reply(res, 200, {
           busy,

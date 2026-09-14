@@ -509,6 +509,33 @@ test("server-managed pairs persist their relationship and comparison", async (t)
   assert.equal(bookingBenchmark.boundariesUnverified, 1);
   assert.equal(bookingBenchmark.receiptsVerified, 2);
   assert.equal(bookingBenchmark.screenshotFilesVerified, 8);
+  assert.match(benchmark.attestation.digest, /^[a-f0-9]{64}$/);
+  const benchmarkReport = await fetch(`${base}/api/benchmark/report`);
+  assert.equal(benchmarkReport.status, 200);
+  const benchmarkReportText = await benchmarkReport.text();
+  assert.match(benchmarkReportText, /Portfolio certified: no/);
+  assert.match(benchmarkReportText, new RegExp(`Pair: ${pair.id}`));
+  assert.match(
+    benchmarkReportText,
+    new RegExp(`Portfolio receipt: SHA-256 ${benchmark.attestation.digest}`),
+  );
+  assert.match(
+    benchmarkReportText,
+    new RegExp(
+      `Baseline receipt: SHA-256 ${bookingBenchmark.receiptDigests.baseline}`,
+    ),
+  );
+  assert.match(
+    benchmarkReportText,
+    new RegExp(
+      `Candidate receipt: SHA-256 ${bookingBenchmark.receiptDigests.candidate}`,
+    ),
+  );
+  const repeatedBenchmark = await (await fetch(`${base}/api/benchmark`)).json();
+  assert.equal(
+    repeatedBenchmark.attestation.digest,
+    benchmark.attestation.digest,
+  );
   const screenshotName = candidate.checks
     .flatMap((check) => check.screenshots)[0]
     .url.split("/")
@@ -522,6 +549,10 @@ test("server-managed pairs persist their relationship and comparison", async (t)
     tamperedBenchmark.suites.find((suite) => suite.id === "booking-v1")
       .verified,
     false,
+  );
+  assert.notEqual(
+    tamperedBenchmark.attestation.digest,
+    benchmark.attestation.digest,
   );
 });
 
@@ -835,6 +866,12 @@ test("the judge-tour comparison survives a browser reload", async (t) => {
     "solid",
   );
   await page.emulateMedia({ forcedColors: "none" });
+  assert.equal(
+    await page
+      .getByRole("link", { name: "Benchmark receipt ↗" })
+      .getAttribute("href"),
+    "/api/benchmark/report",
+  );
   const portfolioProof = page.getByRole("link", {
     name: "Second workflow proof ↗",
   });
@@ -947,7 +984,7 @@ test("public demo mode excludes local projects and model spending", async (t) =>
   );
   const status = await (await fetch(`${base}/api/status`)).json();
   assert.equal(status.modelConfigured, false);
-  assert.equal(status.version, "0.1.17");
+  assert.equal(status.version, "0.1.18");
   assert.equal(status.publicDemo, true);
   const integrity = await (
     await fetch(`${base}/api/runs/${receiptId}/integrity`)

@@ -2,7 +2,7 @@
 
 This evaluation covers two independent included workflows with deliberately seeded baseline defects, repaired candidates and real isolated Chrome execution. The primary appointment pair uses two live NVIDIA Nemotron 3.5 Lightning calls per run through Nebius Token Factory. The Fieldnotes pair repeats the deterministic runner, comparison and receipt path without model calls, separating workflow reuse from the qualifying runtime proof.
 
-The public homepage does not hard-code the portfolio result. Each workflow manifest declares its baseline, candidate, known defect IDs and invariant IDs. `/api/benchmark` selects the latest server-managed pair for each workflow, recomputes both evidence receipts, reads every screenshot from disk and checks the observed comparison states against that ground truth. The homepage shows the aggregate only when every workflow verifies.
+The public homepage does not hard-code the portfolio result. Each workflow manifest declares its baseline, candidate, known defect IDs and invariant IDs. `/api/benchmark` selects the latest server-managed pair for each workflow, recomputes both evidence receipts, reads every screenshot from disk and checks the observed comparison states against that ground truth. The homepage shows the aggregate only when every workflow verifies. `/api/benchmark/report` renders the same verified state as a readable receipt, names all four underlying run-receipt digests and includes a deterministic SHA-256 digest over the ground truth, pair identities, comparison totals and verified run-receipt digests; its generation timestamp is intentionally outside the digest.
 
 Current portfolio-verifier evidence:
 
@@ -45,13 +45,13 @@ Appointment evidence IDs:
 
 ## Independent Fieldnotes pair
 
-The current v0.1.13 runner executed the same server-managed workflow against a separate notes application. The seeded build lost a saved note after reload; the candidate retained it. Blank-note validation and duplicate prevention passed in both builds, excluded authentication and browser coverage remained unverified, and the comparison reported one resolution with zero regressions. Both receipts and all eight screenshots verified from disk.
+The current runner executed the same server-managed workflow against a separate notes application. The seeded build lost a saved note after reload; the candidate retained it. Blank-note validation and duplicate prevention passed in both builds, excluded authentication and browser coverage remained unverified, and the comparison reported one resolution with zero regressions. Both receipts and all eight screenshots verified from disk.
 
 - Baseline: `9f67a852-c07e-444d-8d4c-dcc01302a2aa`
 - Candidate: `b417a60d-f983-4e66-b474-4ea86834c14e`
 - End-to-end pair time: 2.44 s
 - Model calls: none; this pair measures runner reuse rather than additional model behavior
 
-Receipts prove that the saved report fields and screenshots still match the captured artifact set. They are integrity checks rather than third-party signatures.
+Run receipts prove that the saved report fields and screenshots still match each captured artifact set. The portfolio receipt binds the verified run-receipt digests to the scored benchmark and changes if a covered result or receipt changes. These are integrity checks rather than third-party signatures.
 
 This is a controlled functional benchmark of the two included scenarios. It does not measure production defect prevalence, developer time saved, cross-browser behavior or user adoption.

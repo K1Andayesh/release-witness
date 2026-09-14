@@ -14,6 +14,7 @@ flowchart LR
   H --> I[SHA-256 evidence receipt]
   I --> J[Baseline/candidate comparison<br/>resolved regressed unchanged unverified]
   J --> K[Fresh receipt and screenshot verification]
+  K --> L[Portfolio benchmark receipt<br/>aggregate SHA-256 digest]
 ```
 
 ## Authority by component
@@ -36,6 +37,7 @@ flowchart LR
 - Reports are written atomically. Completed runs receive a SHA-256 receipt over decisions, model provenance and screenshot hashes.
 - A comparison request freshly verifies both receipts and reads every referenced screenshot before reporting that the pair is verified.
 - The portfolio endpoint scores only manifest-declared ground truth and withholds the aggregate claim unless every latest workflow pair and screenshot receipt verifies.
+- The benchmark report hashes a stable certification object containing the verified pair identities, scored states, totals and both run-receipt digests. Its timestamp and human-readable presentation remain outside the digest so repeated verification of unchanged evidence produces the same receipt.
 - The hosted public demo disables live model spending and exposes only runs from the active public manifest catalog. The saved qualifying model records remain inspectable.
 
 ## Failure behavior

@@ -46,6 +46,7 @@ The hardest part was keeping model assistance useful without letting it become t
 - Scored the controlled appointment benchmark against known ground truth: 2/2 seeded defects detected, 2/2 fixes classified as resolved, one invariant preserved and zero regressions reported. Model-enabled runs completed in 3.51 and 2.85 seconds, with both receipts and all eight screenshots verified.
 - Repeated the evaluation on the independent Fieldnotes workflow: its persistence defect changed from fail to pass, two invariants stayed passing, excluded coverage remained unverified, and both receipts plus eight screenshots verified.
 - Replaced the homepage's editorial benchmark number with a server-derived portfolio verifier that checks declared ground truth, paired comparison states, four receipts and all 16 screenshot files before displaying 3/3.
+- Added a judge-readable portfolio receipt with the exact verified pair IDs and a deterministic aggregate SHA-256 digest that changes when covered benchmark evidence changes.
 
 ## What we learned
 

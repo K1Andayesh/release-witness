@@ -818,6 +818,7 @@ footer {
 }
 .judge-actions nav {
   display: flex;
+  flex-wrap: wrap;
   justify-content: flex-end;
   gap: 14px;
   font-size: 11px;
