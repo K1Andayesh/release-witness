@@ -64,6 +64,12 @@ function strongestJudgePair() {
   return null;
 }
 function renderBenchmark(benchmark) {
+  const exactSource =
+    benchmark.release?.commitSource || benchmark.release?.source;
+  if (exactSource) {
+    $("#source-link").href = exactSource;
+    $("#source-link").textContent = "Exact deployed source ↗";
+  }
   const fieldnotes = benchmark.suites?.find(
     (suite) => suite.id === "notes-v1" && suite.verified,
   );

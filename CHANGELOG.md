@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.1.30 — 2026-09-14
+
+- Resolve the landing page's source shortcut to the immutable commit deployed behind the public demo.
+- Keep the repository URL as the static loading fallback and switch to exact provenance after benchmark verification.
+- Cover the exact deployed-source link in the real-Chrome judge-tour contract.
+
 ## 0.1.29 — 2026-09-14
 
 - Bind the immutable Git commit and its direct source link into the aggregate benchmark receipt.

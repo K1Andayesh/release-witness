@@ -595,10 +595,10 @@ test("server-managed pairs persist their relationship and comparison", async (t)
     (suite) => suite.id === "booking-v1",
   );
   assert.equal(benchmark.complete, false);
-  assert.equal(benchmark.release.version, "0.1.29");
+  assert.equal(benchmark.release.version, "0.1.30");
   assert.equal(
     benchmark.release.source,
-    "https://github.com/K1Andayesh/release-witness/releases/tag/v0.1.29",
+    "https://github.com/K1Andayesh/release-witness/releases/tag/v0.1.30",
   );
   assert.equal(
     benchmark.release.commit,
@@ -629,7 +629,7 @@ test("server-managed pairs persist their relationship and comparison", async (t)
   assert.match(benchmarkReportText, /<main class="benchmark-report">/);
   assert.match(benchmarkReportText, /Portfolio certified: no/);
   assert.match(benchmarkReportText, /data-status="not-certified"/);
-  assert.match(benchmarkReportText, /Release 0\.1\.29 source/);
+  assert.match(benchmarkReportText, /Release 0\.1\.30 source/);
   assert.match(benchmarkReportText, /Commit 01234567/);
   assert.match(benchmarkReportText, new RegExp(`data-pair-id="${pair.id}"`));
   assert.match(benchmarkReportText, /Open Harbour Appointments comparison/);
@@ -918,7 +918,13 @@ test("the judge-tour comparison survives a browser reload", async (t) => {
 
   const port = 4332;
   const base = `http://127.0.0.1:${port}`;
-  const server = await startServer({ port, directory: dir, publicDemo: true });
+  const sourceCommit = "fedcba9876543210fedcba9876543210fedcba98";
+  const server = await startServer({
+    port,
+    directory: dir,
+    publicDemo: true,
+    sourceCommit,
+  });
   const browser = await chromium.launch({ channel: "chrome", headless: true });
   t.after(async () => {
     await browser.close();
@@ -927,6 +933,12 @@ test("the judge-tour comparison survives a browser reload", async (t) => {
   });
   const page = await browser.newPage();
   await page.goto(base);
+  assert.equal(
+    await page
+      .getByRole("link", { name: "Exact deployed source ↗" })
+      .getAttribute("href"),
+    `https://github.com/K1Andayesh/release-witness/commit/${sourceCommit}`,
+  );
   await page
     .locator("#runtime-model")
     .filter({
@@ -1033,9 +1045,9 @@ test("the judge-tour comparison survives a browser reload", async (t) => {
   );
   assert.equal(
     await benchmarkPage
-      .getByRole("link", { name: "Release 0.1.29 source ↗" })
+      .getByRole("link", { name: "Release 0.1.30 source ↗" })
       .getAttribute("href"),
-    "https://github.com/K1Andayesh/release-witness/releases/tag/v0.1.29",
+    "https://github.com/K1Andayesh/release-witness/releases/tag/v0.1.30",
   );
   assert.equal(
     await benchmarkPage
@@ -1192,7 +1204,7 @@ test("public demo mode excludes local projects and model spending", async (t) =>
   );
   const status = await (await fetch(`${base}/api/status`)).json();
   assert.equal(status.modelConfigured, false);
-  assert.equal(status.version, "0.1.29");
+  assert.equal(status.version, "0.1.30");
   assert.equal(status.publicDemo, true);
   const integrity = await (
     await fetch(`${base}/api/runs/${receiptId}/integrity`)
