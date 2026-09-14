@@ -36,20 +36,13 @@ The hardest part was keeping model assistance useful without letting it become t
 
 ## Accomplishments
 
-- Achieved 100% detection (3/3) and 100% repair classification (3/3) across two included ground-truth workflows, with zero observed regressions and no unknown coverage converted into a pass.
-- Demonstrated three independent defects changing from fail to pass with visible screenshots and reproduction steps.
-- Added a one-click judge tour from live model risk to browser evidence to baseline/candidate resolution.
-- Added a durable server-managed baseline/candidate workflow and freshly verified evidence receipts with screenshot-level SHA-256 hashes.
-- Preserved explicit not-tested boundaries throughout reports and comparisons.
-- Added a fail-closed CLI and automated contract/failure tests.
-- Integrated the required NVIDIA model through Nebius with bounded calls, no retries and a persistent development allowance.
-- Scored the controlled appointment benchmark against known ground truth: 2/2 seeded defects detected, 2/2 fixes classified as resolved, one invariant preserved and zero regressions reported. The exact server-managed pair includes two receipt-verified Nemotron runs, six grounded risk hypotheses and two allow-listed advisories. The runs completed in 3.75 and 2.96 seconds, with both receipts and all eight screenshots verified.
-- Repeated the evaluation on the independent Fieldnotes workflow: its persistence defect changed from fail to pass, two invariants stayed passing, excluded coverage remained unverified, and both receipts plus eight screenshots verified. Its two model-backed runs add six grounded risk hypotheses and two allow-listed advisories.
-- Replaced the homepage's editorial benchmark number with a server-derived portfolio verifier that checks declared ground truth, paired comparison states, four receipts and all 16 screenshot files before displaying 3/3.
-- Added a responsive, printable portfolio receipt that makes the 3/3 result, measured Nemotron contribution, exact pair IDs, four run-receipt digests and evidence limits scannable, with direct links to both comparisons. Its deterministic aggregate SHA-256 digest changes when covered benchmark evidence, the deployed source commit or the release archive changes.
-- Bound the exact release, immutable Git commit and downloadable source-archive SHA-256 into the benchmark receipt, exposed all three source references on the receipt, and made the landing-page source shortcut resolve to the deployed commit rather than moving `main`.
-- Versioned each run receipt so the returned NVIDIA model, Nebius provider, model timing and token totals are cryptographically bound alongside browser decisions and screenshots.
-- Verified the bounded Nemotron contract across both applications: four receipt-verified runs, 12 grounded risk hypotheses, four allow-listed advisories, 2,848 tokens and 7.49 seconds of measured model work.
+- Detected 3/3 declared seeded defects and classified 3/3 repairs across two controlled workflows, while preserving three passing invariants, reporting zero observed regressions and keeping both excluded-coverage boundaries unverified.
+- Verified the required NVIDIA/Nebius runtime across both applications: four receipted Nemotron 3.5 Lightning runs through Nebius Token Factory, 12 grounded risk hypotheses, four allow-listed advisories, 2,848 tokens and 7.49 seconds of measured model work.
+- Demonstrated reuse on Harbour Appointments and Fieldnotes through validated manifests; the same model contract, browser runner and receipt path execute both without scenario-specific runner branches.
+- Added a server-derived portfolio verifier that checks declared ground truth, durable pair relationships, four versioned run receipts and all 16 screenshot files before certifying the public 3/3 result.
+- Bound the exact release, immutable Git commit and downloadable source-archive SHA-256 into a responsive, printable benchmark receipt with direct links to both comparisons and all four source run-receipt digests.
+- Designed a one-click judge path from bounded model risk to browser observations, side-by-side repair evidence and explicit unknowns, verified on desktop and at 390 × 844 without horizontal overflow.
+- Covered model schemas, provider failures, tampering, unsafe targets, concurrency, restart recovery, paired execution, public-demo isolation and the real-Chrome judge journey with 22 passing tests and public CI.
 
 ## What we learned
 
@@ -74,6 +67,7 @@ Release Witness was created during the hackathon submission period. The applicat
 ## Public links
 
 - Source repository: https://github.com/K1Andayesh/release-witness
+- Verified source release: https://github.com/K1Andayesh/release-witness/releases/tag/v0.1.32
 - Working demo: https://release-witness.139-99-135-89.sslip.io
 - Demo video, under three minutes: https://youtu.be/LVYa90poYM8
 

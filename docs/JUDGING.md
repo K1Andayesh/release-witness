@@ -2,6 +2,8 @@
 
 Release Witness is entered in **Best Apps and Agents**. This guide maps the shipped evidence to the four equally weighted judging criteria in the official rules.
 
+Verified source release: https://github.com/K1Andayesh/release-witness/releases/tag/v0.1.32
+
 ## Technological implementation
 
 - NVIDIA Nemotron 3.5 Lightning runs through Nebius Token Factory in two bounded calls: a pre-run risk map and a post-run advisory action.

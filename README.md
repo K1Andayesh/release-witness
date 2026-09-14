@@ -6,13 +6,24 @@
 
 ![Release Witness — Evidence before confidence](public/assets/release-witness-cover-v1.jpg)
 
-A PR-preview QA agent that turns a change description into a bounded risk map, executes the same reviewed browser contract against a baseline and candidate, and compares the evidence. NVIDIA Nemotron through Nebius maps the change to every known check and chooses a constrained advisory next action; deterministic browser assertions own every verdict.
+A PR-preview QA agent that turns a change description into a bounded risk map, executes the same reviewed browser contract against a baseline and candidate, and compares the evidence. NVIDIA Nemotron through Nebius maps the change to every reviewed check and chooses a constrained advisory next action; deterministic browser assertions own every verdict.
 
 **Public competition demo:** https://release-witness.139-99-135-89.sslip.io
 
 **Natural-narration demo video:** https://youtu.be/LVYa90poYM8
 
+**Verified source release:** https://github.com/K1Andayesh/release-witness/releases/tag/v0.1.32
+
 **Required runtime:** saved qualifying runs show `nvidia/Nemotron-3_5-Lightning` executing through Nebius Token Factory, including returned model identity, provider, latency and token usage. The hosted judge tour replays those verified records without requiring credentials or spending judge credits.
+
+## Judge evidence map
+
+| Criterion                    | Shipped evidence                                                                                                                                              | Fastest verification                                                                                                                                                                            |
+| ---------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Technological implementation | Four receipt-verified Nemotron calls through Nebius, strict model schemas, isolated Chrome checks, versioned run receipts and a source-bound portfolio digest | [Benchmark receipt](https://release-witness.139-99-135-89.sslip.io/api/benchmark/report) and [`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md)                                                     |
+| Design                       | One-click baseline/candidate review, side-by-side changed evidence, explicit unknowns, responsive judge view and printable receipt                            | [Appointment comparison](https://release-witness.139-99-135-89.sslip.io/#790c7762-e9bf-4ab7-abdb-31854091c15d~b2998668-7680-4f95-9811-76b7e6132e6a)                                             |
+| Potential impact             | A release-review artifact for small product teams: change risk, observed behavior, repair status and untested boundaries in one place                         | [Two-workflow evaluation](docs/EVALUATION.md)                                                                                                                                                   |
+| Quality of idea              | The model must cover the reviewed catalog but cannot invent checks or decide outcomes; every claim remains traceable to browser evidence                      | [`docs/JUDGING.md`](docs/JUDGING.md) and the [Fieldnotes comparison](https://release-witness.139-99-135-89.sslip.io/#ae47fe51-8953-4fd7-b096-ae9ef91df395~79e33d76-c634-44f7-aebf-534d240bfa56) |
 
 ## Verified benchmark
 
