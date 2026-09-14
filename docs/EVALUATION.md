@@ -2,7 +2,7 @@
 
 This evaluation covers two independent included workflows with deliberately seeded baseline defects, repaired candidates and real isolated Chrome execution. Both server-managed pairs use two live NVIDIA Nemotron 3.5 Lightning calls per run through Nebius Token Factory: a bounded risk map before Chrome execution and a bounded advisory afterward.
 
-The public homepage does not hard-code the portfolio result. Each workflow manifest declares its baseline, candidate, known defect IDs and invariant IDs. `/api/benchmark` selects the latest server-managed pair for each workflow, recomputes both evidence receipts, reads every screenshot from disk and checks the observed comparison states against that ground truth. The homepage shows the aggregate only when every workflow verifies. `/api/benchmark/report` renders the same verified state as a readable receipt, names all four underlying run-receipt digests and includes a deterministic SHA-256 digest over the ground truth, pair identities, comparison totals and verified run-receipt digests; its generation timestamp is intentionally outside the digest.
+The public homepage does not hard-code the portfolio result. Each workflow manifest declares its baseline, candidate, known defect IDs and invariant IDs. `/api/benchmark` selects the latest server-managed pair for each workflow, recomputes both evidence receipts, reads every screenshot from disk and checks the observed comparison states against that ground truth. The homepage shows the aggregate only when every workflow verifies. `/api/benchmark/report` renders the same verified state as a readable receipt, names all four underlying run-receipt digests and includes a deterministic SHA-256 digest over the ground truth, pair identities, comparison totals, verified run-receipt digests and exact release source; its generation timestamp is intentionally outside the digest.
 
 Current portfolio-verifier evidence:
 
@@ -53,6 +53,6 @@ The current runner executed the same server-managed and model-bounded workflow a
 - Candidate: `ae47fe51-8953-4fd7-b096-ae9ef91df395` — 3.13 s end to end, 1.50 s model time, 687 tokens
 - Model evidence: six grounded risk hypotheses and two allow-listed advisories, with exact NVIDIA model and Nebius provider identity in both receipts
 
-Run receipts prove that the saved report fields and screenshots still match each captured artifact set. The portfolio receipt binds the verified run-receipt digests to the scored benchmark and changes if a covered result or receipt changes. These are integrity checks rather than third-party signatures.
+Run receipts prove that the saved report fields and screenshots still match each captured artifact set. The portfolio receipt binds the verified run-receipt digests and exact release source to the scored benchmark, and changes if a covered result, receipt or source release changes. These are integrity checks rather than third-party signatures.
 
 This is a controlled functional benchmark of the two included scenarios. It does not measure production defect prevalence, developer time saved, cross-browser behavior or user adoption.

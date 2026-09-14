@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.1.28 — 2026-09-14
+
+- Bind the exact release version and GitHub source URL into the aggregate benchmark receipt.
+- Make source changes alter the portfolio digest even when the underlying browser evidence is unchanged.
+- Add a focused receipt contract proving release provenance is cryptographically covered.
+
 ## 0.1.27 — 2026-09-14
 
 - Verify Nebius/Nemotron planning and advice across both included workflows.

@@ -3,6 +3,7 @@ import { readFile, writeFile, mkdir, rename, readdir } from "node:fs/promises";
 import { randomUUID, createHash } from "node:crypto";
 import { runChecks } from "./lib/runner.mjs";
 import {
+  attestBenchmark,
   attestRun,
   compareRuns,
   measureModelContribution,
@@ -399,6 +400,10 @@ export async function startServer({
       definitions.length > 0 &&
       suites.length === definitions.length &&
       suites.every((suite) => suite.verified);
+    const release = {
+      version: packageMetadata.version,
+      source: `${sourceRepository}/releases/tag/v${packageMetadata.version}`,
+    };
     const certification = {
       complete,
       suites: suites.map(
@@ -440,20 +445,10 @@ export async function startServer({
     };
     return {
       ...certification,
-      release: {
-        version: packageMetadata.version,
-        source: `${sourceRepository}/releases/tag/v${packageMetadata.version}`,
-      },
+      release,
       generatedAt: new Date().toISOString(),
       suites,
-      attestation: {
-        algorithm: "SHA-256",
-        digest: createHash("sha256")
-          .update(JSON.stringify(certification))
-          .digest("hex"),
-        scope:
-          "Benchmark ground truth, pair identities, comparison totals, verified model contribution and run receipts",
-      },
+      attestation: attestBenchmark(certification, release),
     };
   }
   function escapeHtml(value) {
