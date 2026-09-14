@@ -6,7 +6,7 @@ Release Witness
 
 ## Tagline
 
-Evidence-backed browser QA for the change you are about to ship.
+A release result needs a receipt: browser QA for the change you are shipping.
 
 ## Track
 
@@ -23,6 +23,10 @@ Release Witness turns a developer's change description into a bounded risk map, 
 The included appointment demo starts with two seeded defects: a booking disappears after reload and a sold-out time can still be selected. The candidate repairs both while preserving required-name validation. A smaller Fieldnotes workflow demonstrates that the same model contract and runner execute another reviewed application without scenario-specific branches.
 
 The first users are small product teams reviewing pull requests without a dedicated QA function. The product gives the reviewer a compact answer to three questions: what risk did the change create, what did Chrome actually observe, and which claims remain untested? A one-click judge tour opens the strongest saved Nemotron-backed comparison without requiring credentials or spending credits.
+
+## Why the idea is different
+
+The model's authority stops before the verdict. Nemotron must map the change to every reviewed check, but the manifest defines coverage, Chrome produces observations and deterministic assertions decide outcomes. The product's final artifact is therefore a release receipt that connects model reasoning, browser evidence, explicit unknowns and exact source provenance. A fluent model answer cannot turn missing evidence into confidence.
 
 ## How we built it
 
