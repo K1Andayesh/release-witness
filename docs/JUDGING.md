@@ -5,7 +5,7 @@ Release Witness is entered in **Best Apps and Agents**. This guide maps the ship
 ## Technological implementation
 
 - NVIDIA Nemotron 3.5 Lightning runs through Nebius Token Factory in two bounded calls: a pre-run risk map and a post-run advisory action.
-- The judge view surfaces the exact benchmark pair's verified model contribution before the workflow controls: two receipted Nemotron runs, six grounded risk hypotheses, two allow-listed advisories, returned model identity, Nebius provider and token usage.
+- The judge view surfaces the exact benchmark pair's verified model contribution before the workflow controls: two receipted Nemotron runs, six grounded risk hypotheses, two allow-listed advisories, returned model identity, Nebius provider, token usage and 3.78 seconds of recorded model work.
 - Strict schemas require one risk hypothesis for every allow-listed check. The model cannot omit checks, add checks or determine a verdict.
 - A server-managed job runs the reviewed contract against baseline and candidate in isolated Chrome contexts, then persists their relationship across reloads. Loading the comparison freshly verifies both receipts and every referenced screenshot file.
 - Deterministic assertions produce the verdicts. SHA-256 receipts are recomputed from each report and every stored screenshot before the UI shows verification.

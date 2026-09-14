@@ -578,6 +578,7 @@ test("server-managed pairs persist their relationship and comparison", async (t)
   assert.equal(bookingBenchmark.modelEvidence.riskHypothesesVerified, 6);
   assert.equal(bookingBenchmark.modelEvidence.advisoriesVerified, 2);
   assert.equal(bookingBenchmark.modelEvidence.tokensVerified, 40);
+  assert.ok(bookingBenchmark.modelEvidence.durationMsVerified >= 0);
   assert.match(benchmark.attestation.digest, /^[a-f0-9]{64}$/);
   const benchmarkReport = await fetch(`${base}/api/benchmark/report`);
   assert.equal(benchmarkReport.status, 200);
@@ -598,6 +599,15 @@ test("server-managed pairs persist their relationship and comparison", async (t)
   assert.match(benchmarkReportText, /Nemotron runs verified: 2/);
   assert.match(benchmarkReportText, /Grounded risk hypotheses verified: 6/);
   assert.match(benchmarkReportText, /Allow-listed advisories verified: 2/);
+  const verifiedDuration =
+    benchmark.totals.modelDurationMsVerified >= 1000
+      ? `${(benchmark.totals.modelDurationMsVerified / 1000).toFixed(2)} s`
+      : `${benchmark.totals.modelDurationMsVerified} ms`;
+  assert.ok(
+    benchmarkReportText.includes(
+      `Verified model duration: ${verifiedDuration}`,
+    ),
+  );
   const repeatedBenchmark = await (await fetch(`${base}/api/benchmark`)).json();
   assert.equal(
     repeatedBenchmark.attestation.digest,
@@ -1111,7 +1121,7 @@ test("public demo mode excludes local projects and model spending", async (t) =>
   );
   const status = await (await fetch(`${base}/api/status`)).json();
   assert.equal(status.modelConfigured, false);
-  assert.equal(status.version, "0.1.22");
+  assert.equal(status.version, "0.1.23");
   assert.equal(status.publicDemo, true);
   const integrity = await (
     await fetch(`${base}/api/runs/${receiptId}/integrity`)

@@ -1216,7 +1216,7 @@ footer {
   border-color: #c9d9bc;
 }
 .model-summary-metrics {
-  grid-template-columns: repeat(4, minmax(0, 1fr));
+  grid-template-columns: repeat(5, minmax(0, 1fr));
   background: #fff;
 }
 .benchmark-suite-grid {
@@ -1407,12 +1407,16 @@ footer {
     border-right: 0;
   }
   .benchmark-metrics .benchmark-metric:nth-last-child(-n + 2),
-  .model-summary-metrics .benchmark-metric:nth-last-child(-n + 2),
   .suite-metrics .benchmark-metric:nth-last-child(-n + 2) {
     border-bottom: 0;
   }
   .suite-metrics {
     grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+  .model-summary-metrics .benchmark-metric:last-child {
+    grid-column: 1 / -1;
+    border-top: 1px solid var(--line);
+    border-bottom: 0;
   }
   .benchmark-boundary {
     grid-template-columns: 1fr;

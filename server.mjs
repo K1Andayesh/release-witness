@@ -616,6 +616,10 @@ export async function startServer({
         const benchmark = await benchmarkSummary();
         const metric = (value, label, ariaLabel = `${label}: ${value}`) =>
           `<div class="benchmark-metric" aria-label="${escapeHtml(ariaLabel)}"><strong>${escapeHtml(value)}</strong><span>${escapeHtml(label)}</span></div>`;
+        const modelDuration = (durationMs) =>
+          durationMs >= 1000
+            ? `${(durationMs / 1000).toFixed(2)} s`
+            : `${durationMs} ms`;
         const suiteCards = benchmark.suites
           .map((suite) => {
             const model = suite.modelEvidence;
@@ -647,7 +651,7 @@ export async function startServer({
     <p>${escapeHtml(model?.reason || "Model evidence is unavailable.")}</p>
     ${
       model?.verified
-        ? `<div class="model-proof-facts"><span>${model.runsVerified} runs</span><span>${model.riskHypothesesVerified} hypotheses</span><span>${model.advisoriesVerified} advisories</span><span>${Number(model.tokensVerified).toLocaleString()} tokens</span></div><p class="fine-print">${escapeHtml(model.model)} via ${escapeHtml(model.provider)}</p>`
+        ? `<div class="model-proof-facts"><span>${model.runsVerified} runs</span><span>${model.riskHypothesesVerified} hypotheses</span><span>${model.advisoriesVerified} advisories</span><span>${Number(model.tokensVerified).toLocaleString()} tokens</span><span>${modelDuration(model.durationMsVerified)} model time</span></div><p class="fine-print">${escapeHtml(model.model)} via ${escapeHtml(model.provider)}</p>`
         : ""
     }
   </section>
@@ -672,6 +676,7 @@ ${metric(benchmark.totals.modelRunsVerified, "Nemotron runs verified", `Nemotron
 ${metric(benchmark.totals.riskHypothesesVerified, "grounded hypotheses", `Grounded risk hypotheses verified: ${benchmark.totals.riskHypothesesVerified}`)}
 ${metric(benchmark.totals.advisoriesVerified, "allow-listed advisories", `Allow-listed advisories verified: ${benchmark.totals.advisoriesVerified}`)}
 ${metric(Number(benchmark.totals.modelTokensVerified).toLocaleString(), "verified model tokens", `Verified model tokens: ${benchmark.totals.modelTokensVerified}`)}
+${metric(modelDuration(benchmark.totals.modelDurationMsVerified), "verified model time", `Verified model duration: ${modelDuration(benchmark.totals.modelDurationMsVerified)}`)}
 </div></section><section aria-labelledby="workflow-evidence"><div class="report-section-heading"><div><span class="eyebrow">TRACEABLE ARTIFACTS</span><h2 id="workflow-evidence">Workflow evidence</h2></div><p>Each card links to the exact baseline-to-candidate comparison.</p></div><div class="benchmark-suite-grid">${suiteCards}</div></section><aside class="benchmark-boundary"><strong>Evidence boundary</strong><p>This receipt covers the controlled included scenarios. It is not a claim about all production defects or a third-party signature.</p></aside></main><footer class="benchmark-report-footer"><span>Release Witness · evidence before confidence</span><a href="/api/benchmark">Open machine-readable JSON →</a></footer></div></body></html>`,
           "text/html; charset=utf-8",
         );

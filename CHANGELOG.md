@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.1.23 — 2026-09-14
+
+- Surface the receipt-verified model runtime alongside token usage in the judge summary.
+- Show the verified model time on the exact workflow card that used Nemotron.
+- Preserve a balanced mobile model-evidence grid with the additional measured field.
+
 ## 0.1.22 — 2026-09-14
 
 - Surface the independently verified 3/3 baseline defect-detection result in the portfolio summary.
