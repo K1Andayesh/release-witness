@@ -1,5 +1,10 @@
 # Changelog
 
+## 0.1.5 — 2026-09-14
+
+- Recomputed both baseline and candidate receipts whenever a comparison loads.
+- Added a combined receipt result with the number of screenshot files freshly checked from disk.
+
 ## 0.1.4 — 2026-09-14
 
 - Added inline baseline/candidate evidence drill-downs for resolved, regressed and still-failing checks.

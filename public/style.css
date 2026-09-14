@@ -851,6 +851,25 @@ footer {
   color: var(--muted);
   font-size: 12px;
 }
+.pair-receipts {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 14px;
+  padding: 11px 14px;
+  border: 1px solid var(--line);
+  border-top: 0;
+  font-size: 10px;
+}
+.pair-receipts.verified strong {
+  color: var(--green);
+}
+.pair-receipts.invalid strong {
+  color: var(--red);
+}
+.pair-receipts span {
+  color: var(--muted);
+}
 .comparison-evidence {
   margin-top: 10px;
   border: 1px solid var(--line);
@@ -923,6 +942,7 @@ footer {
 @media (max-width: 700px) {
   .judge-strip,
   .comparison-callout,
+  .pair-receipts,
   .release-delta {
     align-items: stretch;
     flex-direction: column;

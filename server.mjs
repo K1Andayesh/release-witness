@@ -393,10 +393,18 @@ export async function startServer({
         if (!before || !after)
           return reply(res, 404, { error: "Both saved runs are required." });
         try {
+          const [beforeReceipt, afterReceipt] = await Promise.all([
+            before.attestation ? verifyEvidence(before) : null,
+            after.attestation ? verifyEvidence(after) : null,
+          ]);
           return reply(res, 200, {
             before: before.id,
             after: after.id,
             changes: compareRuns(before, after),
+            receipts: {
+              before: beforeReceipt,
+              after: afterReceipt,
+            },
           });
         } catch (error) {
           return reply(res, 400, { error: error.message });

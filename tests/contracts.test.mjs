@@ -423,6 +423,10 @@ test("server-managed pairs persist their relationship and comparison", async (t)
     comparison.changes.filter((item) => item.change === "resolved").length,
     2,
   );
+  assert.equal(comparison.receipts.before.verified, true);
+  assert.equal(comparison.receipts.after.verified, true);
+  assert.equal(comparison.receipts.before.fileCount, 4);
+  assert.equal(comparison.receipts.after.fileCount, 4);
 });
 
 test("the judge-tour comparison survives a browser reload", async (t) => {
