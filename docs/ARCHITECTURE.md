@@ -35,6 +35,7 @@ flowchart LR
 - Mutating workflows are limited to included application paths and explicit loopback previews. Explicit HTTPS targets must use read-only actions, and the browser context blocks unrelated origins.
 - Reports are written atomically. Completed runs receive a SHA-256 receipt over decisions, model provenance and screenshot hashes.
 - A comparison request freshly verifies both receipts and reads every referenced screenshot before reporting that the pair is verified.
+- The portfolio endpoint scores only manifest-declared ground truth and withholds the aggregate claim unless every latest workflow pair and screenshot receipt verifies.
 - The hosted public demo disables live model spending and exposes only runs from the active public manifest catalog. The saved qualifying model records remain inspectable.
 
 ## Failure behavior

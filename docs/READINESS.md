@@ -6,6 +6,8 @@ Implemented and observed: two self-contained declarative workflow manifests, a d
 
 The competition-strengthening pass added a validated Nemotron risk hypothesis for every allow-listed check, a one-click judge tour, a paired execution action, visible provider provenance, independently checked evidence receipts and an evidence-derived comparison summary. Fresh appointment runs `75db5178` and `86f39150` detected 2/2 known baseline defects with qualifying Nemotron calls. A current-version Fieldnotes pair `9f67a852` and `b417a60d` independently detected and resolved its persistence defect while preserving two invariants. Across both workflows, all 3/3 seeded defects were detected and classified as resolved, zero regressions were reported, and both excluded boundaries remained unverified. All four report receipts and 16 screenshots verified. See `EVALUATION.md` for timings, token use and limits.
 
+The homepage portfolio figures now come from `/api/benchmark`. The endpoint validates manifest-declared ground truth against the latest durable pair for each workflow, freshly rechecks all four receipts and 16 screenshots, and withholds the aggregate if any expected state or artifact fails.
+
 The primary appointment demonstration provides a stronger product proof than the original notes fixture. Its baseline exhibits two distinct defects; the candidate repairs both while preserving an existing validation invariant. The runner contains no appointment-specific execution branch.
 
 The publication scope is self-contained: only Harbour Appointments and Fieldnotes are included. Model planning still orders a known check catalog; automatic workflow generation and code repair are outside the implemented claim.

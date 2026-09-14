@@ -2,6 +2,8 @@
 
 Each JSON file in `manifests/` defines one bounded comparison suite. Restart the server after adding or editing a manifest. Invalid manifests stop startup rather than silently weakening coverage.
 
+An included controlled benchmark may add a `benchmark` object with `baselineBuild`, `candidateBuild`, `knownDefectIds` and `invariantIds`. The two ID lists must be disjoint and cover every supported check exactly once. The server uses this declared ground truth only to score completed paired evidence; it cannot alter execution or a verdict.
+
 A manifest supplies an ID, display name, release question, default change description, exactly two builds, one to eight supported checks, and an explicit coverage boundary. A build target may be an included `/path`, an explicit local HTTP URL on `localhost` or `127.0.0.1`, or an HTTPS page. HTTPS targets must be entirely read-only: manifests containing `fill`, `select`, `click` or `doubleClick` are rejected.
 
 Each check contains human-readable reproduction steps and one to twenty allow-listed actions. Supported actions are:

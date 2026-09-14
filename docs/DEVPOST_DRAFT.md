@@ -45,6 +45,7 @@ The hardest part was keeping model assistance useful without letting it become t
 - Integrated the required NVIDIA model through Nebius with bounded calls, no retries and a persistent development allowance.
 - Scored the controlled appointment benchmark against known ground truth: 2/2 seeded defects detected, 2/2 fixes classified as resolved, one invariant preserved and zero regressions reported. Model-enabled runs completed in 3.51 and 2.85 seconds, with both receipts and all eight screenshots verified.
 - Repeated the evaluation on the independent Fieldnotes workflow: its persistence defect changed from fail to pass, two invariants stayed passing, excluded coverage remained unverified, and both receipts plus eight screenshots verified.
+- Replaced the homepage's editorial benchmark number with a server-derived portfolio verifier that checks declared ground truth, paired comparison states, four receipts and all 16 screenshot files before displaying 3/3.
 
 ## What we learned
 

@@ -20,6 +20,12 @@
     "expected": "Requires a broader suite.",
     "observed": "Outside this demo: no authentication checks, Firefox, Safari or mobile devices."
   },
+  "benchmark": {
+    "baselineBuild": "defect",
+    "candidateBuild": "fixed",
+    "knownDefectIds": ["persistence"],
+    "invariantIds": ["validation", "duplicate"]
+  },
   "checks": [
     {
       "id": "persistence",

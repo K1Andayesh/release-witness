@@ -20,6 +20,12 @@
     "expected": "Requires separate authorized test suites.",
     "observed": "Outside this demo: no sign-in, payment, email, Firefox, Safari or physical-device checks."
   },
+  "benchmark": {
+    "baselineBuild": "baseline",
+    "candidateBuild": "candidate",
+    "knownDefectIds": ["booking-persistence", "sold-out-slot"],
+    "invariantIds": ["required-name"]
+  },
   "checks": [
     {
       "id": "booking-persistence",

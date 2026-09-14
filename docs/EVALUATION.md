@@ -2,6 +2,15 @@
 
 This evaluation covers two independent included workflows with deliberately seeded baseline defects, repaired candidates and real isolated Chrome execution. The primary appointment pair uses two live NVIDIA Nemotron 3.5 Lightning calls per run through Nebius Token Factory. The Fieldnotes pair repeats the deterministic runner, comparison and receipt path without model calls, separating workflow reuse from the qualifying runtime proof.
 
+The public homepage does not hard-code the portfolio result. Each workflow manifest declares its baseline, candidate, known defect IDs and invariant IDs. `/api/benchmark` selects the latest server-managed pair for each workflow, recomputes both evidence receipts, reads every screenshot from disk and checks the observed comparison states against that ground truth. The homepage shows the aggregate only when every workflow verifies.
+
+Current portfolio-verifier evidence:
+
+- Harbour Appointments: baseline `cd0f86d0-ad51-4e77-9a43-5785e0e8889f`, candidate `75e488db-93c7-4c2b-a1af-826fcb3ccdd2`
+- Fieldnotes: baseline `9f67a852-c07e-444d-8d4c-dcc01302a2aa`, candidate `b417a60d-f983-4e66-b474-4ea86834c14e`
+
+The current aggregate check completes in approximately 11 ms on the local evidence store. The separate qualifying appointment pair below preserves the live Nemotron/Nebius runtime evidence.
+
 | Ground-truth result            | Harbour Appointments | Fieldnotes | Portfolio |
 | ------------------------------ | -------------------: | ---------: | --------: |
 | Known seeded defects           |                    2 |          1 |       3/3 |

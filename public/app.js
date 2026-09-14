@@ -14,24 +14,6 @@ function routeState() {
 function routeHash(runId, baselineId = "") {
   return baselineId ? `${runId}~${baselineId}` : runId;
 }
-function pairedRoute(suite, candidateBuild) {
-  const candidate = all
-    .filter(
-      (run) =>
-        run.suite === suite &&
-        run.build === candidateBuild &&
-        run.state === "complete" &&
-        run.comparisonBaselineId,
-    )
-    .sort((a, b) => b.createdAt.localeCompare(a.createdAt))[0];
-  const baseline = all.find(
-    (run) =>
-      run.id === candidate?.comparisonBaselineId &&
-      run.suite === suite &&
-      run.state === "complete",
-  );
-  return candidate && baseline ? routeHash(candidate.id, baseline.id) : "";
-}
 const initialRoute = routeState();
 let selected = initialRoute.runId,
   all = [],
@@ -52,6 +34,30 @@ const label = (status) =>
     : status[0].toUpperCase() + status.slice(1);
 const planRisk = (run, checkId) =>
   run.plan?.risks?.find((risk) => risk.checkId === checkId)?.hypothesis;
+function renderBenchmark(benchmark) {
+  const fieldnotes = benchmark.suites?.find(
+    (suite) => suite.id === "notes-v1" && suite.verified,
+  );
+  $("#portfolio-proof").hidden = !fieldnotes?.route;
+  $("#portfolio-proof").href = fieldnotes?.route || "#";
+  if (!benchmark.complete) {
+    $("#benchmark-defects").textContent = "—";
+    $("#benchmark-defects-label").textContent =
+      "verified benchmark unavailable";
+    $("#benchmark-files").textContent = "—";
+    $("#benchmark-files-label").textContent =
+      "screenshot receipt check incomplete";
+    return;
+  }
+  const { totals, suites } = benchmark;
+  $("#benchmark-defects").textContent =
+    `${totals.repairsResolved}/${totals.knownDefects}`;
+  $("#benchmark-defects-label").textContent =
+    `seeded defects verified across ${suites.length} workflows`;
+  $("#benchmark-files").textContent = totals.screenshotFilesVerified;
+  $("#benchmark-files-label").textContent =
+    `${totals.receiptsVerified} receipts freshly verified`;
+}
 const comparisonEvidence = (change) => {
   if (["unchanged", "unverified"].includes(change.change)) return "";
   const side = (name, status, observed, screenshots) =>
@@ -419,9 +425,6 @@ async function refresh() {
     ]);
     all = runs;
     currentStatus = status;
-    const portfolioRoute = pairedRoute("notes-v1", "fixed");
-    $("#portfolio-proof").hidden = !portfolioRoute;
-    $("#portfolio-proof").href = portfolioRoute ? `#${portfolioRoute}` : "#";
     if (!catalog.length) {
       catalog = manifests;
       $("#suite").innerHTML = catalog
@@ -482,6 +485,7 @@ async function refresh() {
     syncSetupFromRun(all.find((run) => run.id === selected));
     const next = JSON.stringify(all);
     if (next !== signature) {
+      renderBenchmark(await api("/api/benchmark"));
       signature = next;
       render();
     }

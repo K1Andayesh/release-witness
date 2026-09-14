@@ -187,6 +187,15 @@ test("declarative manifests load and reject unsafe targets or actions", async ()
   const assertionFree = structuredClone(manifests.get("booking-v1"));
   assertionFree.checks[0].actions = [{ op: "navigate" }];
   assert.throws(() => validateManifest(assertionFree), /no assertion/);
+  const invalidBenchmark = structuredClone(manifests.get("booking-v1"));
+  invalidBenchmark.benchmark.knownDefectIds = [
+    "booking-persistence",
+    "missing",
+  ];
+  assert.throws(
+    () => validateManifest(invalidBenchmark),
+    /invalid benchmark ground truth/,
+  );
   const remoteMutation = structuredClone(manifests.get("booking-v1"));
   remoteMutation.builds[0].path = "https://example.com/";
   remoteMutation.checks[0].actions.splice(1, 0, {
@@ -431,6 +440,33 @@ test("server-managed pairs persist their relationship and comparison", async (t)
   assert.equal(comparison.receipts.after.verified, true);
   assert.equal(comparison.receipts.before.fileCount, 4);
   assert.equal(comparison.receipts.after.fileCount, 4);
+  const benchmark = await (await fetch(`${base}/api/benchmark`)).json();
+  const bookingBenchmark = benchmark.suites.find(
+    (suite) => suite.id === "booking-v1",
+  );
+  assert.equal(benchmark.complete, false);
+  assert.equal(bookingBenchmark.verified, true);
+  assert.equal(bookingBenchmark.defectsDetected, 2);
+  assert.equal(bookingBenchmark.repairsResolved, 2);
+  assert.equal(bookingBenchmark.invariantsPreserved, 1);
+  assert.equal(bookingBenchmark.regressions, 0);
+  assert.equal(bookingBenchmark.boundariesUnverified, 1);
+  assert.equal(bookingBenchmark.receiptsVerified, 2);
+  assert.equal(bookingBenchmark.screenshotFilesVerified, 8);
+  const screenshotName = candidate.checks
+    .flatMap((check) => check.screenshots)[0]
+    .url.split("/")
+    .pop();
+  await writeFile(
+    new URL(`${candidate.id}/${screenshotName}`, dir),
+    "tampered-benchmark-evidence",
+  );
+  const tamperedBenchmark = await (await fetch(`${base}/api/benchmark`)).json();
+  assert.equal(
+    tamperedBenchmark.suites.find((suite) => suite.id === "booking-v1")
+      .verified,
+    false,
+  );
 });
 
 test("the judge-tour comparison survives a browser reload", async (t) => {
@@ -596,28 +632,30 @@ test("the judge-tour comparison survives a browser reload", async (t) => {
     },
     analysis: { state: "skipped" },
   });
+  const notesBaseline = notesRun(
+    notesBaselineId,
+    "defect",
+    new Date(createdAt.getTime() - 10_000),
+    false,
+  );
+  notesBaseline.attestation = attestRun(notesBaseline);
   await writeFile(
     new URL(`${notesBaselineId}.json`, dir),
-    JSON.stringify(
-      notesRun(
-        notesBaselineId,
-        "defect",
-        new Date(createdAt.getTime() - 10_000),
-        false,
-      ),
-    ),
+    JSON.stringify(notesBaseline),
   );
+  const notesCandidate = {
+    ...notesRun(
+      notesCandidateId,
+      "fixed",
+      new Date(createdAt.getTime() - 9_000),
+      true,
+    ),
+    comparisonBaselineId: notesBaselineId,
+  };
+  notesCandidate.attestation = attestRun(notesCandidate);
   await writeFile(
     new URL(`${notesCandidateId}.json`, dir),
-    JSON.stringify({
-      ...notesRun(
-        notesCandidateId,
-        "fixed",
-        new Date(createdAt.getTime() - 9_000),
-        true,
-      ),
-      comparisonBaselineId: notesBaselineId,
-    }),
+    JSON.stringify(notesCandidate),
   );
   for (let index = 0; index < 6; index += 1) {
     const archiveId = `33333333-3333-4333-8333-${String(index).padStart(12, "0")}`;
@@ -835,7 +873,7 @@ test("public demo mode excludes local projects and model spending", async (t) =>
   );
   const status = await (await fetch(`${base}/api/status`)).json();
   assert.equal(status.modelConfigured, false);
-  assert.equal(status.version, "0.1.15");
+  assert.equal(status.version, "0.1.16");
   assert.equal(status.publicDemo, true);
   const integrity = await (
     await fetch(`${base}/api/runs/${receiptId}/integrity`)

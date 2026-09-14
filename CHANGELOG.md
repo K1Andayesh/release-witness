@@ -1,5 +1,12 @@
 # Changelog
 
+## 0.1.16 — 2026-09-14
+
+- Add manifest-declared benchmark ground truth for known defects and preserved invariants.
+- Derive the public 3/3 portfolio claim from the latest server-managed pairs, fresh receipt checks and every stored screenshot.
+- Withhold the homepage result when any workflow, expected comparison state, receipt or screenshot fails verification.
+- Add tamper regression coverage for benchmark certification.
+
 ## 0.1.15 — 2026-09-14
 
 - Add a judge-strip link that opens the independent Fieldnotes comparison directly.

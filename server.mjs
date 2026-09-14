@@ -228,6 +228,157 @@ export async function startServer({
       }
     }
   }
+  async function benchmarkSummary() {
+    const definitions = [...manifests.values()].filter(
+      (manifest) => manifest.benchmark,
+    );
+    const suites = [];
+    for (const manifest of definitions) {
+      const groundTruth = manifest.benchmark;
+      const candidate = [...runs.values()]
+        .filter(
+          (run) =>
+            run.suite === manifest.id &&
+            run.build === groundTruth.candidateBuild &&
+            run.state === "complete" &&
+            run.comparisonBaselineId,
+        )
+        .sort((a, b) => b.createdAt.localeCompare(a.createdAt))
+        .find((run) => {
+          const baseline = runs.get(run.comparisonBaselineId);
+          return (
+            baseline?.suite === manifest.id &&
+            baseline.build === groundTruth.baselineBuild &&
+            baseline.state === "complete"
+          );
+        });
+      const baseline = candidate
+        ? runs.get(candidate.comparisonBaselineId)
+        : undefined;
+      if (!baseline || !candidate) {
+        suites.push({
+          id: manifest.id,
+          name: manifest.name,
+          verified: false,
+          reason: "A completed server-managed benchmark pair is unavailable.",
+          knownDefects: groundTruth.knownDefectIds.length,
+        });
+        continue;
+      }
+      const changes = compareRuns(baseline, candidate);
+      const byId = new Map(changes.map((change) => [change.id, change]));
+      const [baselineReceipt, candidateReceipt] = await Promise.all([
+        verifyEvidence(baseline),
+        verifyEvidence(candidate),
+      ]);
+      const defectsDetected = groundTruth.knownDefectIds.filter(
+        (id) => byId.get(id)?.before === "fail",
+      ).length;
+      const repairsResolved = groundTruth.knownDefectIds.filter(
+        (id) => byId.get(id)?.change === "resolved",
+      ).length;
+      const invariantsPreserved = groundTruth.invariantIds.filter((id) => {
+        const change = byId.get(id);
+        return (
+          change?.before === "pass" &&
+          change.after === "pass" &&
+          change.change === "unchanged"
+        );
+      }).length;
+      const regressions = changes.filter(
+        (change) => change.change === "regression",
+      ).length;
+      const boundariesUnverified = changes.filter(
+        (change) => change.id === "coverage" && change.change === "unverified",
+      ).length;
+      const receiptsVerified = [baselineReceipt, candidateReceipt].filter(
+        (receipt) => receipt.verified,
+      ).length;
+      const screenshotFilesVerified = [baselineReceipt, candidateReceipt]
+        .filter((receipt) => receipt.verified)
+        .reduce((total, receipt) => total + receipt.fileCount, 0);
+      const verified =
+        defectsDetected === groundTruth.knownDefectIds.length &&
+        repairsResolved === groundTruth.knownDefectIds.length &&
+        invariantsPreserved === groundTruth.invariantIds.length &&
+        regressions === 0 &&
+        boundariesUnverified === 1 &&
+        receiptsVerified === 2;
+      const failures = [];
+      if (defectsDetected !== groundTruth.knownDefectIds.length)
+        failures.push("The baseline did not expose every declared defect.");
+      if (repairsResolved !== groundTruth.knownDefectIds.length)
+        failures.push("The candidate did not resolve every declared defect.");
+      if (invariantsPreserved !== groundTruth.invariantIds.length)
+        failures.push("A declared invariant was not preserved.");
+      if (regressions > 0)
+        failures.push("The comparison contains a regression.");
+      if (boundariesUnverified !== 1)
+        failures.push("The coverage boundary was not retained as unverified.");
+      if (receiptsVerified !== 2)
+        failures.push("Both evidence receipts did not verify.");
+      suites.push({
+        id: manifest.id,
+        name: manifest.name,
+        verified,
+        reason: verified
+          ? "Declared ground truth, comparison states and both evidence receipts verify."
+          : failures.join(" "),
+        baselineId: baseline.id,
+        candidateId: candidate.id,
+        route: `#${candidate.id}~${baseline.id}`,
+        knownDefects: groundTruth.knownDefectIds.length,
+        defectsDetected,
+        repairsResolved,
+        invariantsPreserved,
+        regressions,
+        boundariesUnverified,
+        receiptsVerified,
+        screenshotFilesVerified,
+        modelBacked:
+          baseline.plan?.state === "complete" &&
+          baseline.analysis?.state === "complete" &&
+          candidate.plan?.state === "complete" &&
+          candidate.analysis?.state === "complete",
+      });
+    }
+    const totals = suites.reduce(
+      (summary, suite) => ({
+        knownDefects: summary.knownDefects + suite.knownDefects,
+        defectsDetected: summary.defectsDetected + (suite.defectsDetected || 0),
+        repairsResolved: summary.repairsResolved + (suite.repairsResolved || 0),
+        invariantsPreserved:
+          summary.invariantsPreserved + (suite.invariantsPreserved || 0),
+        regressions: summary.regressions + (suite.regressions || 0),
+        boundariesUnverified:
+          summary.boundariesUnverified + (suite.boundariesUnverified || 0),
+        receiptsVerified:
+          summary.receiptsVerified + (suite.receiptsVerified || 0),
+        screenshotFilesVerified:
+          summary.screenshotFilesVerified +
+          (suite.screenshotFilesVerified || 0),
+      }),
+      {
+        knownDefects: 0,
+        defectsDetected: 0,
+        repairsResolved: 0,
+        invariantsPreserved: 0,
+        regressions: 0,
+        boundariesUnverified: 0,
+        receiptsVerified: 0,
+        screenshotFilesVerified: 0,
+      },
+    );
+    return {
+      complete:
+        definitions.length > 0 &&
+        suites.length === definitions.length &&
+        suites.every((suite) => suite.verified),
+      generatedAt: new Date().toISOString(),
+      suites,
+      totals,
+    };
+  }
   function reply(res, code, data, type = "application/json") {
     res.writeHead(code, {
       "Content-Type": type,
@@ -374,6 +525,8 @@ export async function startServer({
         );
       if (url.pathname === "/api/catalog")
         return reply(res, 200, publicCatalog(manifests));
+      if (url.pathname === "/api/benchmark")
+        return reply(res, 200, await benchmarkSummary());
       if (url.pathname === "/api/status")
         return reply(res, 200, {
           busy,
