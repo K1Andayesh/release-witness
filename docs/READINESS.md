@@ -10,7 +10,7 @@ The primary appointment demonstration provides a stronger product proof than the
 
 The publication scope is self-contained: only Harbour Appointments and Fieldnotes are included. Model planning still orders a known check catalog; automatic workflow generation and code repair are outside the implemented claim.
 
-Prepared for publication: MIT license, CI, contributor and security guidance, a bounded public-demo container, deployment instructions, Devpost copy, a narrated one-minute demo and an external-action checklist.
+Prepared for publication: MIT license, passing CI, contributor and security guidance, a bounded public-demo container, deployment instructions, Devpost copy, a naturally paced 93-second narrated demo and an external-action checklist.
 
 The public demo at https://release-witness.139-99-135-89.sslip.io exposes only synthetic fixtures. A visible HTTPS server-managed pair detected both baseline defects, passed all three candidate checks, reopened the exact comparison after reload, and freshly verified the candidate's four screenshot hashes. Mobile dashboard QA passed at 390 × 844.
 
@@ -18,7 +18,9 @@ Before final submission:
 
 - Complete responsive, keyboard, screen-reader and non-Chrome QA.
 - Review provider credits and the configured development limit before further full model batches. Model-enabled runs require two remaining calls and remain disabled in the hosted public demo.
-- Create and verify the public source repository and public video. The hosted test build is restricted to synthetic scenarios; authentication, tenant isolation and worker hardening remain required before public multi-user use with private projects.
-- Replace the draft link placeholders, recheck official requirements and obtain authorization before deployment, publication or final submission.
+- Keep the hosted test build restricted to synthetic scenarios; authentication, tenant isolation and worker hardening remain required before public multi-user use with private projects.
+- Paste the completed draft into Devpost, preview the entry and verify the public source, demo and video links before submission.
+
+The public repository, passing GitHub Actions run, natural-narration YouTube demo and live HTTPS product were verified on 14 September 2026. The official deadline is 30 October 2026 at 10:00 PDT, and judging ends 15 December 2026.
 
 See `DEMO.md` for the walkthrough, `MANIFESTS.md` for extension instructions and `QA.md` for the evidence record.

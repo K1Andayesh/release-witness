@@ -22,6 +22,8 @@ Release Witness turns a developer's change description into a bounded risk map, 
 
 The included appointment demo starts with two seeded defects: a booking disappears after reload and a sold-out time can still be selected. The candidate repairs both while preserving required-name validation. A smaller Fieldnotes workflow demonstrates that the same runner executes another reviewed contract without scenario-specific branches.
 
+The first users are small product teams reviewing pull requests without a dedicated QA function. The product gives the reviewer a compact answer to three questions: what risk did the change create, what did Chrome actually observe, and which claims remain untested? A one-click judge tour opens the strongest saved Nemotron-backed comparison without requiring credentials or spending credits.
+
 ## How we built it
 
 The application uses a loopback Node.js server, a dependency-light browser UI, Playwright with Google Chrome and validated JSON manifests. An allow-listed interpreter supports navigation, form actions, screenshots and explicit assertions. Reports are written atomically and survive restart.
@@ -34,6 +36,7 @@ The hardest part was keeping model assistance useful without letting it become t
 
 ## Accomplishments
 
+- Achieved 100% detection (2/2) and 100% repair classification (2/2) on the included ground-truth benchmark, with zero observed regressions and no unknown coverage converted into a pass.
 - Demonstrated two independent defects changing from fail to pass with visible screenshots and reproduction steps.
 - Added a one-click judge tour from live model risk to browser evidence to baseline/candidate resolution.
 - Added a durable server-managed baseline/candidate workflow and freshly verified evidence receipts with screenshot-level SHA-256 hashes.
@@ -62,8 +65,8 @@ Token Factory's OpenAI-compatible chat-completions interface made initial integr
 
 Release Witness was created during the hackathon submission period. The application, manifests, runner, model contracts, evidence format, CLI and publication package in this repository are the competition work.
 
-## Links to add at publication
+## Public links
 
 - Source repository: https://github.com/K1Andayesh/release-witness
 - Working demo: https://release-witness.139-99-135-89.sslip.io
-- Demo video, under three minutes: `[PUBLIC_VIDEO_URL]`
+- Demo video, under three minutes: https://youtu.be/LVYa90poYM8

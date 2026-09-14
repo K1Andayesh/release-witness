@@ -1,11 +1,11 @@
 # Narrated demo video
 
-The publication candidate is `artifacts/video/release-witness-demo-narrated.mp4`.
+The publication candidate is `artifacts/video/release-witness-demo-natural.mp4`.
 
-- Duration: 59.92 seconds
+- Duration: 93.29 seconds
 - Video: H.264 High, 1600 × 900, 25 fps
 - Audio: AAC LC, mono, Australian English narration
-- SHA-256: `CEC0A18BBEA51DF2D37BDDDB135DC60EBFEB42DB83DB4E8DCAA9A8FEE017BD36`
+- SHA-256: `5A335C4C8EDA97790DC512B1239E7FDB6970BB7AC22B027F9F15183B727A0D3D`
 
 The recording uses the public competition deployment and the saved live Nemotron evidence pair. Captions identify the model's bounded role, the deterministic browser verdicts, the server-verified SHA-256 receipt, the controlled ground-truth result and the explicitly unverified coverage. It contains no credentials, private application data or customer data.
 
