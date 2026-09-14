@@ -46,7 +46,7 @@ The hardest part was keeping model assistance useful without letting it become t
 - Scored the controlled appointment benchmark against known ground truth: 2/2 seeded defects detected, 2/2 fixes classified as resolved, one invariant preserved and zero regressions reported. The exact server-managed pair includes two receipt-verified Nemotron runs, six grounded risk hypotheses and two allow-listed advisories. The runs completed in 3.75 and 2.96 seconds, with both receipts and all eight screenshots verified.
 - Repeated the evaluation on the independent Fieldnotes workflow: its persistence defect changed from fail to pass, two invariants stayed passing, excluded coverage remained unverified, and both receipts plus eight screenshots verified.
 - Replaced the homepage's editorial benchmark number with a server-derived portfolio verifier that checks declared ground truth, paired comparison states, four receipts and all 16 screenshot files before displaying 3/3.
-- Added a judge-readable portfolio receipt with the exact verified pair IDs and a deterministic aggregate SHA-256 digest that changes when covered benchmark evidence changes.
+- Added a responsive, printable portfolio receipt that makes the 3/3 result, measured Nemotron contribution, exact pair IDs, four run-receipt digests and evidence limits scannable, with direct links to both comparisons. Its deterministic aggregate SHA-256 digest changes when covered benchmark evidence changes.
 - Versioned each run receipt so the returned NVIDIA model, Nebius provider, model timing and token totals are cryptographically bound alongside browser decisions and screenshots.
 
 ## What we learned

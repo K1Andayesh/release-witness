@@ -582,23 +582,17 @@ test("server-managed pairs persist their relationship and comparison", async (t)
   const benchmarkReport = await fetch(`${base}/api/benchmark/report`);
   assert.equal(benchmarkReport.status, 200);
   const benchmarkReportText = await benchmarkReport.text();
+  assert.match(benchmarkReportText, /<main class="benchmark-report">/);
   assert.match(benchmarkReportText, /Portfolio certified: no/);
-  assert.match(benchmarkReportText, new RegExp(`Pair: ${pair.id}`));
-  assert.match(
-    benchmarkReportText,
-    new RegExp(`Portfolio receipt: SHA-256 ${benchmark.attestation.digest}`),
+  assert.match(benchmarkReportText, /data-status="not-certified"/);
+  assert.match(benchmarkReportText, new RegExp(`data-pair-id="${pair.id}"`));
+  assert.match(benchmarkReportText, /Open Harbour Appointments comparison/);
+  assert.ok(benchmarkReportText.includes(benchmark.attestation.digest));
+  assert.ok(
+    benchmarkReportText.includes(bookingBenchmark.receiptDigests.baseline),
   );
-  assert.match(
-    benchmarkReportText,
-    new RegExp(
-      `Baseline receipt: SHA-256 ${bookingBenchmark.receiptDigests.baseline}`,
-    ),
-  );
-  assert.match(
-    benchmarkReportText,
-    new RegExp(
-      `Candidate receipt: SHA-256 ${bookingBenchmark.receiptDigests.candidate}`,
-    ),
+  assert.ok(
+    benchmarkReportText.includes(bookingBenchmark.receiptDigests.candidate),
   );
   assert.match(benchmarkReportText, /Nemotron runs verified: 2/);
   assert.match(benchmarkReportText, /Grounded risk hypotheses verified: 6/);
@@ -955,6 +949,32 @@ test("the judge-tour comparison survives a browser reload", async (t) => {
       .getAttribute("href"),
     "/api/benchmark/report",
   );
+  const benchmarkPage = await browser.newPage();
+  await benchmarkPage.goto(`${base}/api/benchmark/report`);
+  assert.equal(
+    await benchmarkPage.getByRole("heading", { level: 1 }).innerText(),
+    "Evidence a judge can trace.",
+  );
+  assert.equal(
+    await benchmarkPage
+      .locator(".certification-status")
+      .getAttribute("data-status"),
+    "not-certified",
+  );
+  assert.equal(
+    await benchmarkPage
+      .getByRole("link", { name: /Open Fieldnotes comparison/ })
+      .getAttribute("href"),
+    `${base}/#${notesCandidateId}~${notesBaselineId}`,
+  );
+  await benchmarkPage.setViewportSize({ width: 390, height: 844 });
+  assert.equal(
+    await benchmarkPage.evaluate(
+      () => document.documentElement.scrollWidth <= window.innerWidth,
+    ),
+    true,
+  );
+  await benchmarkPage.close();
   const portfolioProof = page.getByRole("link", {
     name: "Second workflow proof ↗",
   });
@@ -1067,7 +1087,7 @@ test("public demo mode excludes local projects and model spending", async (t) =>
   );
   const status = await (await fetch(`${base}/api/status`)).json();
   assert.equal(status.modelConfigured, false);
-  assert.equal(status.version, "0.1.19");
+  assert.equal(status.version, "0.1.20");
   assert.equal(status.publicDemo, true);
   const integrity = await (
     await fetch(`${base}/api/runs/${receiptId}/integrity`)

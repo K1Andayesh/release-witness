@@ -1,5 +1,12 @@
 # Changelog
 
+## 0.1.20 — 2026-09-14
+
+- Replace the raw benchmark text export with a scannable judge-facing evidence page.
+- Present the portfolio result, verified Nemotron contribution, workflow identities, receipt digests and evidence limits as semantic sections.
+- Link each workflow card directly to its exact baseline-to-candidate comparison.
+- Add responsive and print layouts plus real-Chrome coverage for the report's critical evidence path.
+
 ## 0.1.19 — 2026-09-14
 
 - Measure the Nemotron contribution on the exact benchmark pair: verified runs, grounded hypotheses, allow-listed advisories, tokens and latency.

@@ -154,3 +154,10 @@ No receipts are deleted or hidden from the API. A routed selected run and its co
 - The local portfolio endpoint verified 3/3 repairs, three invariants, zero regressions, four receipts, 16 screenshots, two Nemotron runs, six grounded hypotheses and two advisories. Its aggregate receipt was `794189c7291ace23668433e00f0afd0c956d6748849601293292bc35ce8699b1` before deployment.
 - The integration suite now executes four deterministic provider calls in a real server-managed Chrome pair and checks these model measurements. Changing a receipted runtime token count invalidates the run; changing a screenshot removes both functional and model-evidence certification.
 - Actual Chrome kept the verified model contribution visible after repeated refreshes. At 390 × 844 it reported `scrollWidth=390` with no horizontal overflow.
+
+## Judge-readable benchmark receipt — 14 September 2026
+
+- Actual Chrome rendered `/api/benchmark/report` as a semantic evidence page with a certified portfolio status, aggregate SHA-256 digest, 3/3 repair result, model contribution, exact workflow pair IDs, four run-receipt digests and links to both comparisons.
+- Desktop visual inspection found a clear hierarchy from certification to portfolio totals, model evidence and workflow artifacts. At 390 × 844, the report remained readable and had no horizontal overflow.
+- Chrome print emulation hid navigation, changed the page background to white and retained the report heading and evidence content without horizontal overflow.
+- The real-Chrome contract verifies the report heading, fail-closed certification state, Fieldnotes comparison route and mobile width. The full suite remains 21 passing tests.

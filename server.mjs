@@ -451,6 +451,19 @@ export async function startServer({
       },
     };
   }
+  function escapeHtml(value) {
+    return String(value ?? "").replace(
+      /[&<>"']/g,
+      (character) =>
+        ({
+          "&": "&amp;",
+          "<": "&lt;",
+          ">": "&gt;",
+          '"': "&quot;",
+          "'": "&#39;",
+        })[character],
+    );
+  }
   function reply(res, code, data, type = "application/json") {
     res.writeHead(code, {
       "Content-Type": type,
@@ -601,67 +614,62 @@ export async function startServer({
         return reply(res, 200, await benchmarkSummary());
       if (url.pathname === "/api/benchmark/report") {
         const benchmark = await benchmarkSummary();
-        const lines = [
-          "# Release Witness benchmark verification",
-          `Generated: ${benchmark.generatedAt}`,
-          `Portfolio certified: ${benchmark.complete ? "yes" : "no"}`,
-          `Portfolio receipt: SHA-256 ${benchmark.attestation.digest}`,
-          "",
-          `Repairs resolved: ${benchmark.totals.repairsResolved}/${benchmark.totals.knownDefects}`,
-          `Passing invariants preserved: ${benchmark.totals.invariantsPreserved}`,
-          `Regressions: ${benchmark.totals.regressions}`,
-          `Unverified coverage boundaries: ${benchmark.totals.boundariesUnverified}`,
-          `Run receipts verified: ${benchmark.totals.receiptsVerified}`,
-          `Screenshot files verified: ${benchmark.totals.screenshotFilesVerified}`,
-          `Nemotron runs verified: ${benchmark.totals.modelRunsVerified}`,
-          `Grounded risk hypotheses verified: ${benchmark.totals.riskHypothesesVerified}`,
-          `Allow-listed advisories verified: ${benchmark.totals.advisoriesVerified}`,
-          `Verified model tokens: ${benchmark.totals.modelTokensVerified}`,
-          "",
-        ];
-        for (const suite of benchmark.suites) {
-          lines.push(
-            `## ${suite.name}: ${suite.verified ? "verified" : "not verified"}`,
-            `Pair: ${suite.pairId || "unavailable"}`,
-            `Baseline: ${suite.baselineId || "unavailable"}`,
-            `Candidate: ${suite.candidateId || "unavailable"}`,
-            `Baseline receipt: SHA-256 ${suite.receiptDigests?.baseline || "unavailable"}`,
-            `Candidate receipt: SHA-256 ${suite.receiptDigests?.candidate || "unavailable"}`,
-            `Defects detected: ${suite.defectsDetected || 0}/${suite.knownDefects}`,
-            `Repairs resolved: ${suite.repairsResolved || 0}/${suite.knownDefects}`,
-            `Invariants preserved: ${suite.invariantsPreserved || 0}`,
-            `Regressions: ${suite.regressions || 0}`,
-            `Receipts verified: ${suite.receiptsVerified || 0}/2`,
-            `Screenshot files verified: ${suite.screenshotFilesVerified || 0}`,
-            `Model evidence: ${suite.modelEvidence?.verified ? "verified" : "not used or not verified"}`,
-            `Model: ${suite.modelEvidence?.model || "unavailable"}`,
-            `Provider: ${suite.modelEvidence?.provider || "unavailable"}`,
-            `Nemotron runs verified: ${suite.modelEvidence?.runsVerified || 0}`,
-            `Grounded risk hypotheses verified: ${suite.modelEvidence?.riskHypothesesVerified || 0}`,
-            `Allow-listed advisories verified: ${suite.modelEvidence?.advisoriesVerified || 0}`,
-            `Verified model tokens: ${suite.modelEvidence?.tokensVerified || 0}`,
-            `Model evidence reason: ${suite.modelEvidence?.reason || "Unavailable."}`,
-            `Reason: ${suite.reason}`,
-            ...(suite.route
-              ? [`Review comparison: ${reportOrigin}/${suite.route}`]
-              : []),
-            "",
-          );
-        }
-        lines.push(
-          "This receipt covers the controlled included scenarios. It is not a claim about all production defects or a third-party signature.",
-        );
-        const escaped = lines
-          .join("\n")
-          .replace(
-            /[&<>]/g,
-            (character) =>
-              ({ "&": "&amp;", "<": "&lt;", ">": "&gt;" })[character],
-          );
+        const metric = (value, label, ariaLabel = `${label}: ${value}`) =>
+          `<div class="benchmark-metric" aria-label="${escapeHtml(ariaLabel)}"><strong>${escapeHtml(value)}</strong><span>${escapeHtml(label)}</span></div>`;
+        const suiteCards = benchmark.suites
+          .map((suite) => {
+            const model = suite.modelEvidence;
+            const comparisonUrl = suite.route
+              ? `${reportOrigin}/${suite.route}`
+              : "";
+            return `<article class="benchmark-suite-card" data-suite-id="${escapeHtml(suite.id)}" data-pair-id="${escapeHtml(suite.pairId || "")}">
+  <header><div><span class="eyebrow">WORKFLOW EVIDENCE</span><h3>${escapeHtml(suite.name)}</h3></div><span class="certification-chip ${suite.verified ? "verified" : "invalid"}">${suite.verified ? "Verified" : "Not verified"}</span></header>
+  <p class="suite-reason">${escapeHtml(suite.reason)}</p>
+  <dl class="evidence-identifiers">
+    <div><dt>Pair</dt><dd><code>${escapeHtml(suite.pairId || "Unavailable")}</code></dd></div>
+    <div><dt>Baseline</dt><dd><code>${escapeHtml(suite.baselineId || "Unavailable")}</code></dd></div>
+    <div><dt>Candidate</dt><dd><code>${escapeHtml(suite.candidateId || "Unavailable")}</code></dd></div>
+  </dl>
+  <div class="suite-metrics">
+    ${metric(`${suite.repairsResolved || 0}/${suite.knownDefects}`, "repairs resolved")}
+    ${metric(suite.invariantsPreserved || 0, "invariants preserved")}
+    ${metric(suite.regressions || 0, "regressions")}
+    ${metric(`${suite.receiptsVerified || 0}/2`, "run receipts")}
+    ${metric(suite.screenshotFilesVerified || 0, "screenshots")}
+  </div>
+  <section class="receipt-digests" aria-label="Run receipt digests">
+    <div><span>Baseline receipt</span><code>SHA-256 ${escapeHtml(suite.receiptDigests?.baseline || "Unavailable")}</code></div>
+    <div><span>Candidate receipt</span><code>SHA-256 ${escapeHtml(suite.receiptDigests?.candidate || "Unavailable")}</code></div>
+  </section>
+  <section class="suite-model-proof ${model?.verified ? "verified" : "unused"}" aria-label="Model evidence">
+    <span class="eyebrow">${model?.verified ? "VERIFIED MODEL EVIDENCE" : "MODEL ROLE"}</span>
+    <p>${escapeHtml(model?.reason || "Model evidence is unavailable.")}</p>
+    ${
+      model?.verified
+        ? `<div class="model-proof-facts"><span>${model.runsVerified} runs</span><span>${model.riskHypothesesVerified} hypotheses</span><span>${model.advisoriesVerified} advisories</span><span>${Number(model.tokensVerified).toLocaleString()} tokens</span></div><p class="fine-print">${escapeHtml(model.model)} via ${escapeHtml(model.provider)}</p>`
+        : ""
+    }
+  </section>
+  ${comparisonUrl ? `<a class="comparison-link" href="${escapeHtml(comparisonUrl)}">Open ${escapeHtml(suite.name)} comparison →</a>` : ""}
+</article>`;
+          })
+          .join("");
         return reply(
           res,
           200,
-          `<!doctype html><html lang="en"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Release Witness benchmark verification</title><link rel="stylesheet" href="/style.css"><main><a href="/">Back to Release Witness</a><pre class="export-text">${escaped}</pre></main></html>`,
+          `<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="description" content="Server-verified Release Witness benchmark evidence"><title>Release Witness benchmark verification</title><link rel="stylesheet" href="/style.css"></head><body class="benchmark-report-page"><div class="benchmark-report-shell"><a class="report-back" href="/">← Back to Release Witness</a><header class="benchmark-report-hero"><span class="certification-status ${benchmark.complete ? "verified" : "invalid"}" data-status="${benchmark.complete ? "certified" : "not-certified"}">Portfolio certified: ${benchmark.complete ? "yes" : "no"}</span><p class="eyebrow">SERVER-VERIFIED BENCHMARK</p><h1>Evidence a judge can trace.</h1><p>The aggregate below is derived from manifest ground truth, durable pair identity, comparison states, four run receipts and every referenced screenshot.</p><div class="portfolio-receipt"><span>Portfolio receipt</span><code>SHA-256 ${escapeHtml(benchmark.attestation.digest)}</code><small>${escapeHtml(benchmark.attestation.scope)}</small></div></header><main class="benchmark-report"><section aria-labelledby="portfolio-summary"><div class="report-section-heading"><div><span class="eyebrow">CONTROLLED RESULT</span><h2 id="portfolio-summary">Verified portfolio</h2></div><p>Generated <time datetime="${escapeHtml(benchmark.generatedAt)}">${escapeHtml(benchmark.generatedAt)}</time></p></div><div class="benchmark-metrics">
+${metric(`${benchmark.totals.repairsResolved}/${benchmark.totals.knownDefects}`, "repairs resolved", `Repairs resolved: ${benchmark.totals.repairsResolved}/${benchmark.totals.knownDefects}`)}
+${metric(benchmark.totals.invariantsPreserved, "invariants preserved", `Passing invariants preserved: ${benchmark.totals.invariantsPreserved}`)}
+${metric(benchmark.totals.regressions, "regressions", `Regressions: ${benchmark.totals.regressions}`)}
+${metric(benchmark.totals.boundariesUnverified, "boundaries unverified", `Unverified coverage boundaries: ${benchmark.totals.boundariesUnverified}`)}
+${metric(benchmark.totals.receiptsVerified, "run receipts", `Run receipts verified: ${benchmark.totals.receiptsVerified}`)}
+${metric(benchmark.totals.screenshotFilesVerified, "screenshots", `Screenshot files verified: ${benchmark.totals.screenshotFilesVerified}`)}
+</div></section><section class="benchmark-model-summary" aria-labelledby="model-summary"><div><span class="eyebrow">VERIFIED NEMOTRON CONTRIBUTION</span><h2 id="model-summary">The model work is part of the receipt.</h2><p>The benchmark verifies exact model and provider identity, complete check coverage, grounded hypotheses, allow-listed advice, recorded runtime totals and intact browser evidence.</p></div><div class="model-summary-metrics">
+${metric(benchmark.totals.modelRunsVerified, "Nemotron runs verified", `Nemotron runs verified: ${benchmark.totals.modelRunsVerified}`)}
+${metric(benchmark.totals.riskHypothesesVerified, "grounded hypotheses", `Grounded risk hypotheses verified: ${benchmark.totals.riskHypothesesVerified}`)}
+${metric(benchmark.totals.advisoriesVerified, "allow-listed advisories", `Allow-listed advisories verified: ${benchmark.totals.advisoriesVerified}`)}
+${metric(Number(benchmark.totals.modelTokensVerified).toLocaleString(), "verified model tokens", `Verified model tokens: ${benchmark.totals.modelTokensVerified}`)}
+</div></section><section aria-labelledby="workflow-evidence"><div class="report-section-heading"><div><span class="eyebrow">TRACEABLE ARTIFACTS</span><h2 id="workflow-evidence">Workflow evidence</h2></div><p>Each card links to the exact baseline-to-candidate comparison.</p></div><div class="benchmark-suite-grid">${suiteCards}</div></section><aside class="benchmark-boundary"><strong>Evidence boundary</strong><p>This receipt covers the controlled included scenarios. It is not a claim about all production defects or a third-party signature.</p></aside></main><footer class="benchmark-report-footer"><span>Release Witness · evidence before confidence</span><a href="/api/benchmark">Open machine-readable JSON →</a></footer></div></body></html>`,
           "text/html; charset=utf-8",
         );
       }
@@ -757,15 +765,10 @@ export async function startServer({
           );
         const reportText = lines.join("\n\n");
         if (url.pathname.endsWith("/report")) {
-          const escaped = reportText.replace(
-            /[&<>]/g,
-            (character) =>
-              ({ "&": "&amp;", "<": "&lt;", ">": "&gt;" })[character],
-          );
           return reply(
             res,
             200,
-            `<!doctype html><html lang="en"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Release Witness report</title><link rel="stylesheet" href="/style.css"><main><a href="/#${run.id}">Back to run</a><pre class="export-text">${escaped}</pre></main></html>`,
+            `<!doctype html><html lang="en"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Release Witness report</title><link rel="stylesheet" href="/style.css"><main><a href="/#${run.id}">Back to run</a><pre class="export-text">${escapeHtml(reportText)}</pre></main></html>`,
             "text/html; charset=utf-8",
           );
         }

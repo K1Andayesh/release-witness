@@ -9,7 +9,7 @@ Release Witness is entered in **Best Apps and Agents**. This guide maps the ship
 - Strict schemas require one risk hypothesis for every allow-listed check. The model cannot omit checks, add checks or determine a verdict.
 - A server-managed job runs the reviewed contract against baseline and candidate in isolated Chrome contexts, then persists their relationship across reloads. Loading the comparison freshly verifies both receipts and every referenced screenshot file.
 - Deterministic assertions produce the verdicts. SHA-256 receipts are recomputed from each report and every stored screenshot before the UI shows verification.
-- The portfolio benchmark is server-derived rather than editorial: manifest ground truth identifies seeded defects and invariants, and `/api/benchmark` verifies the latest paired results, four receipts and all 16 screenshot files before the homepage can show 3/3. It separately verifies that both appointment plans cover every allowed check and both advisories cite allow-listed evidence. `/api/benchmark/report` exposes the same certification, pair IDs, model measurements and aggregate SHA-256 digest as a judge-readable receipt.
+- The portfolio benchmark is server-derived rather than editorial: manifest ground truth identifies seeded defects and invariants, and `/api/benchmark` verifies the latest paired results, four receipts and all 16 screenshot files before the homepage can show 3/3. It separately verifies that both appointment plans cover every allowed check and both advisories cite allow-listed evidence. `/api/benchmark/report` presents the same certification as a scannable, printable receipt with pair IDs, model measurements, four run-receipt digests, an aggregate SHA-256 digest and direct comparison links.
 - Twenty-one automated tests and the public GitHub Actions workflow cover contracts, persisted pair identity, failure handling, tamper detection, concurrency, restart recovery, paired execution, judge-tour reload restoration and a real-Chrome smoke run.
 - The [`architecture and trust-boundary map`](ARCHITECTURE.md) makes the authority split, execution boundary and fail-closed behavior reviewable without reading the implementation first.
 
@@ -19,7 +19,7 @@ Release Witness is entered in **Best Apps and Agents**. This guide maps the ship
 - A controlled-benchmark release delta places the measured two resolutions and zero regressions directly below the result metrics.
 - The comparison separates resolved, regressed, unchanged and unverified checks instead of collapsing them into one score.
 - Every decision expands into its model hypothesis, reviewed expectation, observed behavior, reproduction steps, screenshots and receipt status. Changed checks also place the baseline and candidate observations and screenshots side by side.
-- The responsive public UI was checked at 390 × 844 as well as desktop size, with no horizontal overflow. The main keyboard path includes a visible skip link and moves focus to the judge-tour report.
+- The responsive public UI and benchmark receipt were checked at 390 × 844 as well as desktop size, with no horizontal overflow. The receipt also has a dedicated print layout. The main keyboard path includes a visible skip link and moves focus to the judge-tour report.
 
 ## Potential impact
 
@@ -34,7 +34,7 @@ The model's useful role is deliberately narrower than the evidence system around
 1. Open the [public demo](https://release-witness.139-99-135-89.sslip.io) and choose **Start 90-second tour**.
 2. Confirm the comparison reports two resolved checks, zero regressions, one unchanged check and one unverified boundary.
 3. Open a resolved comparison check to inspect the baseline and candidate observations and screenshots together.
-4. Open **Benchmark receipt** and confirm the aggregate digest, 3/3 result, pair IDs, four run receipts and 16 screenshots.
+4. Open **Benchmark receipt** and confirm the aggregate digest, 3/3 result, pair IDs, four run receipts and 16 screenshots. Use either workflow card to open its exact comparison.
 5. Review [`EVALUATION.md`](EVALUATION.md) for the ground-truth table and explicit limits.
 6. Open the [independent Fieldnotes comparison](https://release-witness.139-99-135-89.sslip.io/#56b5d993-1298-4272-9c68-0cf5e0356f15~223c548b-9eda-40cd-aed1-5716d6677adb) to verify the same runner and receipt path on another workflow.
 
