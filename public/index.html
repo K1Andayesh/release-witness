@@ -1,0 +1,125 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Release Witness</title>
+    <link rel="stylesheet" href="/style.css" />
+    <script type="module" src="/app.js"></script>
+  </head>
+  <body>
+    <header class="topbar">
+      <a href="/" class="brand"
+        ><span class="mark">W</span>release witness<span
+          class="tag"
+          id="environment-tag"
+          >LOCAL PREVIEW</span
+        ></a
+      ><span class="connection" id="connection">Connecting…</span>
+    </header>
+    <main class="workspace">
+      <section class="intro">
+        <p class="eyebrow">EVIDENCE BEFORE CONFIDENCE</p>
+        <h1>See what actually works.</h1>
+        <p>
+          Run the workflow. Inspect the evidence. Make the release decision.
+        </p>
+        <div class="judge-strip">
+          <div>
+            <strong>Judging Release Witness?</strong>
+            <span
+              >Open the strongest baseline-to-candidate proof in one
+              click.</span
+            >
+          </div>
+          <button id="judge-tour" type="button">Start 90-second tour →</button>
+        </div>
+        <div class="proof-points" aria-label="Demonstrated product outcomes">
+          <div><strong>2</strong><span>independent defects exposed</span></div>
+          <div>
+            <strong>4</strong><span>evidence states per comparison</span>
+          </div>
+          <div>
+            <strong>0</strong><span>model authority over verdicts</span>
+          </div>
+        </div>
+      </section>
+      <div class="layout">
+        <aside>
+          <section class="panel setup">
+            <div class="section-label">
+              <span>01 / CHECK SETUP</span><span class="dot"></span>
+            </div>
+            <h2>A preview pair.<br />A real release question.</h2>
+            <p class="muted" id="suite-question">Loading workflow manifests…</p>
+            <form id="run-form">
+              <label for="suite">Workflow manifest</label>
+              <select id="suite"></select>
+              <label for="build">Application build</label
+              ><select id="build"></select
+              ><a
+                id="fixture-link"
+                href="/fixture?build=defect"
+                target="_blank"
+                rel="noopener"
+                >Open test app ↗</a
+              >
+              <div class="scope">
+                <strong id="scope-name">Loading…</strong
+                ><span id="scope-checks"
+                  >Bounded browser checks · isolated Chrome</span
+                ><span id="scope-coverage"
+                  >Excluded coverage stays visible</span
+                >
+              </div>
+              <label for="change">What changed?</label
+              ><textarea id="change" maxlength="600" rows="3">
+The save flow changed. Verify note persistence after reload.</textarea
+              ><label class="check-label"
+                ><input type="checkbox" id="analyze" checked /><span
+                  >Use Nemotron planning and advice<small id="model-note"
+                    >Two bounded calls · check order and suggestion</small
+                  ></span
+                ></label
+              ><button class="primary start" id="start" type="submit">
+                Run checks <span>↗</span>
+              </button>
+              <button class="secondary pair" id="run-pair" type="button">
+                Run baseline + candidate
+              </button>
+              <p id="run-message" role="status" class="muted"></p>
+            </form>
+          </section>
+          <section class="history">
+            <div class="section-label">SAVED RUNS</div>
+            <div id="history"></div>
+          </section>
+        </aside>
+        <section class="results" aria-label="Run results">
+          <div id="report">
+            <div class="empty-state">
+              <div class="evidence-icon">⌘</div>
+              <p class="eyebrow">YOUR FIRST WITNESS REPORT</p>
+              <h2>A result needs a receipt.</h2>
+              <p>
+                Start a run to capture what the browser actually saw.<br />Every
+                finding includes steps and visual evidence.
+              </p>
+              <div class="empty-steps">
+                <span>01 &nbsp; Execute</span><span>02 &nbsp; Observe</span
+                ><span>03 &nbsp; Review</span>
+              </div>
+            </div>
+          </div>
+        </section>
+      </div>
+      <footer>
+        Built for a considered release decision.
+        <span
+          >A bounded suite is not proof that an entire application is
+          ready.</span
+        >
+      </footer>
+    </main>
+  </body>
+</html>

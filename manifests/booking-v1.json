@@ -1,0 +1,133 @@
+{
+  "id": "booking-v1",
+  "name": "Harbour Appointments",
+  "question": "Did the candidate repair booking state and availability rules?",
+  "defaultChange": "Booking persistence and sold-out slot handling changed. Verify both rules.",
+  "builds": [
+    {
+      "id": "baseline",
+      "label": "Baseline · Two seeded defects",
+      "path": "/booking?build=baseline"
+    },
+    {
+      "id": "candidate",
+      "label": "Candidate · Repairs applied",
+      "path": "/booking?build=candidate"
+    }
+  ],
+  "coverage": {
+    "title": "Authentication, payments and other browsers",
+    "expected": "Requires separate authorized test suites.",
+    "observed": "Outside this demo: no sign-in, payment, email, Firefox, Safari or physical-device checks."
+  },
+  "checks": [
+    {
+      "id": "booking-persistence",
+      "title": "Booking survives reload",
+      "expected": "Exactly one booking remains after reloading.",
+      "steps": [
+        "Open a clean booking session.",
+        "Book Jordan Lee into the 10:00 AM slot.",
+        "Verify the booking appears.",
+        "Reload and count matching bookings."
+      ],
+      "actions": [
+        { "op": "navigate" },
+        {
+          "op": "waitFor",
+          "by": "role",
+          "role": "heading",
+          "name": "Book an appointment"
+        },
+        {
+          "op": "fill",
+          "by": "label",
+          "name": "Customer name",
+          "value": "Jordan Lee"
+        },
+        {
+          "op": "select",
+          "by": "label",
+          "name": "Appointment time",
+          "value": "10:00"
+        },
+        {
+          "op": "click",
+          "by": "role",
+          "role": "button",
+          "name": "Book appointment"
+        },
+        {
+          "op": "waitFor",
+          "by": "text",
+          "name": "Jordan Lee · 10:00 AM",
+          "exact": true
+        },
+        { "op": "screenshot", "stage": "before" },
+        { "op": "reload" },
+        {
+          "op": "assertCount",
+          "by": "testId",
+          "name": "booking",
+          "hasText": "Jordan Lee · 10:00 AM",
+          "equals": 1
+        },
+        { "op": "screenshot", "stage": "after" }
+      ]
+    },
+    {
+      "id": "sold-out-slot",
+      "title": "Sold-out slot cannot be selected",
+      "expected": "The fully booked 9:00 AM option is disabled.",
+      "steps": [
+        "Open a clean booking session.",
+        "Inspect the 9:00 AM time option.",
+        "Verify the option is unavailable."
+      ],
+      "actions": [
+        { "op": "navigate" },
+        {
+          "op": "assertDisabled",
+          "by": "role",
+          "role": "option",
+          "name": "9:00 AM — fully booked",
+          "equals": true
+        },
+        { "op": "screenshot", "stage": "after" }
+      ]
+    },
+    {
+      "id": "required-name",
+      "title": "Customer name is required",
+      "expected": "No booking is created and a validation message appears.",
+      "steps": [
+        "Open a clean booking session.",
+        "Choose 10:00 AM without entering a name.",
+        "Submit and inspect the booking count and message."
+      ],
+      "actions": [
+        { "op": "navigate" },
+        {
+          "op": "select",
+          "by": "label",
+          "name": "Appointment time",
+          "value": "10:00"
+        },
+        {
+          "op": "click",
+          "by": "role",
+          "role": "button",
+          "name": "Book appointment"
+        },
+        { "op": "assertCount", "by": "testId", "name": "booking", "equals": 0 },
+        {
+          "op": "assertText",
+          "by": "role",
+          "role": "status",
+          "equals": "Enter the customer name."
+        },
+        { "op": "screenshot", "stage": "after" }
+      ]
+    }
+  ]
+}

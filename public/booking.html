@@ -1,0 +1,38 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Harbour Appointments · Controlled preview</title>
+    <link rel="stylesheet" href="/style.css" />
+    <script src="/booking.js" defer></script>
+  </head>
+  <body class="fixture booking-fixture">
+    <main>
+      <p class="eyebrow">
+        CONTROLLED PR PREVIEW / <span id="build-label"></span>
+      </p>
+      <h1>Book an appointment</h1>
+      <p class="muted">Choose an available consultation time.</p>
+      <form id="booking-form">
+        <label for="customer-name">Customer name</label>
+        <input id="customer-name" autocomplete="off" />
+        <label for="appointment-time">Appointment time</label>
+        <select id="appointment-time">
+          <option value="">Choose a time…</option>
+          <option value="09:00" id="sold-out">9:00 AM — fully booked</option>
+          <option value="10:00">10:00 AM</option>
+          <option value="11:00">11:00 AM</option>
+        </select>
+        <button type="submit" class="primary">Book appointment</button>
+        <p role="status" id="booking-status"></p>
+      </form>
+      <section aria-label="Upcoming bookings">
+        <h2>Upcoming bookings</h2>
+        <p id="empty">No bookings yet.</p>
+        <div id="bookings"></div>
+      </section>
+      <a href="/">← Back to Release Witness</a>
+    </main>
+  </body>
+</html>

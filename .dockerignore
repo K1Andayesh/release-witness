@@ -1,0 +1,7 @@
+.env
+.git
+.github
+artifacts
+node_modules
+npm-debug.log
+

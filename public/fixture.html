@@ -1,0 +1,35 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Fieldnotes · Controlled test app</title>
+    <link rel="stylesheet" href="/style.css" />
+    <script src="/fixture.js" defer></script>
+  </head>
+  <body class="fixture">
+    <main>
+      <p class="eyebrow">
+        CONTROLLED TEST APP / <span id="build-label"></span>
+      </p>
+      <h1>Fieldnotes</h1>
+      <p class="muted">A quiet place for the things you want to keep.</p>
+      <form id="note-form">
+        <label for="note-input">Your note</label
+        ><textarea
+          id="note-input"
+          maxlength="500"
+          placeholder="Something worth remembering…"
+        ></textarea
+        ><button type="submit" class="primary">Save note</button>
+        <p role="status" id="note-status"></p>
+      </form>
+      <section aria-label="Saved notes">
+        <h2>Saved notes</h2>
+        <p id="empty">No notes yet.</p>
+        <div id="notes"></div>
+      </section>
+      <a href="/">← Back to Release Witness</a>
+    </main>
+  </body>
+</html>

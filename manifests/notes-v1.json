@@ -1,0 +1,139 @@
+{
+  "id": "notes-v1",
+  "name": "Fieldnotes",
+  "question": "Does a saved note survive a reload?",
+  "defaultChange": "The save flow changed. Verify note persistence after reload.",
+  "builds": [
+    {
+      "id": "defect",
+      "label": "v0.1 · Seeded persistence defect",
+      "path": "/fixture?build=defect"
+    },
+    {
+      "id": "fixed",
+      "label": "v0.2 · Persistence repaired",
+      "path": "/fixture?build=fixed"
+    }
+  ],
+  "coverage": {
+    "title": "Authentication and other browsers",
+    "expected": "Requires a broader suite.",
+    "observed": "Outside this demo: no authentication checks, Firefox, Safari or mobile devices."
+  },
+  "checks": [
+    {
+      "id": "persistence",
+      "title": "Saved note survives reload",
+      "expected": "Exactly one saved note remains after reloading.",
+      "steps": [
+        "Open a clean notes session.",
+        "Type “Release evidence note”.",
+        "Click Save note and verify the note is visible.",
+        "Reload the page and count matching notes."
+      ],
+      "actions": [
+        { "op": "navigate" },
+        {
+          "op": "waitFor",
+          "by": "role",
+          "role": "heading",
+          "name": "Fieldnotes"
+        },
+        {
+          "op": "fill",
+          "by": "label",
+          "name": "Your note",
+          "value": "Release evidence note"
+        },
+        {
+          "op": "click",
+          "by": "role",
+          "role": "button",
+          "name": "Save note",
+          "exact": true
+        },
+        {
+          "op": "waitFor",
+          "by": "text",
+          "name": "Release evidence note",
+          "exact": true
+        },
+        { "op": "screenshot", "stage": "before" },
+        { "op": "reload" },
+        {
+          "op": "waitFor",
+          "by": "role",
+          "role": "heading",
+          "name": "Fieldnotes"
+        },
+        {
+          "op": "assertCount",
+          "by": "testId",
+          "name": "note",
+          "hasText": "Release evidence note",
+          "equals": 1
+        },
+        { "op": "screenshot", "stage": "after" }
+      ]
+    },
+    {
+      "id": "validation",
+      "title": "Empty notes are rejected",
+      "expected": "No note is created and a validation message appears.",
+      "steps": [
+        "Open a clean notes session.",
+        "Enter three spaces.",
+        "Click Save note.",
+        "Inspect the note count and validation message."
+      ],
+      "actions": [
+        { "op": "navigate" },
+        { "op": "fill", "by": "label", "name": "Your note", "value": "   " },
+        {
+          "op": "click",
+          "by": "role",
+          "role": "button",
+          "name": "Save note",
+          "exact": true
+        },
+        { "op": "assertCount", "by": "testId", "name": "note", "equals": 0 },
+        {
+          "op": "assertText",
+          "by": "role",
+          "role": "status",
+          "equals": "Write a note before saving."
+        },
+        { "op": "screenshot", "stage": "after" }
+      ]
+    },
+    {
+      "id": "duplicate",
+      "title": "Double click creates one note",
+      "expected": "Exactly one note is created after a double click.",
+      "steps": [
+        "Open a clean notes session.",
+        "Type “One click, one note”.",
+        "Double-click Save note.",
+        "Count notes after both click events."
+      ],
+      "actions": [
+        { "op": "navigate" },
+        {
+          "op": "fill",
+          "by": "label",
+          "name": "Your note",
+          "value": "One click, one note"
+        },
+        {
+          "op": "doubleClick",
+          "by": "role",
+          "role": "button",
+          "name": "Save note",
+          "exact": true
+        },
+        { "op": "assertCount", "by": "testId", "name": "note", "equals": 1 },
+        { "op": "screenshot", "stage": "after" }
+      ]
+    }
+  ]
+}
