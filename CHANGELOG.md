@@ -1,5 +1,22 @@
 # Changelog
 
+## 0.1.4 — 2026-09-14
+
+- Added inline baseline/candidate evidence drill-downs for resolved, regressed and still-failing checks.
+- Kept the comparison summary as the polite live region while leaving evidence controls with their native semantics.
+- Corrected the README's verified-comparison link to preserve both evidence IDs.
+
+## 0.1.3 — 2026-09-14
+
+- Added the measured release delta directly below report metrics.
+- Synchronized the setup panel with the selected evidence and improved judge-tour focus handling.
+- Hid non-public historical suites and their direct evidence routes in public-demo mode.
+
+## 0.1.2 — 2026-09-14
+
+- Persisted candidate and baseline IDs in judge-tour links and restored the exact comparison after reload.
+- Added real-Chrome reload coverage for the judge tour.
+
 ## 0.1.1 — 2026-09-14
 
 - Moved paired baseline/candidate execution into a durable server-managed job.

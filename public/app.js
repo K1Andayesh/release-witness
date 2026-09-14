@@ -32,6 +32,12 @@ const label = (status) =>
     : status[0].toUpperCase() + status.slice(1);
 const planRisk = (run, checkId) =>
   run.plan?.risks?.find((risk) => risk.checkId === checkId)?.hypothesis;
+const comparisonEvidence = (change) => {
+  if (["unchanged", "unverified"].includes(change.change)) return "";
+  const side = (name, status, observed, screenshots) =>
+    `<section><span class="eyebrow">${name} · ${esc(label(status))}</span><p>${esc(observed)}</p>${screenshots.length ? `<div class="shots comparison-shots">${screenshots.map((shot) => `<a href="${esc(shot.url)}" target="_blank" rel="noopener"><img src="${esc(shot.url)}" alt="${esc(change.title)} — ${esc(name)} — ${esc(shot.label)}" loading="lazy"><span>${esc(shot.label)} ↗</span></a>`).join("")}</div>` : '<p class="fine-print">No screenshot was recorded for this state.</p>'}</section>`;
+  return `<details class="comparison-evidence"><summary><span>${esc(change.title)}</span><span class="badge ${esc(change.change)}">${esc(change.change)}</span></summary><div class="evidence-pair">${side("Before", change.before, change.beforeObserved, change.beforeScreenshots)}${side("Now", change.after, change.afterObserved, change.afterScreenshots)}</div></details>`;
+};
 async function api(path, options) {
   const response = await fetch(path, options);
   const body = await response.json();
@@ -284,9 +290,7 @@ function render() {
       (r) =>
         `<option value="${r.id}">${esc(r.buildLabel || r.build)} · ${esc(new Date(r.createdAt).toLocaleString())} · ${r.id.slice(0, 8)}</option>`,
     )
-    .join(
-      "",
-    )}</select><div id="comparison-result" role="status"></div></section>
+    .join("")}</select><div id="comparison-result"></div></section>
   <div class="report-actions"><a href="/api/runs/${run.id}/report" target="_blank" rel="noopener">View report ↗</a><a href="/api/runs/${run.id}/export" download>Download report</a><a href="/api/runs/${run.id}" target="_blank" rel="noopener">Open JSON ↗</a><span>${busy(run) ? "Evidence is being captured." : "Saved locally · available after reload"}</span></div>`;
   $("#baseline").disabled = run.state !== "complete";
   $("#baseline").onchange = async () => {
@@ -309,7 +313,7 @@ function render() {
       const total = (change) =>
         diff.changes.filter((item) => item.change === change).length;
       summary.innerHTML = `<section class="release-delta"><div><span class="eyebrow">CONTROLLED BENCHMARK · RELEASE DELTA</span><strong>${total("resolved")} concerns resolved</strong></div><span>${total("regression")} regressions · ${total("unchanged")} unchanged · ${total("unverified")} unverified</span></section>`;
-      target.innerHTML = `<div class="comparison-callout"><strong>${total("resolved")} concerns resolved</strong><span>${total("regression")} regressions · ${total("unchanged")} unchanged · ${total("unverified")} unverified</span></div><table><thead><tr><th>Check</th><th>Before</th><th>Now</th><th>Change</th></tr></thead><tbody>${diff.changes.map((c) => `<tr><td>${esc(c.title)}</td><td>${esc(c.before)}</td><td>${esc(c.after)}</td><td>${esc(c.change)}</td></tr>`).join("")}</tbody></table><p class="fine-print">Only matching checks are comparable. Untested coverage stays unverified.</p>`;
+      target.innerHTML = `<div class="comparison-callout" role="status" aria-live="polite"><strong>${total("resolved")} concerns resolved</strong><span>${total("regression")} regressions · ${total("unchanged")} unchanged · ${total("unverified")} unverified</span></div><table><thead><tr><th>Check</th><th>Before</th><th>Now</th><th>Change</th></tr></thead><tbody>${diff.changes.map((c) => `<tr><td>${esc(c.title)}</td><td>${esc(c.before)}</td><td>${esc(c.after)}</td><td>${esc(c.change)}</td></tr>`).join("")}</tbody></table>${diff.changes.map(comparisonEvidence).join("")}<p class="fine-print">Open a changed check to inspect both observations and screenshots. Only matching checks are comparable; untested coverage stays unverified.</p>`;
     } catch (error) {
       target.textContent = error.message;
       summary.replaceChildren();

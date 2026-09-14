@@ -15,7 +15,7 @@ Release Witness is entered in **Best Apps and Agents**. This guide maps the ship
 - **Start 90-second tour** takes a judge directly to the strongest saved model-backed comparison without credentials or model spend.
 - A controlled-benchmark release delta places the measured two resolutions and zero regressions directly below the result metrics.
 - The comparison separates resolved, regressed, unchanged and unverified checks instead of collapsing them into one score.
-- Every decision expands into its model hypothesis, reviewed expectation, observed behavior, reproduction steps, screenshots and receipt status.
+- Every decision expands into its model hypothesis, reviewed expectation, observed behavior, reproduction steps, screenshots and receipt status. Changed checks also place the baseline and candidate observations and screenshots side by side.
 - The responsive public UI was checked at 390 × 844 as well as desktop size, with no horizontal overflow. The main keyboard path includes a visible skip link and moves focus to the judge-tour report.
 
 ## Potential impact
@@ -30,7 +30,7 @@ The model's useful role is deliberately narrower than the evidence system around
 
 1. Open the [public demo](https://release-witness.139-99-135-89.sslip.io) and choose **Start 90-second tour**.
 2. Confirm the comparison reports two resolved checks, zero regressions, one unchanged check and one unverified boundary.
-3. Open a resolved check to inspect the baseline and candidate observations and screenshots.
+3. Open a resolved comparison check to inspect the baseline and candidate observations and screenshots together.
 4. Open the receipt and confirm the report and screenshot hashes verify.
 5. Review [`EVALUATION.md`](EVALUATION.md) for the ground-truth table and explicit limits.
 

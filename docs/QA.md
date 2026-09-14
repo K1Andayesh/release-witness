@@ -92,3 +92,10 @@ The receipt is a consistency proof for the stored artifact set, not an external 
 - Public-demo mode now filters saved runs whose suites are outside the public manifest catalog and returns 404 for their direct JSON, report, export, receipt, comparison and evidence routes. This was verified against a deliberately seeded hidden run.
 
 Screenshot inspection found a clear entry point, coherent result hierarchy and visible boundaries. Representative screen-reader output, Windows high-contrast mode, 200% zoom and non-Chrome engines remain unverified.
+
+## Paired evidence inspection — 14 September 2026
+
+- The comparison API now returns the recorded baseline and candidate observations and screenshot references for each matching check, alongside its status transition.
+- Actual Chrome opened the first resolved comparison check and displayed the failing baseline and repaired candidate side by side: `Expected count 1; observed 0.` before and `Expected count 1; observed 1.` now.
+- The same panel displayed two baseline and two candidate screenshots with descriptive link and image labels. At narrow widths, the evidence columns stack into one reading order.
+- The real-Chrome contract now expands this panel and asserts both observations. All 20 tests, syntax checks and formatting validation pass.

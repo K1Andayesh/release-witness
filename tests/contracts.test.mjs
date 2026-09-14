@@ -62,22 +62,37 @@ test("comparison exposes fixes and regressions independently", () => {
     suite: "s",
     state: "complete",
     checks: [
-      { id: "x", status: "fail" },
-      { id: "y", status: "pass" },
+      {
+        id: "x",
+        status: "fail",
+        observed: "The booking disappeared.",
+        screenshots: [{ label: "Before", url: "/before.png" }],
+      },
+      { id: "y", status: "pass", screenshots: [] },
     ],
   };
   const after = {
     ...before,
     id: "b",
     checks: [
-      { id: "x", status: "pass" },
-      { id: "y", status: "fail" },
+      {
+        id: "x",
+        status: "pass",
+        observed: "The booking remained.",
+        screenshots: [{ label: "Now", url: "/now.png" }],
+      },
+      { id: "y", status: "fail", screenshots: [] },
     ],
   };
   assert.deepEqual(
     compareRuns(before, after).map((c) => c.change),
     ["resolved", "regression"],
   );
+  const resolved = compareRuns(before, after)[0];
+  assert.equal(resolved.beforeObserved, "The booking disappeared.");
+  assert.equal(resolved.afterObserved, "The booking remained.");
+  assert.equal(resolved.beforeScreenshots[0].url, "/before.png");
+  assert.equal(resolved.afterScreenshots[0].url, "/now.png");
 });
 test("model plans cannot omit, duplicate or invent checks", () => {
   for (const order of [["x"], ["x", "x"], ["x", "shell"]])
@@ -553,6 +568,10 @@ test("the judge-tour comparison survives a browser reload", async (t) => {
     await page.locator("#comparison-result").innerText(),
     /2 concerns resolved/,
   );
+  const proof = page.locator(".comparison-evidence").first();
+  await proof.locator("summary").click();
+  assert.match(await proof.innerText(), /Booking disappeared\./);
+  assert.match(await proof.innerText(), /Booking remained\./);
   await page.setViewportSize({ width: 390, height: 844 });
   const widths = await page.evaluate(() => ({
     inner: window.innerWidth,

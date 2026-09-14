@@ -12,7 +12,7 @@ A PR-preview QA agent that turns a change description into a bounded risk map, e
 
 ## Verified benchmark
 
-On the included ground-truth benchmark, Release Witness detected **2/2 known defects (100%)** and correctly classified **2/2 repairs (100%)**, with **zero observed regressions**. It preserved the passing invariant, kept excluded coverage unverified, verified all eight screenshot hashes in the model-backed pair, and restored the exact comparison after reload. These figures describe the included controlled benchmark; they are not a claim about all production defects. See [`docs/EVALUATION.md`](docs/EVALUATION.md) and the [live verified comparison](https://release-witness.139-99-135-89.sslip.io/#d042418f-486e-4c8b-adfc-a92984c91221).
+On the included ground-truth benchmark, Release Witness detected **2/2 known defects (100%)** and correctly classified **2/2 repairs (100%)**, with **zero observed regressions**. It preserved the passing invariant, kept excluded coverage unverified, verified all eight screenshot hashes in the model-backed pair, and restored the exact comparison after reload. These figures describe the included controlled benchmark; they are not a claim about all production defects. See [`docs/EVALUATION.md`](docs/EVALUATION.md) and the [live verified comparison](https://release-witness.139-99-135-89.sslip.io/#86f39150-bbd6-4039-b352-959da94e3097~75db5178-f87b-4d16-88e9-3e917f9a9a19).
 
 The competition case is mapped directly to the four equally weighted judging criteria in [`docs/JUDGING.md`](docs/JUDGING.md).
 

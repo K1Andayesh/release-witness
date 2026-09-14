@@ -18,7 +18,7 @@ Small teams often review a pull request with a mix of intuition, stale checklist
 
 ## What it does
 
-Release Witness turns a developer's change description into a bounded risk map, then runs a baseline and candidate build as one release-review action using reviewed JSON workflow manifests. Each check runs in a fresh Chrome context and records the risk hypothesis, reproduction steps, expected and observed behavior, screenshots and console errors. The resulting report distinguishes pass, fail and not-tested coverage. It opens a comparison that classifies each check as resolved, regressed, unchanged or unverified, and verifies a SHA-256 receipt against the report and every screenshot on disk.
+Release Witness turns a developer's change description into a bounded risk map, then runs a baseline and candidate build as one release-review action using reviewed JSON workflow manifests. Each check runs in a fresh Chrome context and records the risk hypothesis, reproduction steps, expected and observed behavior, screenshots and console errors. The resulting report distinguishes pass, fail and not-tested coverage. It opens a comparison that classifies each check as resolved, regressed, unchanged or unverified, places changed evidence side by side, and verifies a SHA-256 receipt against the report and every screenshot on disk.
 
 The included appointment demo starts with two seeded defects: a booking disappears after reload and a sold-out time can still be selected. The candidate repairs both while preserving required-name validation. A smaller Fieldnotes workflow demonstrates that the same runner executes another reviewed contract without scenario-specific branches.
 
