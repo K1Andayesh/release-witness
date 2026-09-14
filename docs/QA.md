@@ -127,3 +127,9 @@ No receipts are deleted or hidden from the API. A routed selected run and its co
 - The public hero names small product teams without dedicated QA as the initial audience.
 - The demonstrated value is stated as one path from a pull-request change to Chrome evidence, a before/after release decision and explicit unknowns.
 - No adoption, time-saving or defect-prevention numbers are presented because those outcomes have not been measured with external users.
+
+## Hosted evidence provenance — 14 September 2026
+
+- The public report now says `Saved in demo evidence store · available after reload` rather than implying that hosted evidence is local to the judge.
+- Local preview mode retains `Saved locally · available after reload` because its artifact directory belongs to the local operator.
+- The real-Chrome public-demo contract asserts the hosted label before the judge tour continues.

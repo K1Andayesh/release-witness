@@ -307,7 +307,7 @@ function render() {
         `<option value="${r.id}">${esc(r.buildLabel || r.build)} · ${esc(new Date(r.createdAt).toLocaleString())} · ${r.id.slice(0, 8)}</option>`,
     )
     .join("")}</select><div id="comparison-result"></div></section>
-  <div class="report-actions"><a href="/api/runs/${run.id}/report" target="_blank" rel="noopener">View report ↗</a><a href="/api/runs/${run.id}/export" download>Download report</a><a href="/api/runs/${run.id}" target="_blank" rel="noopener">Open JSON ↗</a><span>${busy(run) ? "Evidence is being captured." : "Saved locally · available after reload"}</span></div>`;
+  <div class="report-actions"><a href="/api/runs/${run.id}/report" target="_blank" rel="noopener">View report ↗</a><a href="/api/runs/${run.id}/export" download>Download report</a><a href="/api/runs/${run.id}" target="_blank" rel="noopener">Open JSON ↗</a><span>${busy(run) ? "Evidence is being captured." : currentStatus.publicDemo ? "Saved in demo evidence store · available after reload" : "Saved locally · available after reload"}</span></div>`;
   $("#baseline").disabled = run.state !== "complete";
   $("#baseline").onchange = async () => {
     const target = $("#comparison-result");

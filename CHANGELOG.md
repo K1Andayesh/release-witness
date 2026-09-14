@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.1.12 — 2026-09-14
+
+- Corrected hosted receipt provenance from `Saved locally` to `Saved in demo evidence store`.
+- Kept local-preview wording unchanged for developers running their own evidence directory.
+- Added the hosted provenance label to the real-Chrome judge journey contract.
+
 ## 0.1.11 — 2026-09-14
 
 - Added a reviewer-first architecture and trust-boundary map.
