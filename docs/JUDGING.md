@@ -14,7 +14,7 @@ Release Witness is entered in **Best Apps and Agents**. This guide maps the ship
 
 ## Design
 
-- **Start 90-second tour** takes a judge directly to the strongest saved model-backed comparison without credentials or model spend. The same entry point links to the public source and natural 93-second walkthrough.
+- **Start 90-second tour** takes a judge directly to the strongest saved model-backed comparison without credentials or model spend. **Second workflow proof** opens the independent Fieldnotes comparison from the same judge strip. The entry point also links to the public source and natural 93-second walkthrough.
 - A controlled-benchmark release delta places the measured two resolutions and zero regressions directly below the result metrics.
 - The comparison separates resolved, regressed, unchanged and unverified checks instead of collapsing them into one score.
 - Every decision expands into its model hypothesis, reviewed expectation, observed behavior, reproduction steps, screenshots and receipt status. Changed checks also place the baseline and candidate observations and screenshots side by side.

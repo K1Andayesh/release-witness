@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.1.15 — 2026-09-14
+
+- Add a judge-strip link that opens the independent Fieldnotes comparison directly.
+- Derive the route from the latest completed server-managed pair and hide the link when paired evidence is unavailable.
+- Preserve keyboard focus transfer and the existing public-source and natural-demo entry points.
+
 ## 0.1.14 — 2026-09-14
 
 - Extend the controlled benchmark to the independent Fieldnotes workflow with a fresh server-managed Chrome pair.

@@ -527,6 +527,98 @@ test("the judge-tour comparison survives a browser reload", async (t) => {
       run(candidateId, "candidate", new Date(createdAt.getTime() + 1000), true),
     ),
   );
+  const notesBaselineId = "44444444-4444-4444-8444-444444444444";
+  const notesCandidateId = "55555555-5555-4555-8555-555555555555";
+  const notesChecks = (repaired) => [
+    {
+      id: "persistence",
+      title: "Saved note survives reload",
+      status: repaired ? "pass" : "fail",
+      expected: "The note remains after reload.",
+      observed: repaired ? "Note remained." : "Note disappeared.",
+      durationMs: 1,
+      steps: [],
+      logs: [],
+      screenshots: [],
+    },
+    {
+      id: "validation",
+      title: "Empty notes are rejected",
+      status: "pass",
+      expected: "Empty notes are rejected.",
+      observed: "Empty note was rejected.",
+      durationMs: 1,
+      steps: [],
+      logs: [],
+      screenshots: [],
+    },
+    {
+      id: "duplicate",
+      title: "Double click creates one note",
+      status: "pass",
+      expected: "One note is created.",
+      observed: "One note was created.",
+      durationMs: 1,
+      steps: [],
+      logs: [],
+      screenshots: [],
+    },
+    {
+      id: "coverage",
+      title: "Authentication and other browsers",
+      status: "not-tested",
+      expected: "Outside this suite.",
+      observed: "Not tested.",
+      durationMs: 0,
+      steps: [],
+      logs: [],
+      screenshots: [],
+    },
+  ];
+  const notesRun = (id, build, time, repaired) => ({
+    id,
+    suite: "notes-v1",
+    build,
+    buildLabel:
+      build === "defect"
+        ? "v0.1 · Seeded persistence defect"
+        : "v0.2 · Persistence repaired",
+    targetName: "Fieldnotes",
+    change: "Verify note persistence.",
+    createdAt: time.toISOString(),
+    state: "complete",
+    checks: notesChecks(repaired),
+    plan: {
+      state: "standard",
+      order: ["persistence", "validation", "duplicate"],
+      risks: [],
+      reason: "Standard suite.",
+    },
+    analysis: { state: "skipped" },
+  });
+  await writeFile(
+    new URL(`${notesBaselineId}.json`, dir),
+    JSON.stringify(
+      notesRun(
+        notesBaselineId,
+        "defect",
+        new Date(createdAt.getTime() - 10_000),
+        false,
+      ),
+    ),
+  );
+  await writeFile(
+    new URL(`${notesCandidateId}.json`, dir),
+    JSON.stringify({
+      ...notesRun(
+        notesCandidateId,
+        "fixed",
+        new Date(createdAt.getTime() - 9_000),
+        true,
+      ),
+      comparisonBaselineId: notesBaselineId,
+    }),
+  );
   for (let index = 0; index < 6; index += 1) {
     const archiveId = `33333333-3333-4333-8333-${String(index).padStart(12, "0")}`;
     await writeFile(
@@ -573,11 +665,11 @@ test("the judge-tour comparison survives a browser reload", async (t) => {
   );
   assert.equal(await page.locator(".history-item").count(), 6);
   const historyToggle = page.getByRole("button", {
-    name: "Show all 8 saved runs",
+    name: "Show all 10 saved runs",
   });
   assert.equal(await historyToggle.getAttribute("aria-expanded"), "false");
   await historyToggle.click();
-  assert.equal(await page.locator(".history-item").count(), 8);
+  assert.equal(await page.locator(".history-item").count(), 10);
   assert.equal(
     await page
       .getByRole("button", { name: "Show 6 recent runs" })
@@ -631,6 +723,30 @@ test("the judge-tour comparison survives a browser reload", async (t) => {
     "solid",
   );
   await page.emulateMedia({ forcedColors: "none" });
+  const portfolioProof = page.getByRole("link", {
+    name: "Second workflow proof ↗",
+  });
+  assert.equal(await portfolioProof.isVisible(), true);
+  await portfolioProof.click();
+  await page.waitForURL(`${base}/#${notesCandidateId}~${notesBaselineId}`);
+  await page
+    .locator("#comparison-summary")
+    .getByText("1 concerns resolved", { exact: true })
+    .waitFor();
+  assert.match(
+    await page.locator("#comparison-summary").innerText(),
+    /1 concerns resolved[\s\S]*0 regressions[\s\S]*2 unchanged/,
+  );
+  assert.equal(
+    new URL(page.url()).hash,
+    `#${notesCandidateId}~${notesBaselineId}`,
+  );
+  assert.equal(
+    await page
+      .locator("#report h2")
+      .evaluate((element) => element === document.activeElement),
+    true,
+  );
 });
 
 test("public demo mode excludes local projects and model spending", async (t) => {
@@ -719,7 +835,7 @@ test("public demo mode excludes local projects and model spending", async (t) =>
   );
   const status = await (await fetch(`${base}/api/status`)).json();
   assert.equal(status.modelConfigured, false);
-  assert.equal(status.version, "0.1.14");
+  assert.equal(status.version, "0.1.15");
   assert.equal(status.publicDemo, true);
   const integrity = await (
     await fetch(`${base}/api/runs/${receiptId}/integrity`)

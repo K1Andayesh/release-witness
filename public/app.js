@@ -14,6 +14,24 @@ function routeState() {
 function routeHash(runId, baselineId = "") {
   return baselineId ? `${runId}~${baselineId}` : runId;
 }
+function pairedRoute(suite, candidateBuild) {
+  const candidate = all
+    .filter(
+      (run) =>
+        run.suite === suite &&
+        run.build === candidateBuild &&
+        run.state === "complete" &&
+        run.comparisonBaselineId,
+    )
+    .sort((a, b) => b.createdAt.localeCompare(a.createdAt))[0];
+  const baseline = all.find(
+    (run) =>
+      run.id === candidate?.comparisonBaselineId &&
+      run.suite === suite &&
+      run.state === "complete",
+  );
+  return candidate && baseline ? routeHash(candidate.id, baseline.id) : "";
+}
 const initialRoute = routeState();
 let selected = initialRoute.runId,
   all = [],
@@ -124,6 +142,18 @@ $("#skip-report").addEventListener("click", (event) => {
   const target = $("#report h2") || $("#report");
   target.tabIndex = -1;
   target.focus();
+});
+$("#portfolio-proof").addEventListener("click", (event) => {
+  event.preventDefault();
+  const targetHash = event.currentTarget.getAttribute("href").slice(1);
+  const [runId, baselineId] = targetHash.split("~", 2);
+  if (!runId || !baselineId) return;
+  selected = runId;
+  routeBaseline = baselineId;
+  focusReportAfterRender = true;
+  if (location.hash.slice(1) !== targetHash) location.hash = targetHash;
+  else render();
+  document.querySelector(".results")?.scrollIntoView({ behavior: "smooth" });
 });
 $("#suite").addEventListener("change", syncSetup);
 $("#build").addEventListener("change", syncBuild);
@@ -389,6 +419,9 @@ async function refresh() {
     ]);
     all = runs;
     currentStatus = status;
+    const portfolioRoute = pairedRoute("notes-v1", "fixed");
+    $("#portfolio-proof").hidden = !portfolioRoute;
+    $("#portfolio-proof").href = portfolioRoute ? `#${portfolioRoute}` : "#";
     if (!catalog.length) {
       catalog = manifests;
       $("#suite").innerHTML = catalog
