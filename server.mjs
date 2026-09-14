@@ -20,6 +20,9 @@ export async function startServer({
   directory = new URL("./artifacts/runs/", import.meta.url),
   runnerOptions = {},
 } = {}) {
+  const packageMetadata = JSON.parse(
+    await readFile(new URL("./package.json", import.meta.url), "utf8"),
+  );
   const origin = `http://127.0.0.1:${port}`;
   const reportOrigin = publicBaseUrl ? new URL(publicBaseUrl).origin : origin;
   const allowedHosts = new Set([
@@ -378,6 +381,7 @@ export async function startServer({
           ),
           modelAllowance: await modelAllowance(directory),
           model: process.env.NEBIUS_MODEL || "nvidia/Nemotron-3_5-Lightning",
+          version: packageMetadata.version,
         });
       if (/^\/api\/pairs\/[a-f0-9-]+$/.test(url.pathname)) {
         const pair = pairs.get(url.pathname.split("/").pop());

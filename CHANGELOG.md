@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.1.6 — 2026-09-14
+
+- Linked the public source and natural 93-second demo from the judge entry point.
+- Exposed the running package version in the status API and public footer.
+- Added description and social-sharing metadata to the hosted demo.
+
 ## 0.1.5 — 2026-09-14
 
 - Recomputed both baseline and candidate receipts whenever a comparison loads.

@@ -4,6 +4,21 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>Release Witness</title>
+    <meta
+      name="description"
+      content="Evidence-backed browser QA that compares a baseline and candidate without giving AI authority over verdicts."
+    />
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="Release Witness" />
+    <meta
+      property="og:description"
+      content="See what changed, what Chrome observed, and what remains unverified."
+    />
+    <meta
+      property="og:url"
+      content="https://release-witness.139-99-135-89.sslip.io"
+    />
+    <meta name="twitter:card" content="summary" />
     <link rel="stylesheet" href="/style.css" />
     <script type="module" src="/app.js"></script>
   </head>
@@ -35,7 +50,25 @@
               click.</span
             >
           </div>
-          <button id="judge-tour" type="button">Start 90-second tour →</button>
+          <div class="judge-actions">
+            <button id="judge-tour" type="button">
+              Start 90-second tour →
+            </button>
+            <nav aria-label="Competition resources">
+              <a
+                href="https://github.com/K1Andayesh/release-witness"
+                target="_blank"
+                rel="noopener"
+                >Public source ↗</a
+              >
+              <a
+                href="https://youtu.be/LVYa90poYM8"
+                target="_blank"
+                rel="noopener"
+                >93s demo ↗</a
+              >
+            </nav>
+          </div>
         </div>
         <div class="proof-points" aria-label="Demonstrated product outcomes">
           <div><strong>2</strong><span>independent defects exposed</span></div>
@@ -119,9 +152,9 @@ The save flow changed. Verify note persistence after reload.</textarea
       <footer>
         Built for a considered release decision.
         <span
-          >A bounded suite is not proof that an entire application is
-          ready.</span
-        >
+          >A bounded suite is not proof that an entire application is ready.
+          <span id="build-version"></span
+        ></span>
       </footer>
     </main>
   </body>

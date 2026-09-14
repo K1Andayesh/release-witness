@@ -795,6 +795,16 @@ footer {
   border-radius: 6px;
   font-weight: 700;
 }
+.judge-actions {
+  display: grid;
+  gap: 8px;
+}
+.judge-actions nav {
+  display: flex;
+  justify-content: flex-end;
+  gap: 14px;
+  font-size: 11px;
+}
 .proof-points {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
@@ -952,6 +962,9 @@ footer {
   }
   .judge-strip button {
     width: 100%;
+  }
+  .judge-actions nav {
+    justify-content: center;
   }
   .proof-points {
     grid-template-columns: 1fr;

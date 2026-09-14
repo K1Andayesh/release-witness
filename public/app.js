@@ -390,6 +390,9 @@ async function refresh() {
     $("#environment-tag").textContent = status.publicDemo
       ? "PUBLIC DEMO"
       : "LOCAL PREVIEW";
+    $("#build-version").textContent = status.version
+      ? `Release ${status.version}`
+      : "";
     $("#connection").classList.remove("offline");
     const calls = status.modelAllowance?.remaining ?? 0;
     const limit = status.modelAllowance?.limit ?? 10;
