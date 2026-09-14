@@ -967,6 +967,21 @@ test("the judge-tour comparison survives a browser reload", async (t) => {
       .getAttribute("href"),
     `${base}/#${notesCandidateId}~${notesBaselineId}`,
   );
+  await benchmarkPage.emulateMedia({ forcedColors: "active" });
+  assert.equal(
+    await benchmarkPage
+      .locator(".certification-status")
+      .evaluate((element) => getComputedStyle(element).borderStyle),
+    "solid",
+  );
+  assert.equal(
+    await benchmarkPage
+      .locator(".benchmark-suite-card")
+      .first()
+      .evaluate((element) => getComputedStyle(element).borderStyle),
+    "solid",
+  );
+  await benchmarkPage.emulateMedia({ forcedColors: "none" });
   await benchmarkPage.setViewportSize({ width: 390, height: 844 });
   assert.equal(
     await benchmarkPage.evaluate(
@@ -1087,7 +1102,7 @@ test("public demo mode excludes local projects and model spending", async (t) =>
   );
   const status = await (await fetch(`${base}/api/status`)).json();
   assert.equal(status.modelConfigured, false);
-  assert.equal(status.version, "0.1.20");
+  assert.equal(status.version, "0.1.21");
   assert.equal(status.publicDemo, true);
   const integrity = await (
     await fetch(`${base}/api/runs/${receiptId}/integrity`)

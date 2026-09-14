@@ -1,5 +1,10 @@
 # Changelog
 
+## 0.1.21 — 2026-09-14
+
+- Preserve visible certification and evidence-group boundaries in Windows forced-colours mode.
+- Add real-Chrome regression coverage for the benchmark status and workflow cards under forced colours.
+
 ## 0.1.20 — 2026-09-14
 
 - Replace the raw benchmark text export with a scannable judge-facing evidence page.

@@ -160,4 +160,5 @@ No receipts are deleted or hidden from the API. A routed selected run and its co
 - Actual Chrome rendered `/api/benchmark/report` as a semantic evidence page with a certified portfolio status, aggregate SHA-256 digest, 3/3 repair result, model contribution, exact workflow pair IDs, four run-receipt digests and links to both comparisons.
 - Desktop visual inspection found a clear hierarchy from certification to portfolio totals, model evidence and workflow artifacts. At 390 × 844, the report remained readable and had no horizontal overflow.
 - Chrome print emulation hid navigation, changed the page background to white and retained the report heading and evidence content without horizontal overflow.
-- The real-Chrome contract verifies the report heading, fail-closed certification state, Fieldnotes comparison route and mobile width. The full suite remains 21 passing tests.
+- Windows forced-colours emulation retained solid boundaries around the certification status, workflow cards, receipt groups and model evidence. The screenshot remained readable without relying on colour.
+- The real-Chrome contract verifies the report heading, fail-closed certification state, Fieldnotes comparison route, forced-colours boundaries and mobile width. The full suite remains 21 passing tests.

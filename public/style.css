@@ -1452,7 +1452,15 @@ footer {
   .receipt,
   .comparison-callout,
   .pair-receipts,
-  .comparison-evidence {
+  .comparison-evidence,
+  .certification-status,
+  .certification-chip,
+  .portfolio-receipt,
+  .benchmark-report > section,
+  .benchmark-suite-card,
+  .benchmark-boundary,
+  .receipt-digests,
+  .suite-model-proof {
     border: 1px solid ButtonText !important;
   }
   :focus-visible {
