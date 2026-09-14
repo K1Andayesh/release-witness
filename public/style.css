@@ -888,6 +888,29 @@ footer {
 .pair-receipts.verified strong {
   color: var(--green);
 }
+.runtime-proof {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 24px;
+  padding: 14px 18px;
+  border: 1px solid var(--line);
+  border-top: 0;
+  background: #f1f5ed;
+}
+.runtime-proof div {
+  display: grid;
+  gap: 5px;
+}
+.runtime-proof strong {
+  font-size: 12px;
+}
+.runtime-proof > span {
+  max-width: 540px;
+  color: var(--muted);
+  font-size: 11px;
+  text-align: right;
+}
 .pair-receipts.invalid strong {
   color: var(--red);
 }
@@ -965,6 +988,7 @@ footer {
 }
 @media (max-width: 700px) {
   .judge-strip,
+  .runtime-proof,
   .comparison-callout,
   .pair-receipts,
   .release-delta {
@@ -979,6 +1003,10 @@ footer {
   }
   .judge-actions nav {
     justify-content: center;
+  }
+  .runtime-proof > span {
+    max-width: none;
+    text-align: left;
   }
   .proof-points {
     grid-template-columns: 1fr;

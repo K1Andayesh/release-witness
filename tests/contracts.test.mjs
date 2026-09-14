@@ -549,6 +549,11 @@ test("the judge-tour comparison survives a browser reload", async (t) => {
   });
   const page = await browser.newPage();
   await page.goto(base);
+  assert.match(
+    await page.locator("#runtime-model").innerText(),
+    /nvidia\/Nemotron-3_5-Lightning via Nebius Token Factory/,
+  );
+  assert.match(await page.locator("#runtime-meta").innerText(), /1 tokens/);
   await page.keyboard.press("Tab");
   assert.equal(await page.locator(":focus").getAttribute("id"), "skip-report");
   await page.keyboard.press("Enter");
@@ -706,7 +711,7 @@ test("public demo mode excludes local projects and model spending", async (t) =>
   );
   const status = await (await fetch(`${base}/api/status`)).json();
   assert.equal(status.modelConfigured, false);
-  assert.equal(status.version, "0.1.8");
+  assert.equal(status.version, "0.1.9");
   assert.equal(status.publicDemo, true);
   const integrity = await (
     await fetch(`${base}/api/runs/${receiptId}/integrity`)

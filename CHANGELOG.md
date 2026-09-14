@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.1.9 — 2026-09-14
+
+- Surfaced the qualifying NVIDIA Nemotron and Nebius Token Factory runtime record in the judge entry point.
+- Derived returned model identity, provider, latency and token usage from a saved model-backed run instead of presenting a static claim.
+- Tightened the README and judging guide around the required competition runtime.
+
 ## 0.1.8 — 2026-09-14
 
 - Reduced saved-run noise by showing the six most recent receipts by default.

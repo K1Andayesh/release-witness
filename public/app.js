@@ -409,6 +409,23 @@ async function refresh() {
     $("#build-version").textContent = status.version
       ? `Release ${status.version}`
       : "";
+    const runtimeRun = all.find(
+      (run) =>
+        run.build === "candidate" &&
+        run.plan?.state === "complete" &&
+        run.analysis?.state === "complete",
+    );
+    if (runtimeRun) {
+      const model = runtimeRun.plan.returnedModel || runtimeRun.plan.model;
+      $("#runtime-model").textContent =
+        `${model} via ${runtimeRun.plan.provider}`;
+      $("#runtime-meta").textContent =
+        `Saved runtime call · ${(runtimeRun.plan.durationMs / 1000).toFixed(1)}s · ${runtimeRun.plan.usage?.total_tokens ?? "unknown"} tokens · verified evidence below`;
+    } else {
+      $("#runtime-model").textContent = "No saved model-backed run available";
+      $("#runtime-meta").textContent =
+        "Run with model planning enabled to record provider, model identity and usage.";
+    }
     $("#connection").classList.remove("offline");
     const calls = status.modelAllowance?.remaining ?? 0;
     const limit = status.modelAllowance?.limit ?? 10;

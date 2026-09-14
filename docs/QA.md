@@ -115,3 +115,9 @@ A representative Windows OS high-contrast session, 200% browser zoom, full scree
 - Automated real-Chrome coverage verifies the six-item default, complete expansion, accessible state and continued judge-tour behavior.
 
 No receipts are deleted or hidden from the API. A routed selected run and its comparison baseline stay visible even when either falls outside the six most recent records.
+
+## Competition runtime proof — 14 September 2026
+
+- Actual Chrome displays the qualifying runtime record before the workflow controls: `nvidia/Nemotron-3_5-Lightning via Nebius Token Factory`.
+- The accompanying values are read from the saved model-backed run and expose the recorded latency, token usage and route to the detailed verified evidence.
+- The real-Chrome judge-tour test asserts the runtime model/provider identity and token metadata before continuing through the comparison.
