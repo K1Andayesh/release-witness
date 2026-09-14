@@ -98,7 +98,7 @@ Screenshot inspection found a clear entry point, coherent result hierarchy and v
 - The comparison API now returns the recorded baseline and candidate observations and screenshot references for each matching check, alongside its status transition.
 - Actual Chrome opened the first resolved comparison check and displayed the failing baseline and repaired candidate side by side: `Expected count 1; observed 0.` before and `Expected count 1; observed 1.` now.
 - The same panel displayed two baseline and two candidate screenshots with descriptive link and image labels. At narrow widths, the evidence columns stack into one reading order.
-- The real-Chrome contract now expands this panel and asserts both observations. All 20 tests, syntax checks and formatting validation pass.
+- The real-Chrome contract now expands this panel and asserts both observations. All 21 tests, syntax checks and formatting validation pass.
 
 ## Forced-colour accessibility — 14 September 2026
 
@@ -143,3 +143,4 @@ No receipts are deleted or hidden from the API. A routed selected run and its co
 - The new `/api/benchmark` verifier accepts a workflow only when its latest server-managed pair matches declared defect and invariant IDs, reports no regressions, keeps its coverage boundary unverified and passes both receipt checks. A real-Chrome contract test tampers with a benchmark screenshot and confirms certification fails.
 - Fresh current-version appointment pair `cd0f86d0` → `75e488db` supplied the missing durable pair relationship. With the Fieldnotes pair, the local verifier returned `complete: true`, 3/3 repairs, three preserved invariants, zero regressions, two unverified boundaries, four verified receipts and 16 verified screenshot files in 11 ms.
 - Actual Chrome read those values through the public UI code rather than static markup. At 390 × 844, the evidence-derived proof remained visible with `scrollWidth=375` and no horizontal overflow.
+- Benchmark certification now requires a matching persisted pair record: pair ID, suite, build order, completion state, baseline/candidate IDs, run positions and candidate baseline reference must all agree. A focused contract test rejects both a mismatched pair candidate and a stale candidate baseline reference.

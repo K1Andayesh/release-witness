@@ -6,6 +6,7 @@ import {
   attestRun,
   compareRuns,
   verifyAttestation,
+  verifyPairRelationship,
   verdict,
 } from "./lib/report.mjs";
 import { loadManifests, publicCatalog } from "./lib/manifests.mjs";
@@ -246,11 +247,8 @@ export async function startServer({
         .sort((a, b) => b.createdAt.localeCompare(a.createdAt))
         .find((run) => {
           const baseline = runs.get(run.comparisonBaselineId);
-          return (
-            baseline?.suite === manifest.id &&
-            baseline.build === groundTruth.baselineBuild &&
-            baseline.state === "complete"
-          );
+          const pair = pairs.get(run.pairId);
+          return verifyPairRelationship(manifest, pair, baseline, run);
         });
       const baseline = candidate
         ? runs.get(candidate.comparisonBaselineId)
@@ -324,6 +322,7 @@ export async function startServer({
         reason: verified
           ? "Declared ground truth, comparison states and both evidence receipts verify."
           : failures.join(" "),
+        pairId: candidate.pairId,
         baselineId: baseline.id,
         candidateId: candidate.id,
         route: `#${candidate.id}~${baseline.id}`,

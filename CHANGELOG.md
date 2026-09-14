@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.1.17 — 2026-09-14
+
+- Require benchmark runs to match an independently loaded, completed pair record.
+- Verify pair suite, build order, run IDs, pair positions and candidate baseline reference before certification.
+- Add focused contract coverage for forged candidate and stale baseline relationships.
+
 ## 0.1.16 — 2026-09-14
 
 - Add manifest-declared benchmark ground truth for known defects and preserved invariants.

@@ -11,6 +11,7 @@ import {
   compareRuns,
   verdict,
   verifyAttestation,
+  verifyPairRelationship,
   validatePlan,
   validateAdvice,
 } from "../lib/report.mjs";
@@ -170,6 +171,61 @@ test("run receipts detect decision or evidence-reference changes", () => {
   assert.equal(verifyAttestation(run), true);
   run.checks[0].observed = "Changed after receipt.";
   assert.equal(verifyAttestation(run), false);
+});
+
+test("benchmark pairs require a matching persisted relationship", () => {
+  const manifest = {
+    id: "suite-v1",
+    benchmark: {
+      baselineBuild: "before",
+      candidateBuild: "after",
+    },
+  };
+  const pair = {
+    id: "pair",
+    suite: "suite-v1",
+    state: "complete",
+    builds: ["before", "after"],
+    baselineId: "baseline",
+    candidateId: "candidate",
+  };
+  const baseline = {
+    id: "baseline",
+    suite: "suite-v1",
+    build: "before",
+    state: "complete",
+    pairId: "pair",
+    pairPosition: "baseline",
+  };
+  const candidate = {
+    id: "candidate",
+    suite: "suite-v1",
+    build: "after",
+    state: "complete",
+    pairId: "pair",
+    pairPosition: "candidate",
+    comparisonBaselineId: "baseline",
+  };
+  assert.equal(
+    verifyPairRelationship(manifest, pair, baseline, candidate),
+    true,
+  );
+  assert.equal(
+    verifyPairRelationship(
+      manifest,
+      { ...pair, candidateId: "different" },
+      baseline,
+      candidate,
+    ),
+    false,
+  );
+  assert.equal(
+    verifyPairRelationship(manifest, pair, baseline, {
+      ...candidate,
+      comparisonBaselineId: "different",
+    }),
+    false,
+  );
 });
 
 test("declarative manifests load and reject unsafe targets or actions", async () => {
@@ -565,6 +621,7 @@ test("the judge-tour comparison survives a browser reload", async (t) => {
   );
   const notesBaselineId = "44444444-4444-4444-8444-444444444444";
   const notesCandidateId = "55555555-5555-4555-8555-555555555555";
+  const notesPairId = "66666666-6666-4666-8666-666666666666";
   const notesChecks = (repaired) => [
     {
       id: "persistence",
@@ -638,6 +695,8 @@ test("the judge-tour comparison survives a browser reload", async (t) => {
     new Date(createdAt.getTime() - 10_000),
     false,
   );
+  notesBaseline.pairId = notesPairId;
+  notesBaseline.pairPosition = "baseline";
   notesBaseline.attestation = attestRun(notesBaseline);
   await writeFile(
     new URL(`${notesBaselineId}.json`, dir),
@@ -650,12 +709,27 @@ test("the judge-tour comparison survives a browser reload", async (t) => {
       new Date(createdAt.getTime() - 9_000),
       true,
     ),
+    pairId: notesPairId,
+    pairPosition: "candidate",
     comparisonBaselineId: notesBaselineId,
   };
   notesCandidate.attestation = attestRun(notesCandidate);
   await writeFile(
     new URL(`${notesCandidateId}.json`, dir),
     JSON.stringify(notesCandidate),
+  );
+  await writeFile(
+    new URL(`${notesPairId}.pair.json`, dir),
+    JSON.stringify({
+      id: notesPairId,
+      suite: "notes-v1",
+      state: "complete",
+      builds: ["defect", "fixed"],
+      baselineId: notesBaselineId,
+      candidateId: notesCandidateId,
+      createdAt: new Date(createdAt.getTime() - 10_000).toISOString(),
+      finishedAt: new Date(createdAt.getTime() - 8_000).toISOString(),
+    }),
   );
   for (let index = 0; index < 6; index += 1) {
     const archiveId = `33333333-3333-4333-8333-${String(index).padStart(12, "0")}`;
@@ -873,7 +947,7 @@ test("public demo mode excludes local projects and model spending", async (t) =>
   );
   const status = await (await fetch(`${base}/api/status`)).json();
   assert.equal(status.modelConfigured, false);
-  assert.equal(status.version, "0.1.16");
+  assert.equal(status.version, "0.1.17");
   assert.equal(status.publicDemo, true);
   const integrity = await (
     await fetch(`${base}/api/runs/${receiptId}/integrity`)

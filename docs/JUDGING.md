@@ -10,7 +10,7 @@ Release Witness is entered in **Best Apps and Agents**. This guide maps the ship
 - A server-managed job runs the reviewed contract against baseline and candidate in isolated Chrome contexts, then persists their relationship across reloads. Loading the comparison freshly verifies both receipts and every referenced screenshot file.
 - Deterministic assertions produce the verdicts. SHA-256 receipts are recomputed from each report and every stored screenshot before the UI shows verification.
 - The portfolio benchmark is server-derived rather than editorial: manifest ground truth identifies seeded defects and invariants, and `/api/benchmark` verifies the latest paired results, four receipts and all 16 screenshot files before the homepage can show 3/3.
-- Twenty automated tests and the public GitHub Actions workflow cover contracts, failure handling, tamper detection, concurrency, restart recovery, paired execution, judge-tour reload restoration and a real-Chrome smoke run.
+- Twenty-one automated tests and the public GitHub Actions workflow cover contracts, persisted pair identity, failure handling, tamper detection, concurrency, restart recovery, paired execution, judge-tour reload restoration and a real-Chrome smoke run.
 - The [`architecture and trust-boundary map`](ARCHITECTURE.md) makes the authority split, execution boundary and fail-closed behavior reviewable without reading the implementation first.
 
 ## Design

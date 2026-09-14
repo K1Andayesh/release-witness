@@ -57,7 +57,7 @@ npm test
 npm run format:check
 ```
 
-Twenty contract/failure tests pass. Actual Chrome verification covers the server-managed paired-run workflow, judge-tour comparison restoration after reload, receipt verification and tamper detection, both appointment defects, the repaired candidate, before/after comparison, model-budget gating, model planning/advice, provider-failure fallback and public-demo restrictions. See `docs/QA.md`, `docs/DEMO.md` and `docs/READINESS.md`.
+Twenty-one contract/failure tests pass. Actual Chrome verification covers the server-managed paired-run workflow, persisted pair identity, judge-tour comparison restoration after reload, receipt verification and tamper detection, both appointment defects, the repaired candidate, before/after comparison, model-budget gating, model planning/advice, provider-failure fallback and public-demo restrictions. See `docs/QA.md`, `docs/DEMO.md` and `docs/READINESS.md`.
 
 ## Model and scope controls
 
