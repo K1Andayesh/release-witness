@@ -25,7 +25,8 @@ let selected = initialRoute.runId,
   focusReportAfterRender = false,
   currentStatus = {},
   pairProgress = "",
-  showAllRuns = false;
+  showAllRuns = false,
+  benchmarkModelProof = null;
 const HISTORY_LIMIT = 6;
 const busy = (run) => ["planning", "running", "analyzing"].includes(run?.state);
 const label = (status) =>
@@ -40,6 +41,16 @@ function renderBenchmark(benchmark) {
   );
   $("#portfolio-proof").hidden = !fieldnotes?.route;
   $("#portfolio-proof").href = fieldnotes?.route || "#";
+  const modelSuite = benchmark.suites?.find(
+    (suite) => suite.modelEvidence?.verified,
+  );
+  benchmarkModelProof = modelSuite?.modelEvidence || null;
+  if (benchmarkModelProof) {
+    const proof = benchmarkModelProof;
+    $("#runtime-model").textContent = `${proof.model} via ${proof.provider}`;
+    $("#runtime-meta").textContent =
+      `${proof.runsVerified} receipt-verified runs · ${proof.riskHypothesesVerified} grounded risk hypotheses · ${proof.advisoriesVerified} allow-listed advisories · ${proof.tokensVerified.toLocaleString()} tokens`;
+  }
   if (!benchmark.complete) {
     $("#benchmark-defects").textContent = "—";
     $("#benchmark-defects-label").textContent =
@@ -445,23 +456,6 @@ async function refresh() {
     $("#build-version").textContent = status.version
       ? `Release ${status.version}`
       : "";
-    const runtimeRun = all.find(
-      (run) =>
-        run.build === "candidate" &&
-        run.plan?.state === "complete" &&
-        run.analysis?.state === "complete",
-    );
-    if (runtimeRun) {
-      const model = runtimeRun.plan.returnedModel || runtimeRun.plan.model;
-      $("#runtime-model").textContent =
-        `${model} via ${runtimeRun.plan.provider}`;
-      $("#runtime-meta").textContent =
-        `Saved runtime call · ${(runtimeRun.plan.durationMs / 1000).toFixed(1)}s · ${runtimeRun.plan.usage?.total_tokens ?? "unknown"} tokens · verified evidence below`;
-    } else {
-      $("#runtime-model").textContent = "No saved model-backed run available";
-      $("#runtime-meta").textContent =
-        "Run with model planning enabled to record provider, model identity and usage.";
-    }
     $("#connection").classList.remove("offline");
     const calls = status.modelAllowance?.remaining ?? 0;
     const limit = status.modelAllowance?.limit ?? 10;
@@ -488,6 +482,25 @@ async function refresh() {
       renderBenchmark(await api("/api/benchmark"));
       signature = next;
       render();
+    }
+    if (!benchmarkModelProof) {
+      const runtimeRun = all.find(
+        (run) =>
+          run.build === "candidate" &&
+          run.plan?.state === "complete" &&
+          run.analysis?.state === "complete",
+      );
+      if (runtimeRun) {
+        const model = runtimeRun.plan.returnedModel || runtimeRun.plan.model;
+        $("#runtime-model").textContent =
+          `${model} via ${runtimeRun.plan.provider}`;
+        $("#runtime-meta").textContent =
+          `Saved runtime call · ${(runtimeRun.plan.durationMs / 1000).toFixed(1)}s · ${runtimeRun.plan.usage?.total_tokens ?? "unknown"} tokens · verified evidence below`;
+      } else {
+        $("#runtime-model").textContent = "No saved model-backed run available";
+        $("#runtime-meta").textContent =
+          "Run with model planning enabled to record provider, model identity and usage.";
+      }
     }
     $("#run-message").textContent = pairProgress
       ? pairProgress

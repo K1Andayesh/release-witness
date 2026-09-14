@@ -5,6 +5,7 @@ import { runChecks } from "./lib/runner.mjs";
 import {
   attestRun,
   compareRuns,
+  measureModelContribution,
   verifyAttestation,
   verifyPairRelationship,
   verdict,
@@ -295,6 +296,11 @@ export async function startServer({
       const screenshotFilesVerified = [baselineReceipt, candidateReceipt]
         .filter((receipt) => receipt.verified)
         .reduce((total, receipt) => total + receipt.fileCount, 0);
+      const modelEvidence = measureModelContribution(
+        manifest,
+        [baseline, candidate],
+        receiptsVerified,
+      );
       const verified =
         defectsDetected === groundTruth.knownDefectIds.length &&
         repairsResolved === groundTruth.knownDefectIds.length &&
@@ -338,11 +344,8 @@ export async function startServer({
           baseline: baselineReceipt.digest || null,
           candidate: candidateReceipt.digest || null,
         },
-        modelBacked:
-          baseline.plan?.state === "complete" &&
-          baseline.analysis?.state === "complete" &&
-          candidate.plan?.state === "complete" &&
-          candidate.analysis?.state === "complete",
+        modelBacked: modelEvidence.verified,
+        modelEvidence,
       });
     }
     const totals = suites.reduce(
@@ -360,6 +363,20 @@ export async function startServer({
         screenshotFilesVerified:
           summary.screenshotFilesVerified +
           (suite.screenshotFilesVerified || 0),
+        modelRunsVerified:
+          summary.modelRunsVerified + (suite.modelEvidence?.runsVerified || 0),
+        riskHypothesesVerified:
+          summary.riskHypothesesVerified +
+          (suite.modelEvidence?.riskHypothesesVerified || 0),
+        advisoriesVerified:
+          summary.advisoriesVerified +
+          (suite.modelEvidence?.advisoriesVerified || 0),
+        modelTokensVerified:
+          summary.modelTokensVerified +
+          (suite.modelEvidence?.tokensVerified || 0),
+        modelDurationMsVerified:
+          summary.modelDurationMsVerified +
+          (suite.modelEvidence?.durationMsVerified || 0),
       }),
       {
         knownDefects: 0,
@@ -370,6 +387,11 @@ export async function startServer({
         boundariesUnverified: 0,
         receiptsVerified: 0,
         screenshotFilesVerified: 0,
+        modelRunsVerified: 0,
+        riskHypothesesVerified: 0,
+        advisoriesVerified: 0,
+        modelTokensVerified: 0,
+        modelDurationMsVerified: 0,
       },
     );
     const complete =
@@ -394,6 +416,7 @@ export async function startServer({
           receiptsVerified,
           screenshotFilesVerified,
           receiptDigests,
+          modelEvidence,
         }) => ({
           id,
           verified,
@@ -409,6 +432,7 @@ export async function startServer({
           receiptsVerified,
           screenshotFilesVerified,
           receiptDigests,
+          modelEvidence,
         }),
       ),
       totals,
@@ -423,7 +447,7 @@ export async function startServer({
           .update(JSON.stringify(certification))
           .digest("hex"),
         scope:
-          "Benchmark ground truth, pair identities, comparison totals and verified run receipts",
+          "Benchmark ground truth, pair identities, comparison totals, verified model contribution and run receipts",
       },
     };
   }
@@ -589,6 +613,10 @@ export async function startServer({
           `Unverified coverage boundaries: ${benchmark.totals.boundariesUnverified}`,
           `Run receipts verified: ${benchmark.totals.receiptsVerified}`,
           `Screenshot files verified: ${benchmark.totals.screenshotFilesVerified}`,
+          `Nemotron runs verified: ${benchmark.totals.modelRunsVerified}`,
+          `Grounded risk hypotheses verified: ${benchmark.totals.riskHypothesesVerified}`,
+          `Allow-listed advisories verified: ${benchmark.totals.advisoriesVerified}`,
+          `Verified model tokens: ${benchmark.totals.modelTokensVerified}`,
           "",
         ];
         for (const suite of benchmark.suites) {
@@ -605,6 +633,14 @@ export async function startServer({
             `Regressions: ${suite.regressions || 0}`,
             `Receipts verified: ${suite.receiptsVerified || 0}/2`,
             `Screenshot files verified: ${suite.screenshotFilesVerified || 0}`,
+            `Model evidence: ${suite.modelEvidence?.verified ? "verified" : "not used or not verified"}`,
+            `Model: ${suite.modelEvidence?.model || "unavailable"}`,
+            `Provider: ${suite.modelEvidence?.provider || "unavailable"}`,
+            `Nemotron runs verified: ${suite.modelEvidence?.runsVerified || 0}`,
+            `Grounded risk hypotheses verified: ${suite.modelEvidence?.riskHypothesesVerified || 0}`,
+            `Allow-listed advisories verified: ${suite.modelEvidence?.advisoriesVerified || 0}`,
+            `Verified model tokens: ${suite.modelEvidence?.tokensVerified || 0}`,
+            `Model evidence reason: ${suite.modelEvidence?.reason || "Unavailable."}`,
             `Reason: ${suite.reason}`,
             ...(suite.route
               ? [`Review comparison: ${reportOrigin}/${suite.route}`]

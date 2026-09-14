@@ -145,3 +145,12 @@ No receipts are deleted or hidden from the API. A routed selected run and its co
 - Actual Chrome read those values through the public UI code rather than static markup. At 390 × 844, the evidence-derived proof remained visible with `scrollWidth=375` and no horizontal overflow.
 - Benchmark certification now requires a matching persisted pair record: pair ID, suite, build order, completion state, baseline/candidate IDs, run positions and candidate baseline reference must all agree. A focused contract test rejects both a mismatched pair candidate and a stale candidate baseline reference.
 - The judge strip links to a human-readable portfolio receipt. The receipt exposes the exact pair IDs and a stable aggregate SHA-256 digest over certified ground truth, comparison totals and both verified run-receipt digests. The contract suite confirms the digest is well formed, is rendered by `/api/benchmark/report`, and changes after screenshot tampering invalidates a covered receipt.
+
+## Receipt-covered Nemotron benchmark — 14 September 2026
+
+- Fresh server-managed appointment pair `15ebbae0` ran baseline `b2998668` and candidate `790c7762` with four live calls to `nvidia/Nemotron-3_5-Lightning` through Nebius Token Factory.
+- The plans produced six grounded hypotheses across the two runs and covered every allow-listed check exactly once. Both post-run advisories selected an allow-listed evidence ID. The combined recorded model work was 1,460 tokens and 3.78 seconds.
+- Fresh Fieldnotes pair `7fc874fb` reran the independent workflow without model calls. All four current benchmark reports use `run-v2` receipts that bind model/provider/timing/token metadata where present, as well as decisions, observations and screenshot hashes.
+- The local portfolio endpoint verified 3/3 repairs, three invariants, zero regressions, four receipts, 16 screenshots, two Nemotron runs, six grounded hypotheses and two advisories. Its aggregate receipt was `794189c7291ace23668433e00f0afd0c956d6748849601293292bc35ce8699b1` before deployment.
+- The integration suite now executes four deterministic provider calls in a real server-managed Chrome pair and checks these model measurements. Changing a receipted runtime token count invalidates the run; changing a screenshot removes both functional and model-evidence certification.
+- Actual Chrome kept the verified model contribution visible after repeated refreshes. At 390 × 844 it reported `scrollWidth=390` with no horizontal overflow.

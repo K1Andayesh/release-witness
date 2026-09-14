@@ -1,5 +1,12 @@
 # Changelog
 
+## 0.1.19 — 2026-09-14
+
+- Measure the Nemotron contribution on the exact benchmark pair: verified runs, grounded hypotheses, allow-listed advisories, tokens and latency.
+- Add versioned run receipts that cover the returned NVIDIA model, Nebius provider, model timing and token totals as well as browser decisions and screenshots.
+- Surface two receipt-verified Nemotron runs, six grounded risk hypotheses and two bounded advisories in the judge view and benchmark receipt.
+- Add integration coverage for all four model calls and fail the model-evidence claim when a covered screenshot is changed.
+
 ## 0.1.18 — 2026-09-14
 
 - Add a judge-facing benchmark receipt with the verified workflow pair IDs, totals and explicit coverage limits.

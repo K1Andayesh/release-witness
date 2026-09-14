@@ -6,8 +6,8 @@ The public homepage does not hard-code the portfolio result. Each workflow manif
 
 Current portfolio-verifier evidence:
 
-- Harbour Appointments: baseline `cd0f86d0-ad51-4e77-9a43-5785e0e8889f`, candidate `75e488db-93c7-4c2b-a1af-826fcb3ccdd2`
-- Fieldnotes: baseline `9f67a852-c07e-444d-8d4c-dcc01302a2aa`, candidate `b417a60d-f983-4e66-b474-4ea86834c14e`
+- Harbour Appointments: baseline `b2998668-7680-4f95-9811-76b7e6132e6a`, candidate `790c7762-e9bf-4ab7-abdb-31854091c15d`
+- Fieldnotes: baseline `223c548b-9eda-40cd-aed1-5716d6677adb`, candidate `56b5d993-1298-4272-9c68-0cf5e0356f15`
 
 The current aggregate check completes in approximately 11 ms on the local evidence store. The separate qualifying appointment pair below preserves the live Nemotron/Nebius runtime evidence.
 
@@ -29,27 +29,29 @@ The current aggregate check completes in approximately 11 ms on the local eviden
 | Defects reported                    |        2 |         0 |
 | Existing invariant reported passing |        1 |         1 |
 | Browser screenshots                 |        4 |         4 |
-| End-to-end run time                 |   3.51 s |    2.85 s |
-| Nemotron plan + advice latency      |   2.18 s |    1.49 s |
-| Nemotron tokens                     |      716 |       726 |
+| End-to-end run time                 |   3.75 s |    2.96 s |
+| Nemotron plan + advice latency      |   2.27 s |    1.52 s |
+| Nemotron tokens                     |      721 |       739 |
 | SHA-256 receipt verified            |      yes |       yes |
 
-The server-managed paired workflow classified both seeded failures as resolved, the required-name invariant as unchanged, and excluded coverage as unverified. It produced zero regressions and did not convert unknown coverage into a pass. The pair relationship survives reloads, and the server independently recomputed each report receipt and all eight screenshot hashes from disk before displaying verification.
+The server-managed paired workflow classified both seeded failures as resolved, the required-name invariant as unchanged, and excluded coverage as unverified. It produced zero regressions and did not convert unknown coverage into a pass. Both Nemotron plans covered all three allow-listed checks with a grounded hypothesis, and both advisories cited an allow-listed evidence ID. The pair relationship survives reloads, and the server independently recomputed each versioned report receipt and all eight screenshot hashes from disk before displaying verification.
 
 The model received only the reviewed check catalog and expected behavior. It returned one validated risk hypothesis for every check and ordered the complete catalog. The browser runner still executed every check, and deterministic assertions produced every verdict. The post-run call selected one action from a server-owned catalog. Invalid model identifiers, omitted checks, provider failures and malformed outputs fail closed in the automated tests.
 
 Appointment evidence IDs:
 
-- Baseline: `75db5178-f87b-4d16-88e9-3e917f9a9a19`
-- Candidate: `86f39150-bbd6-4039-b352-959da94e3097`
+- Pair: `15ebbae0-7309-4607-a752-f9306afd0395`
+- Baseline: `b2998668-7680-4f95-9811-76b7e6132e6a`
+- Candidate: `790c7762-e9bf-4ab7-abdb-31854091c15d`
 
 ## Independent Fieldnotes pair
 
 The current runner executed the same server-managed workflow against a separate notes application. The seeded build lost a saved note after reload; the candidate retained it. Blank-note validation and duplicate prevention passed in both builds, excluded authentication and browser coverage remained unverified, and the comparison reported one resolution with zero regressions. Both receipts and all eight screenshots verified from disk.
 
-- Baseline: `9f67a852-c07e-444d-8d4c-dcc01302a2aa`
-- Candidate: `b417a60d-f983-4e66-b474-4ea86834c14e`
-- End-to-end pair time: 2.44 s
+- Pair: `7fc874fb-8665-4baf-97e2-715f80757d3c`
+- Baseline: `223c548b-9eda-40cd-aed1-5716d6677adb`
+- Candidate: `56b5d993-1298-4272-9c68-0cf5e0356f15`
+- End-to-end pair time: 3.14 s
 - Model calls: none; this pair measures runner reuse rather than additional model behavior
 
 Run receipts prove that the saved report fields and screenshots still match each captured artifact set. The portfolio receipt binds the verified run-receipt digests to the scored benchmark and changes if a covered result or receipt changes. These are integrity checks rather than third-party signatures.

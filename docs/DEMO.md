@@ -2,7 +2,7 @@
 
 Start with `npm start`, then open http://127.0.0.1:4317. Harbour Appointments is the default manifest. Nemotron is automatically unavailable when fewer than two calls remain, so this walkthrough does not consume the final call.
 
-1. Click **Start 90-second tour** to open candidate `86f39150-bbd6-4039-b352-959da94e3097` with baseline `75db5178-f87b-4d16-88e9-3e917f9a9a19` already selected.
+1. Click **Start 90-second tour** to open candidate `790c7762-e9bf-4ab7-abdb-31854091c15d` with baseline `b2998668-7680-4f95-9811-76b7e6132e6a` already selected.
 2. Confirm the candidate receipt is verified, then expand a check to inspect its risk hypothesis, exact observation, steps and screenshots.
 3. Read the comparison: persistence and sold-out availability are resolved, required-name validation is unchanged, and excluded coverage remains unverified.
 4. Open the baseline to see both failures and its separately verified receipt.

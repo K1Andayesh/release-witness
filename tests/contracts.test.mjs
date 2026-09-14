@@ -164,10 +164,31 @@ test("run receipts detect decision or evidence-reference changes", () => {
         ],
       },
     ],
-    plan: { state: "standard", order: ["save"], risks: [] },
-    analysis: { state: "skipped" },
+    plan: {
+      state: "complete",
+      order: ["save"],
+      risks: [{ checkId: "save", hypothesis: "The saved item may be lost." }],
+      model: "nvidia/Nemotron-3_5-Lightning",
+      provider: "Nebius Token Factory",
+      durationMs: 100,
+      usage: { total_tokens: 10 },
+    },
+    analysis: {
+      state: "complete",
+      action: "repeat-check",
+      evidenceIds: ["save"],
+      model: "nvidia/Nemotron-3_5-Lightning",
+      provider: "Nebius Token Factory",
+      durationMs: 50,
+      usage: { total_tokens: 5 },
+    },
   };
   run.attestation = attestRun(run);
+  assert.equal(run.attestation.schema, "run-v2");
+  assert.equal(verifyAttestation(run), true);
+  run.plan.usage.total_tokens = 11;
+  assert.equal(verifyAttestation(run), false);
+  run.plan.usage.total_tokens = 10;
   assert.equal(verifyAttestation(run), true);
   run.checks[0].observed = "Changed after receipt.";
   assert.equal(verifyAttestation(run), false);
@@ -451,7 +472,49 @@ test("server-managed pairs persist their relationship and comparison", async (t)
   const dir = await directory();
   const port = 4331;
   const base = `http://127.0.0.1:${port}`;
-  const server = await startServer({ port, directory: dir, publicDemo: true });
+  process.env.NEBIUS_API_KEY = "synthetic-qa-key";
+  process.env.NEBIUS_INFERENCE_APPROVED = "true";
+  process.env.MODEL_CALL_LIMIT = "10";
+  const model = "nvidia/Nemotron-3_5-Lightning";
+  let modelCalls = 0;
+  const transport = async (_url, options) => {
+    modelCalls += 1;
+    const messages = JSON.parse(options.body).messages;
+    const planning = messages[0].content.includes("bounded risk map");
+    const content = planning
+      ? JSON.stringify({
+          order: ["booking-persistence", "sold-out-slot", "required-name"],
+          reason: "Cover every reviewed booking risk.",
+          risks: [
+            {
+              checkId: "booking-persistence",
+              hypothesis: "A booking may disappear after reload.",
+            },
+            {
+              checkId: "sold-out-slot",
+              hypothesis: "A sold-out slot may become selectable.",
+            },
+            {
+              checkId: "required-name",
+              hypothesis: "A missing name may bypass validation.",
+            },
+          ],
+        })
+      : JSON.stringify({
+          nextCheckId: "coverage",
+          action: "expand-coverage",
+        });
+    return Response.json({
+      model,
+      choices: [{ finish_reason: "stop", message: { content } }],
+      usage: { total_tokens: 10 },
+    });
+  };
+  const server = await startServer({
+    port,
+    directory: dir,
+    runnerOptions: { providerOptions: { transport } },
+  });
   t.after(() => {
     server.closeAllConnections();
     server.close();
@@ -462,7 +525,7 @@ test("server-managed pairs persist their relationship and comparison", async (t)
     body: JSON.stringify({
       suite: "booking-v1",
       change: "Verify the paired release review.",
-      analyze: false,
+      analyze: true,
     }),
   });
   assert.equal(response.status, 202);
@@ -473,6 +536,7 @@ test("server-managed pairs persist their relationship and comparison", async (t)
     pair = await (await fetch(`${base}/api/pairs/${pair.id}`)).json();
   }
   assert.equal(pair.state, "complete");
+  assert.equal(modelCalls, 4);
   const baseline = await (
     await fetch(`${base}/api/runs/${pair.baselineId}`)
   ).json();
@@ -509,6 +573,11 @@ test("server-managed pairs persist their relationship and comparison", async (t)
   assert.equal(bookingBenchmark.boundariesUnverified, 1);
   assert.equal(bookingBenchmark.receiptsVerified, 2);
   assert.equal(bookingBenchmark.screenshotFilesVerified, 8);
+  assert.equal(bookingBenchmark.modelBacked, true);
+  assert.equal(bookingBenchmark.modelEvidence.runsVerified, 2);
+  assert.equal(bookingBenchmark.modelEvidence.riskHypothesesVerified, 6);
+  assert.equal(bookingBenchmark.modelEvidence.advisoriesVerified, 2);
+  assert.equal(bookingBenchmark.modelEvidence.tokensVerified, 40);
   assert.match(benchmark.attestation.digest, /^[a-f0-9]{64}$/);
   const benchmarkReport = await fetch(`${base}/api/benchmark/report`);
   assert.equal(benchmarkReport.status, 200);
@@ -531,6 +600,9 @@ test("server-managed pairs persist their relationship and comparison", async (t)
       `Candidate receipt: SHA-256 ${bookingBenchmark.receiptDigests.candidate}`,
     ),
   );
+  assert.match(benchmarkReportText, /Nemotron runs verified: 2/);
+  assert.match(benchmarkReportText, /Grounded risk hypotheses verified: 6/);
+  assert.match(benchmarkReportText, /Allow-listed advisories verified: 2/);
   const repeatedBenchmark = await (await fetch(`${base}/api/benchmark`)).json();
   assert.equal(
     repeatedBenchmark.attestation.digest,
@@ -548,6 +620,11 @@ test("server-managed pairs persist their relationship and comparison", async (t)
   assert.equal(
     tamperedBenchmark.suites.find((suite) => suite.id === "booking-v1")
       .verified,
+    false,
+  );
+  assert.equal(
+    tamperedBenchmark.suites.find((suite) => suite.id === "booking-v1")
+      .modelEvidence.verified,
     false,
   );
   assert.notEqual(
@@ -788,6 +865,12 @@ test("the judge-tour comparison survives a browser reload", async (t) => {
   });
   const page = await browser.newPage();
   await page.goto(base);
+  await page
+    .locator("#runtime-model")
+    .filter({
+      hasText: /nvidia\/Nemotron-3_5-Lightning via Nebius Token Factory/,
+    })
+    .waitFor();
   assert.match(
     await page.locator("#runtime-model").innerText(),
     /nvidia\/Nemotron-3_5-Lightning via Nebius Token Factory/,
@@ -984,7 +1067,7 @@ test("public demo mode excludes local projects and model spending", async (t) =>
   );
   const status = await (await fetch(`${base}/api/status`)).json();
   assert.equal(status.modelConfigured, false);
-  assert.equal(status.version, "0.1.18");
+  assert.equal(status.version, "0.1.19");
   assert.equal(status.publicDemo, true);
   const integrity = await (
     await fetch(`${base}/api/runs/${receiptId}/integrity`)
