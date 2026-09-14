@@ -1095,8 +1095,18 @@ footer {
   font-size: 14px;
   line-height: 1.75;
 }
-.certification-status {
+.report-provenance {
   float: right;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+.report-provenance > a {
+  color: #d8e6de;
+  font-size: 10px;
+  font-weight: 700;
+}
+.certification-status {
   padding: 8px 11px;
   color: #173d2e;
   background: #e7f9bb;
@@ -1382,8 +1392,12 @@ footer {
     padding-top: 18px;
   }
   .certification-status {
-    float: none;
     display: inline-block;
+  }
+  .report-provenance {
+    float: none;
+    flex-wrap: wrap;
+    justify-content: flex-start;
     margin-bottom: 20px;
   }
   .benchmark-report-hero h1 {

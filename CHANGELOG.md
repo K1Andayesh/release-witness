@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.1.24 — 2026-09-14
+
+- Bind the machine-readable benchmark response to the deployed release version and exact GitHub release URL.
+- Link the judge-facing certification directly to the source archive and commit for that release.
+- Keep release provenance visible beside certification on desktop and mobile.
+
 ## 0.1.23 — 2026-09-14
 
 - Surface the receipt-verified model runtime alongside token usage in the judge summary.

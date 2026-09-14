@@ -27,6 +27,7 @@ export async function startServer({
   );
   const origin = `http://127.0.0.1:${port}`;
   const reportOrigin = publicBaseUrl ? new URL(publicBaseUrl).origin : origin;
+  const sourceRepository = "https://github.com/K1Andayesh/release-witness";
   const allowedHosts = new Set([
     `127.0.0.1:${port}`,
     `localhost:${port}`,
@@ -439,6 +440,10 @@ export async function startServer({
     };
     return {
       ...certification,
+      release: {
+        version: packageMetadata.version,
+        source: `${sourceRepository}/releases/tag/v${packageMetadata.version}`,
+      },
       generatedAt: new Date().toISOString(),
       suites,
       attestation: {
@@ -662,7 +667,7 @@ export async function startServer({
         return reply(
           res,
           200,
-          `<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="description" content="Server-verified Release Witness benchmark evidence"><title>Release Witness benchmark verification</title><link rel="stylesheet" href="/style.css"></head><body class="benchmark-report-page"><div class="benchmark-report-shell"><a class="report-back" href="/">← Back to Release Witness</a><header class="benchmark-report-hero"><span class="certification-status ${benchmark.complete ? "verified" : "invalid"}" data-status="${benchmark.complete ? "certified" : "not-certified"}">Portfolio certified: ${benchmark.complete ? "yes" : "no"}</span><p class="eyebrow">SERVER-VERIFIED BENCHMARK</p><h1>Evidence a judge can trace.</h1><p>The aggregate below is derived from manifest ground truth, durable pair identity, comparison states, four run receipts and every referenced screenshot.</p><div class="portfolio-receipt"><span>Portfolio receipt</span><code>SHA-256 ${escapeHtml(benchmark.attestation.digest)}</code><small>${escapeHtml(benchmark.attestation.scope)}</small></div></header><main class="benchmark-report"><section aria-labelledby="portfolio-summary"><div class="report-section-heading"><div><span class="eyebrow">CONTROLLED RESULT</span><h2 id="portfolio-summary">Verified portfolio</h2></div><p>Generated <time datetime="${escapeHtml(benchmark.generatedAt)}">${escapeHtml(benchmark.generatedAt)}</time></p></div><div class="benchmark-metrics">
+          `<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="description" content="Server-verified Release Witness benchmark evidence"><title>Release Witness benchmark verification</title><link rel="stylesheet" href="/style.css"></head><body class="benchmark-report-page"><div class="benchmark-report-shell"><a class="report-back" href="/">← Back to Release Witness</a><header class="benchmark-report-hero"><div class="report-provenance"><a href="${escapeHtml(benchmark.release.source)}" target="_blank" rel="noopener">Release ${escapeHtml(benchmark.release.version)} source ↗</a><span class="certification-status ${benchmark.complete ? "verified" : "invalid"}" data-status="${benchmark.complete ? "certified" : "not-certified"}">Portfolio certified: ${benchmark.complete ? "yes" : "no"}</span></div><p class="eyebrow">SERVER-VERIFIED BENCHMARK</p><h1>Evidence a judge can trace.</h1><p>The aggregate below is derived from manifest ground truth, durable pair identity, comparison states, four run receipts and every referenced screenshot.</p><div class="portfolio-receipt"><span>Portfolio receipt</span><code>SHA-256 ${escapeHtml(benchmark.attestation.digest)}</code><small>${escapeHtml(benchmark.attestation.scope)}</small></div></header><main class="benchmark-report"><section aria-labelledby="portfolio-summary"><div class="report-section-heading"><div><span class="eyebrow">CONTROLLED RESULT</span><h2 id="portfolio-summary">Verified portfolio</h2></div><p>Generated <time datetime="${escapeHtml(benchmark.generatedAt)}">${escapeHtml(benchmark.generatedAt)}</time></p></div><div class="benchmark-metrics">
 ${metric(`${benchmark.totals.defectsDetected}/${benchmark.totals.knownDefects}`, "defects detected", `Defects detected: ${benchmark.totals.defectsDetected}/${benchmark.totals.knownDefects}`)}
 ${metric(`${benchmark.totals.repairsResolved}/${benchmark.totals.knownDefects}`, "repairs resolved", `Repairs resolved: ${benchmark.totals.repairsResolved}/${benchmark.totals.knownDefects}`)}
 ${metric(benchmark.totals.invariantsPreserved, "invariants preserved", `Passing invariants preserved: ${benchmark.totals.invariantsPreserved}`)}
