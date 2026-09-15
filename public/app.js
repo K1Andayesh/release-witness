@@ -114,7 +114,7 @@ function renderBenchmark(benchmark) {
     `seeded defects verified across ${suites.length} workflows`;
   $("#benchmark-files").textContent = totals.screenshotFilesVerified;
   $("#benchmark-files-label").textContent =
-    `${totals.receiptsVerified} receipts freshly verified`;
+    `screenshots · ${totals.receiptsVerified} receipts freshly verified`;
   $("#benchmark-model-runs").textContent = totals.modelRunsVerified;
   $("#benchmark-model-runs-label").textContent =
     `receipt-verified Nemotron runs across ${modelSuites.length} workflows`;

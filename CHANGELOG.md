@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.1.34 — 2026-09-15
+
+- Label the verified evidence total as screenshots so the judge-facing metric is self-explanatory.
+- Reconcile the repository handoff with the completed Devpost preview and saved entry fields.
+- Keep the release provenance links synchronized with the deployed source.
+
 ## 0.1.33 — 2026-09-15
 
 - Publish the synchronized 1:47 two-workflow demo with naturally paced Australian English narration.

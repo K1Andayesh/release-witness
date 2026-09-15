@@ -6,10 +6,12 @@ Keyvan approved this competition on 9 September 2026: “I approve both you have
 
 - Preparation: startup rules/access review and a dependency-free integration probe prepared on 9 September 2026. See docs/STARTUP.md and README.md.
 - Registration: completed on 9 September 2026 as a solo participant. Devpost displayed "Thanks for registering!" and the hackathon project dashboard.
-- Nebius account/model access: billing completed by the user; authenticated account showed a $1 trial with 29 days remaining. Authorized project key stored in ignored .env. Real NVIDIA Nemotron inference and HTTP 401 failure handling verified. See docs/STARTUP.md for response, usage and limitations.
+- Nebius account/model access: billing completed by the user; the **9 September access check** recorded a $1 trial with 29 days remaining. This is historical evidence, not today's balance. Authorized project key stored in ignored .env. Real NVIDIA Nemotron inference and HTTP 401 failure handling verified. See docs/STARTUP.md for response, usage and limitations; recheck current budget before additional model calls.
 - Implementation and UI testing: first local vertical slice built as Release Witness. Actual UI runs verified seeded failure, repaired pass, screenshot evidence, provider-truncation failure display and persistence over server restart. Broader M3 evaluation remains. See docs/QA.md.
-- Submission package: source license, CI, security guidance, Devpost draft, demo script and publication checklist prepared locally on 14 September 2026. Public repository, hosted demo, video upload and final submission remain external publication actions and have not occurred.
-- Proposed concept below is a starting direction, not a validated product specification.
+- Public package: [source](https://github.com/K1Andayesh/release-witness), [bounded hosted demo](https://release-witness.139-99-135-89.sslip.io), and [1:47 narrated video](https://youtu.be/O8Ijn85__6U) are recorded as published and verified on **15 September 2026** in [docs/READINESS.md](docs/READINESS.md) and [docs/PUBLISH_CHECKLIST.md](docs/PUBLISH_CHECKLIST.md). The rendered Devpost preview is verified; final submission remains pending.
+- Current implementation evidence: two declarative workflows, 3/3 seeded defects detected and resolved, checked report/screenshot receipts, and 22 automated tests are recorded in the readiness handoff. This is a bounded QA product; arbitrary workflow generation and automatic repair are outside its implemented scope. The hosted synthetic demo disables model calls.
+- Status reconciled from project records on **15 September 2026**; authenticated account state, public-link checks and UI tests were not repeated during this documentation update.
+- The concept, milestones and estimates below preserve the initial plan. Use the readiness and publication checklists for delivered behavior and remaining work.
 
 ## Competition facts
 
@@ -78,7 +80,7 @@ Planning estimate: 15–22 focused build days plus 5–7 QA/demo days, with roug
 
 ## Next action
 
-Complete the external publication sequence in `docs/PUBLISH_CHECKLIST.md`: create the public repository, harden and host an authenticated demo, record the sub-three-minute video, replace link placeholders, recheck the rules and submit after final authorization. The local product is available at http://127.0.0.1:4317.
+Complete the remaining QA in [docs/READINESS.md](docs/READINESS.md). The Devpost story, media, links and eligibility fields are saved and previewed; only final rules acceptance and submission remain subject to action-time confirmation in [docs/PUBLISH_CHECKLIST.md](docs/PUBLISH_CHECKLIST.md). Preserve the bounded synthetic judging deployment through **15 December 2026**. Do not recreate the already published repository, demo or video; later project authorizations apply to those completed actions. The local product is available at http://127.0.0.1:4317.
 
 ## Local MVP handoff
 
