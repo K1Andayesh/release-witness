@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.1.35 — 2026-09-16
+
+- Separate defect detection from repair resolution in the headline judge metric.
+- State both verified 3/3 outcomes directly instead of compressing them into an ambiguous label.
+- Preserve the same server-derived benchmark and explicit evidence boundaries.
+
 ## 0.1.34 — 2026-09-15
 
 - Label the verified evidence total as screenshots so the judge-facing metric is self-explanatory.

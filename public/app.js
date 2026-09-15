@@ -109,9 +109,9 @@ function renderBenchmark(benchmark) {
   }
   const { totals, suites } = benchmark;
   $("#benchmark-defects").textContent =
-    `${totals.repairsResolved}/${totals.knownDefects}`;
+    `${totals.defectsDetected}/${totals.knownDefects}`;
   $("#benchmark-defects-label").textContent =
-    `seeded defects verified across ${suites.length} workflows`;
+    `seeded defects detected · ${totals.repairsResolved}/${totals.knownDefects} repairs resolved across ${suites.length} workflows`;
   $("#benchmark-files").textContent = totals.screenshotFilesVerified;
   $("#benchmark-files-label").textContent =
     `screenshots · ${totals.receiptsVerified} receipts freshly verified`;
