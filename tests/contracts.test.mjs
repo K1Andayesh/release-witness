@@ -617,10 +617,10 @@ test("server-managed pairs persist their relationship and comparison", async (t)
     (suite) => suite.id === "booking-v1",
   );
   assert.equal(benchmark.complete, false);
-  assert.equal(benchmark.release.version, "0.1.36");
+  assert.equal(benchmark.release.version, "0.1.37");
   assert.equal(
     benchmark.release.source,
-    "https://github.com/K1Andayesh/release-witness/releases/tag/v0.1.36",
+    "https://github.com/K1Andayesh/release-witness/releases/tag/v0.1.37",
   );
   assert.equal(
     benchmark.release.commit,
@@ -636,7 +636,7 @@ test("server-managed pairs persist their relationship and comparison", async (t)
   );
   assert.equal(
     benchmark.release.archiveSource,
-    "https://github.com/K1Andayesh/release-witness/releases/download/v0.1.36/release-witness-publication-ready-v0.1.36-r1.tar.gz",
+    "https://github.com/K1Andayesh/release-witness/releases/download/v0.1.37/release-witness-publication-ready-v0.1.37-r1.tar.gz",
   );
   assert.equal(bookingBenchmark.verified, true);
   assert.equal(bookingBenchmark.defectsDetected, 2);
@@ -659,7 +659,7 @@ test("server-managed pairs persist their relationship and comparison", async (t)
   assert.match(benchmarkReportText, /<main class="benchmark-report">/);
   assert.match(benchmarkReportText, /Portfolio certified: no/);
   assert.match(benchmarkReportText, /data-status="not-certified"/);
-  assert.match(benchmarkReportText, /Release 0\.1\.36 source/);
+  assert.match(benchmarkReportText, /Release 0\.1\.37 source/);
   assert.match(benchmarkReportText, /Commit 01234567/);
   assert.match(benchmarkReportText, /Source archive SHA-256 abcdefabcdef/);
   assert.match(benchmarkReportText, new RegExp(`data-pair-id="${pair.id}"`));
@@ -1104,9 +1104,9 @@ test("the judge-tour comparison survives a browser reload", async (t) => {
   );
   assert.equal(
     await benchmarkPage
-      .getByRole("link", { name: "Release 0.1.36 source ↗" })
+      .getByRole("link", { name: "Release 0.1.37 source ↗" })
       .getAttribute("href"),
-    "https://github.com/K1Andayesh/release-witness/releases/tag/v0.1.36",
+    "https://github.com/K1Andayesh/release-witness/releases/tag/v0.1.37",
   );
   assert.equal(
     await benchmarkPage
@@ -1263,7 +1263,7 @@ test("public demo mode excludes local projects and model spending", async (t) =>
   );
   const status = await (await fetch(`${base}/api/status`)).json();
   assert.equal(status.modelConfigured, false);
-  assert.equal(status.version, "0.1.36");
+  assert.equal(status.version, "0.1.37");
   assert.equal(status.publicDemo, true);
   const integrity = await (
     await fetch(`${base}/api/runs/${receiptId}/integrity`)
@@ -1283,4 +1283,48 @@ test("public demo mode excludes local projects and model spending", async (t) =>
   });
   assert.equal(response.status, 400);
   assert.match((await response.json()).error, /public demo mode/);
+  const browser = await chromium.launch({ channel: "chrome", headless: true });
+  t.after(() => browser.close());
+  const page = await browser.newPage();
+  await page.goto(base);
+  await page
+    .getByText("A saved model-backed comparison is unavailable.", {
+      exact: false,
+    })
+    .waitFor();
+  assert.equal(
+    await page
+      .getByRole("button", { name: /Start 90-second tour/ })
+      .isDisabled(),
+    true,
+  );
+  assert.equal(
+    await page.locator("#runtime-eyebrow").innerText(),
+    "MODEL EVIDENCE UNAVAILABLE",
+  );
+  assert.match(
+    await page.locator("#runtime-meta").innerText(),
+    /Live model calls are disabled here/,
+  );
+  await page.getByRole("button", { name: "Run baseline + candidate" }).click();
+  await page.locator("#comparison-result .comparison-callout").waitFor();
+  const browserOnlyBenchmark = await (
+    await fetch(`${base}/api/benchmark`)
+  ).json();
+  assert.equal(browserOnlyBenchmark.complete, false);
+  assert.equal(
+    browserOnlyBenchmark.suites.find((suite) => suite.id === "booking-v1")
+      .modelEvidence.verified,
+    false,
+  );
+  assert.equal(
+    await page
+      .getByRole("button", { name: /Start 90-second tour/ })
+      .isDisabled(),
+    true,
+  );
+  assert.match(
+    await page.locator("#benchmark-defects-label").innerText(),
+    /unavailable/,
+  );
 });

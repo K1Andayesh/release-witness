@@ -1,5 +1,10 @@
 # Release Witness QA record
 
+## Empty model-evidence demo — 16 September 2026
+
+- Actual Chrome opened an isolated public-demo server with an empty evidence directory, then ran Harbour Appointments baseline and candidate with model calls disabled. The paired browser results exposed two resolutions, but `/api/benchmark` returned `complete: false`, zero model runs and `modelEvidence.verified: false`.
+- After the UI correction, a Chrome reload showed **MODEL EVIDENCE UNAVAILABLE**, explained that live calls were disabled, withheld the portfolio headline and disabled the absent saved model tour. The contract suite repeats this path and verifies that a browser-only pair cannot certify the portfolio.
+
 ## Browser-only pair cannot displace model-backed benchmark — 16 September 2026
 
 - Actual Chrome used **Run baseline + candidate** on the local public demo with live model calls disabled. The newer browser-only appointment pair `275e683f` → `6c679ce7` completed and its before/after comparison showed two resolved defects, one preserved invariant and one unverified coverage boundary.

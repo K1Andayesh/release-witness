@@ -4,6 +4,8 @@ This evaluation covers two independent included workflows with deliberately seed
 
 The public homepage does not hard-code the portfolio result. Each workflow manifest declares its baseline, candidate, known defect IDs and invariant IDs. `/api/benchmark` selects the newest completed model-backed server-managed pair for each workflow when one exists, so a newer browser-only demo run cannot displace the competition evidence. It then recomputes both evidence receipts, reads every screenshot from disk and checks the observed comparison states against that ground truth. The homepage shows the aggregate only when every workflow and its model evidence verifies. If no model-backed pair exists, the latest completed pair remains inspectable but cannot certify the aggregate. `/api/benchmark/report` renders the same verified state as a readable receipt, names all four underlying run-receipt digests and includes a deterministic SHA-256 digest over the ground truth, pair identities, comparison totals, verified run-receipt digests, exact release source, immutable Git commit and source-archive SHA-256; its generation timestamp is intentionally outside the digest.
 
+A fresh public-demo install with no saved model runs was checked in Chrome. Its browser-only pair showed two resolved appointment defects and intact run receipts, while the portfolio stayed uncertified; the judge tour and model contribution labels explicitly showed that the model evidence was unavailable.
+
 Current portfolio-verifier evidence:
 
 - Harbour Appointments: baseline `b2998668-7680-4f95-9811-76b7e6132e6a`, candidate `790c7762-e9bf-4ab7-abdb-31854091c15d`

@@ -1,5 +1,10 @@
 # Changelog
 
+## 0.1.37 — 2026-09-16
+
+- Make a public demo without saved model evidence explicit: disable the unavailable judge tour, remove its proof promise and explain that live model calls are disabled.
+- Keep browser-only results inspectable while the portfolio remains uncertified, and exercise that fresh-install path in actual Chrome and the contract suite.
+
 ## 0.1.36 — 2026-09-16
 
 - Keep the published benchmark on the newest completed model-backed pair for each workflow when visitors create newer browser-only demo pairs.

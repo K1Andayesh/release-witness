@@ -91,9 +91,12 @@ function renderBenchmark(benchmark) {
     : null;
   if (benchmarkModelProof) {
     const proof = benchmarkModelProof;
+    $("#runtime-eyebrow").textContent = "VERIFIED NEMOTRON CONTRIBUTION";
     $("#runtime-model").textContent = `${proof.model} via ${proof.provider}`;
     $("#runtime-meta").textContent =
       `${proof.runsVerified} receipt-verified runs across ${proof.workflowsVerified} ${proof.workflowsVerified === 1 ? "workflow" : "workflows"} · ${proof.riskHypothesesVerified} grounded risk hypotheses · ${proof.advisoriesVerified} allow-listed advisories · ${proof.tokensVerified.toLocaleString()} tokens · browser assertions own every verdict`;
+  } else {
+    $("#runtime-eyebrow").textContent = "MODEL EVIDENCE UNAVAILABLE";
   }
   if (!benchmark.complete) {
     $("#benchmark-defects").textContent = "—";
@@ -473,6 +476,7 @@ async function refresh() {
     ]);
     all = runs;
     currentStatus = status;
+    const judgePair = strongestJudgePair();
     if (!catalog.length) {
       catalog = manifests;
       $("#suite").innerHTML = catalog
@@ -494,6 +498,10 @@ async function refresh() {
       ? `Release ${status.version}`
       : "";
     $("#connection").classList.remove("offline");
+    $("#judge-tour").disabled = !judgePair;
+    $("#judge-intro").textContent = judgePair
+      ? "Open the strongest baseline-to-candidate proof in one click."
+      : "A saved model-backed comparison is unavailable. Browser-only checks remain available.";
     const calls = status.modelAllowance?.remaining ?? 0;
     const limit = status.modelAllowance?.limit ?? 10;
     const canAnalyze = status.modelConfigured && calls >= 2;
@@ -502,16 +510,17 @@ async function refresh() {
     $("#model-note").textContent = canAnalyze
       ? `Two bounded calls · ${calls} of ${limit} remaining`
       : status.publicDemo
-        ? "Live calls disabled · judge tour includes verified model records"
+        ? judgePair
+          ? "Live calls disabled · saved model-backed tour available"
+          : "Live calls disabled · no saved model tour available"
         : status.modelConfigured
           ? `${calls} of ${limit} calls remain · browser-only runs available`
           : "Model access unavailable · browser-only runs available";
     $("#start").disabled = submitting || status.busy;
     $("#run-pair").disabled = submitting || status.busy;
     if (!selected && all.length) {
-      const judgePair = status.publicDemo ? strongestJudgePair() : null;
-      selected = judgePair?.candidate.id || all[0].id;
-      routeBaseline = judgePair?.baseline.id || "";
+      selected = (status.publicDemo && judgePair?.candidate.id) || all[0].id;
+      routeBaseline = (status.publicDemo && judgePair?.baseline.id) || "";
       history.replaceState(null, "", `#${routeHash(selected, routeBaseline)}`);
     }
     syncSetupFromRun(all.find((run) => run.id === selected));
@@ -536,8 +545,9 @@ async function refresh() {
           `Saved runtime call · ${(runtimeRun.plan.durationMs / 1000).toFixed(1)}s · ${runtimeRun.plan.usage?.total_tokens ?? "unknown"} tokens · verified evidence below`;
       } else {
         $("#runtime-model").textContent = "No saved model-backed run available";
-        $("#runtime-meta").textContent =
-          "Run with model planning enabled to record provider, model identity and usage.";
+        $("#runtime-meta").textContent = status.publicDemo
+          ? "Live model calls are disabled here. Browser-only results remain inspectable but do not certify model evidence."
+          : "Run with model planning enabled to record provider, model identity and usage.";
       }
     }
     $("#run-message").textContent = pairProgress
