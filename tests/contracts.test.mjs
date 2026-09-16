@@ -617,10 +617,10 @@ test("server-managed pairs persist their relationship and comparison", async (t)
     (suite) => suite.id === "booking-v1",
   );
   assert.equal(benchmark.complete, false);
-  assert.equal(benchmark.release.version, "0.1.37");
+  assert.equal(benchmark.release.version, "0.1.38");
   assert.equal(
     benchmark.release.source,
-    "https://github.com/K1Andayesh/release-witness/releases/tag/v0.1.37",
+    "https://github.com/K1Andayesh/release-witness/releases/tag/v0.1.38",
   );
   assert.equal(
     benchmark.release.commit,
@@ -636,7 +636,7 @@ test("server-managed pairs persist their relationship and comparison", async (t)
   );
   assert.equal(
     benchmark.release.archiveSource,
-    "https://github.com/K1Andayesh/release-witness/releases/download/v0.1.37/release-witness-publication-ready-v0.1.37-r1.tar.gz",
+    "https://github.com/K1Andayesh/release-witness/releases/download/v0.1.38/release-witness-publication-ready-v0.1.38-r1.tar.gz",
   );
   assert.equal(bookingBenchmark.verified, true);
   assert.equal(bookingBenchmark.defectsDetected, 2);
@@ -659,7 +659,7 @@ test("server-managed pairs persist their relationship and comparison", async (t)
   assert.match(benchmarkReportText, /<main class="benchmark-report">/);
   assert.match(benchmarkReportText, /Portfolio certified: no/);
   assert.match(benchmarkReportText, /data-status="not-certified"/);
-  assert.match(benchmarkReportText, /Release 0\.1\.37 source/);
+  assert.match(benchmarkReportText, /Release 0\.1\.38 source/);
   assert.match(benchmarkReportText, /Commit 01234567/);
   assert.match(benchmarkReportText, /Source archive SHA-256 abcdefabcdef/);
   assert.match(benchmarkReportText, new RegExp(`data-pair-id="${pair.id}"`));
@@ -717,15 +717,60 @@ test("server-managed pairs persist their relationship and comparison", async (t)
     pair.id,
   );
   assert.equal(afterJudgeRun.attestation.digest, benchmark.attestation.digest);
-  const screenshotName = candidate.checks
+  const newerResponse = await fetch(`${base}/api/pairs`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json", Origin: base },
+    body: JSON.stringify({
+      suite: "booking-v1",
+      change: "Repeat the model-backed release review.",
+      analyze: true,
+    }),
+  });
+  assert.equal(newerResponse.status, 202);
+  let newerPair = await newerResponse.json();
+  const newerDeadline = Date.now() + 30_000;
+  while (newerPair.state === "running" && Date.now() < newerDeadline) {
+    await new Promise((resolve) => setTimeout(resolve, 100));
+    newerPair = await (await fetch(`${base}/api/pairs/${newerPair.id}`)).json();
+  }
+  assert.equal(newerPair.state, "complete");
+  assert.equal(modelCalls, 8);
+  const newerCandidate = await (
+    await fetch(`${base}/api/runs/${newerPair.candidateId}`)
+  ).json();
+  const newerBenchmark = await (await fetch(`${base}/api/benchmark`)).json();
+  assert.equal(
+    newerBenchmark.suites.find((suite) => suite.id === "booking-v1").pairId,
+    newerPair.id,
+  );
+  const browser = await chromium.launch({ channel: "chrome", headless: true });
+  t.after(() => browser.close());
+  const page = await browser.newPage();
+  await page.goto(base);
+  await page
+    .getByText("Open the strongest baseline-to-candidate proof", {
+      exact: false,
+    })
+    .waitFor();
+  assert.equal(
+    await page
+      .getByRole("button", { name: /Start 90-second tour/ })
+      .isEnabled(),
+    true,
+  );
+  const screenshotName = newerCandidate.checks
     .flatMap((check) => check.screenshots)[0]
     .url.split("/")
     .pop();
   await writeFile(
-    new URL(`${candidate.id}/${screenshotName}`, dir),
+    new URL(`${newerCandidate.id}/${screenshotName}`, dir),
     "tampered-benchmark-evidence",
   );
   const tamperedBenchmark = await (await fetch(`${base}/api/benchmark`)).json();
+  assert.equal(
+    tamperedBenchmark.suites.find((suite) => suite.id === "booking-v1").pairId,
+    newerPair.id,
+  );
   assert.equal(
     tamperedBenchmark.suites.find((suite) => suite.id === "booking-v1")
       .verified,
@@ -738,7 +783,28 @@ test("server-managed pairs persist their relationship and comparison", async (t)
   );
   assert.notEqual(
     tamperedBenchmark.attestation.digest,
-    benchmark.attestation.digest,
+    newerBenchmark.attestation.digest,
+  );
+  assert.equal(tamperedBenchmark.complete, false);
+  assert.equal(
+    (await (await fetch(`${base}/api/runs/${candidate.id}/integrity`)).json())
+      .verified,
+    true,
+  );
+  await page
+    .getByText("A verified model-backed comparison is unavailable.", {
+      exact: false,
+    })
+    .waitFor();
+  assert.equal(
+    await page
+      .getByRole("button", { name: /Start 90-second tour/ })
+      .isDisabled(),
+    true,
+  );
+  assert.match(
+    await page.locator("#benchmark-defects-label").innerText(),
+    /unavailable/,
   );
 });
 
@@ -810,7 +876,20 @@ test("the judge-tour comparison survives a browser reload", async (t) => {
     plan: {
       state: "complete",
       order: ["booking-persistence", "sold-out-slot", "required-name"],
-      risks: [],
+      risks: [
+        {
+          checkId: "booking-persistence",
+          hypothesis: "A booking may disappear after reload.",
+        },
+        {
+          checkId: "sold-out-slot",
+          hypothesis: "A sold-out slot may remain selectable.",
+        },
+        {
+          checkId: "required-name",
+          hypothesis: "An empty customer name may be accepted.",
+        },
+      ],
       reason: "Reviewed model record.",
       model: "nvidia/Nemotron-3_5-Lightning",
       provider: "Nebius Token Factory",
@@ -823,6 +902,7 @@ test("the judge-tour comparison survives a browser reload", async (t) => {
       text: "Expand the explicitly unverified coverage.",
       evidenceIds: ["coverage"],
       model: "nvidia/Nemotron-3_5-Lightning",
+      provider: "Nebius Token Factory",
       durationMs: 1,
       usage: { total_tokens: 1 },
     },
@@ -832,6 +912,7 @@ test("the judge-tour comparison survives a browser reload", async (t) => {
     pairId,
     pairPosition: "baseline",
   };
+  bookingBaseline.attestation = attestRun(bookingBaseline);
   await writeFile(
     new URL(`${baselineId}.json`, dir),
     JSON.stringify(bookingBaseline),
@@ -847,9 +928,23 @@ test("the judge-tour comparison survives a browser reload", async (t) => {
     pairPosition: "candidate",
     comparisonBaselineId: baselineId,
   };
+  bookingCandidate.attestation = attestRun(bookingCandidate);
   await writeFile(
     new URL(`${candidateId}.json`, dir),
     JSON.stringify(bookingCandidate),
+  );
+  await writeFile(
+    new URL(`${pairId}.pair.json`, dir),
+    JSON.stringify({
+      id: pairId,
+      suite: "booking-v1",
+      state: "complete",
+      builds: ["baseline", "candidate"],
+      baselineId,
+      candidateId,
+      createdAt: createdAt.toISOString(),
+      finishedAt: new Date(createdAt.getTime() + 2_000).toISOString(),
+    }),
   );
   const notesBaselineId = "44444444-4444-4444-8444-444444444444";
   const notesCandidateId = "55555555-5555-4555-8555-555555555555";
@@ -1008,7 +1103,7 @@ test("the judge-tour comparison survives a browser reload", async (t) => {
     await page.locator("#runtime-model").innerText(),
     /nvidia\/Nemotron-3_5-Lightning via Nebius Token Factory/,
   );
-  assert.match(await page.locator("#runtime-meta").innerText(), /1 tokens/);
+  assert.match(await page.locator("#runtime-meta").innerText(), /4 tokens/);
   await page.locator("#comparison-result .comparison-callout").waitFor();
   assert.equal(new URL(page.url()).hash, `#${candidateId}~${baselineId}`);
   assert.equal(await page.locator("#baseline").inputValue(), baselineId);
@@ -1104,9 +1199,9 @@ test("the judge-tour comparison survives a browser reload", async (t) => {
   );
   assert.equal(
     await benchmarkPage
-      .getByRole("link", { name: "Release 0.1.37 source ↗" })
+      .getByRole("link", { name: "Release 0.1.38 source ↗" })
       .getAttribute("href"),
-    "https://github.com/K1Andayesh/release-witness/releases/tag/v0.1.37",
+    "https://github.com/K1Andayesh/release-witness/releases/tag/v0.1.38",
   );
   assert.equal(
     await benchmarkPage
@@ -1263,7 +1358,7 @@ test("public demo mode excludes local projects and model spending", async (t) =>
   );
   const status = await (await fetch(`${base}/api/status`)).json();
   assert.equal(status.modelConfigured, false);
-  assert.equal(status.version, "0.1.37");
+  assert.equal(status.version, "0.1.38");
   assert.equal(status.publicDemo, true);
   const integrity = await (
     await fetch(`${base}/api/runs/${receiptId}/integrity`)
@@ -1288,7 +1383,7 @@ test("public demo mode excludes local projects and model spending", async (t) =>
   const page = await browser.newPage();
   await page.goto(base);
   await page
-    .getByText("A saved model-backed comparison is unavailable.", {
+    .getByText("A verified model-backed comparison is unavailable.", {
       exact: false,
     })
     .waitFor();

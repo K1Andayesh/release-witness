@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.1.38 — 2026-09-17
+
+- Gate the judge tour on the server-verified model-backed pair instead of inferring proof from saved run metadata.
+- Recheck benchmark integrity every ten seconds while the page is open, so changed or missing screenshots withdraw the tour and portfolio claim without requiring a reload.
+- Exercise a newer corrupted model-backed pair alongside an older intact pair in real Chrome; certification fails closed without silently falling back.
+
 ## 0.1.37 — 2026-09-16
 
 - Make a public demo without saved model evidence explicit: disable the unavailable judge tour, remove its proof promise and explain that live model calls are disabled.

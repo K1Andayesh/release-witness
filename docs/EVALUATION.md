@@ -6,6 +6,8 @@ The public homepage does not hard-code the portfolio result. Each workflow manif
 
 A fresh public-demo install with no saved model runs was checked in Chrome. Its browser-only pair showed two resolved appointment defects and intact run receipts, while the portfolio stayed uncertified; the judge tour and model contribution labels explicitly showed that the model evidence was unavailable.
 
+An isolated integrity test created two model-backed appointment pairs, retained the older intact pair, and changed a screenshot in the newer pair. `/api/benchmark` kept the newer pair selected and withheld certification. Actual Chrome withdrew the judge tour after its periodic benchmark refresh; no older result silently replaced the failed latest evidence.
+
 Current portfolio-verifier evidence:
 
 - Harbour Appointments: baseline `b2998668-7680-4f95-9811-76b7e6132e6a`, candidate `790c7762-e9bf-4ab7-abdb-31854091c15d`

@@ -1,5 +1,10 @@
 # Release Witness QA record
 
+## Corrupted newer model pair — 17 September 2026
+
+- A controlled local test produced two model-backed Harbour Appointments pairs through an injected Nemotron-shaped provider response; no live provider calls or private project data were used. The older pair stayed receipt-valid. Altering one screenshot in the newer pair made `/api/benchmark` select that newer pair but return `verified: false`, `modelEvidence.verified: false` and `complete: false`.
+- Actual Chrome had the judge tour enabled while the newer pair was intact. With the page still open, the ten-second benchmark refresh detected the altered screenshot, withheld the portfolio headline and disabled the tour. This prevents a saved run's model metadata from serving as proof after its evidence fails.
+
 ## Empty model-evidence demo — 16 September 2026
 
 - Actual Chrome opened an isolated public-demo server with an empty evidence directory, then ran Harbour Appointments baseline and candidate with model calls disabled. The paired browser results exposed two resolutions, but `/api/benchmark` returned `complete: false`, zero model runs and `modelEvidence.verified: false`.

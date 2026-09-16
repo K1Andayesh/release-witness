@@ -26,7 +26,9 @@ let selected = initialRoute.runId,
   currentStatus = {},
   pairProgress = "",
   showAllRuns = false,
-  benchmarkModelProof = null;
+  benchmarkModelProof = null,
+  benchmarkSnapshot = null,
+  benchmarkCheckedAt = 0;
 const HISTORY_LIMIT = 6;
 const busy = (run) => ["planning", "running", "analyzing"].includes(run?.state);
 const label = (status) =>
@@ -36,32 +38,14 @@ const label = (status) =>
 const planRisk = (run, checkId) =>
   run.plan?.risks?.find((risk) => risk.checkId === checkId)?.hypothesis;
 function strongestJudgePair() {
-  const candidates = all
-    .filter(
-      (run) =>
-        run.suite === "booking-v1" &&
-        run.build === "candidate" &&
-        run.state === "complete" &&
-        run.pairId &&
-        run.pairPosition === "candidate" &&
-        run.comparisonBaselineId &&
-        run.plan?.state === "complete" &&
-        run.analysis?.state === "complete",
-    )
-    .sort((a, b) => b.createdAt.localeCompare(a.createdAt));
-  for (const candidate of candidates) {
-    const baseline = all.find(
-      (run) =>
-        run.id === candidate.comparisonBaselineId &&
-        run.suite === candidate.suite &&
-        run.build === "baseline" &&
-        run.state === "complete" &&
-        run.pairId === candidate.pairId &&
-        run.pairPosition === "baseline",
-    );
-    if (baseline) return { candidate, baseline };
-  }
-  return null;
+  const suite = benchmarkSnapshot?.suites?.find(
+    (item) =>
+      item.id === "booking-v1" && item.verified && item.modelEvidence?.verified,
+  );
+  if (!suite) return null;
+  const candidate = all.find((run) => run.id === suite.candidateId);
+  const baseline = all.find((run) => run.id === suite.baselineId);
+  return candidate && baseline ? { candidate, baseline } : null;
 }
 function renderBenchmark(benchmark) {
   const exactSource =
@@ -298,7 +282,7 @@ $("#judge-tour").addEventListener("click", () => {
   const pair = strongestJudgePair();
   if (!pair) {
     $("#run-message").textContent =
-      "The guided comparison needs one completed model-backed server-managed pair.";
+      "The guided comparison needs one verified model-backed server-managed pair.";
     return;
   }
   const { candidate, baseline } = pair;
@@ -476,6 +460,21 @@ async function refresh() {
     ]);
     all = runs;
     currentStatus = status;
+    const next = JSON.stringify(all);
+    const runsChanged = next !== signature;
+    let benchmarkChanged = false;
+    if (
+      runsChanged ||
+      !benchmarkSnapshot ||
+      Date.now() - benchmarkCheckedAt >= 10_000
+    ) {
+      const benchmark = await api("/api/benchmark");
+      benchmarkChanged =
+        benchmark.attestation.digest !== benchmarkSnapshot?.attestation?.digest;
+      benchmarkSnapshot = benchmark;
+      benchmarkCheckedAt = Date.now();
+      renderBenchmark(benchmark);
+    }
     const judgePair = strongestJudgePair();
     if (!catalog.length) {
       catalog = manifests;
@@ -501,7 +500,7 @@ async function refresh() {
     $("#judge-tour").disabled = !judgePair;
     $("#judge-intro").textContent = judgePair
       ? "Open the strongest baseline-to-candidate proof in one click."
-      : "A saved model-backed comparison is unavailable. Browser-only checks remain available.";
+      : "A verified model-backed comparison is unavailable. Browser-only checks remain available.";
     const calls = status.modelAllowance?.remaining ?? 0;
     const limit = status.modelAllowance?.limit ?? 10;
     const canAnalyze = status.modelConfigured && calls >= 2;
@@ -512,7 +511,7 @@ async function refresh() {
       : status.publicDemo
         ? judgePair
           ? "Live calls disabled · saved model-backed tour available"
-          : "Live calls disabled · no saved model tour available"
+          : "Live calls disabled · no verified model tour available"
         : status.modelConfigured
           ? `${calls} of ${limit} calls remain · browser-only runs available`
           : "Model access unavailable · browser-only runs available";
@@ -524,9 +523,7 @@ async function refresh() {
       history.replaceState(null, "", `#${routeHash(selected, routeBaseline)}`);
     }
     syncSetupFromRun(all.find((run) => run.id === selected));
-    const next = JSON.stringify(all);
-    if (next !== signature) {
-      renderBenchmark(await api("/api/benchmark"));
+    if (runsChanged || benchmarkChanged) {
       signature = next;
       render();
     }
@@ -542,7 +539,7 @@ async function refresh() {
         $("#runtime-model").textContent =
           `${model} via ${runtimeRun.plan.provider}`;
         $("#runtime-meta").textContent =
-          `Saved runtime call · ${(runtimeRun.plan.durationMs / 1000).toFixed(1)}s · ${runtimeRun.plan.usage?.total_tokens ?? "unknown"} tokens · verified evidence below`;
+          `Saved runtime call · ${(runtimeRun.plan.durationMs / 1000).toFixed(1)}s · ${runtimeRun.plan.usage?.total_tokens ?? "unknown"} tokens · inspect its evidence receipt below`;
       } else {
         $("#runtime-model").textContent = "No saved model-backed run available";
         $("#runtime-meta").textContent = status.publicDemo
