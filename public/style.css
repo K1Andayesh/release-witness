@@ -583,9 +583,18 @@ select {
 .report-actions {
   padding: 24px 28px;
   display: flex;
+  flex-wrap: wrap;
   justify-content: space-between;
   gap: 10px;
   font-size: 10px;
+}
+.report-actions a {
+  display: inline-flex;
+  align-items: center;
+  min-height: 30px;
+  padding: 5px 8px;
+  border: 1px solid var(--line);
+  border-radius: 4px;
 }
 .report-actions span {
   color: var(--muted);

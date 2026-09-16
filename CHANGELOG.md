@@ -5,6 +5,7 @@
 - Make the judge tour bring its report heading into the visible viewport on narrow screens as well as desktop.
 - Add four direct evidence steps linking the saved Nemotron risk map, browser observations, bounded advice and verified before/after comparison; the public path makes no fresh model calls.
 - Exercise mobile focus, viewport visibility, evidence-step navigation and reflow in real Chrome.
+- Enlarge report download and evidence-link touch targets on narrow screens.
 
 ## 0.1.40 — 2026-09-17
 
