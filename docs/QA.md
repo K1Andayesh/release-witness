@@ -1,5 +1,10 @@
 # Release Witness QA record
 
+## Recorded-model label audit — 17 September 2026
+
+- Actual public Chrome showed **LIVE MODEL RECORD** beside the saved Nemotron risk map while the same page disabled live model calls and said **Live calls disabled · saved model-backed tour available**. The evidence is a real recorded provider call, but “live” could suggest that opening the report triggers a new call.
+- The badge now says **RECORDED MODEL CALL**. The adjacent model and provider metadata, receipt verification and disabled-call message remain visible. This changes the presentation of existing evidence, not any model request or verdict.
+
 ## Mobile judge-tour visibility — 17 September 2026
 
 - Actual public Chrome at 390 × 844 previously focused the judge report after **Start 90-second tour** but left the heading 2,673 pixels below the viewport, with scroll position zero. At desktop width it happened to be visible. This made the tour appear unresponsive on a phone.

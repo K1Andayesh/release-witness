@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.1.42 — 2026-09-17
+
+- Identify completed Nemotron planning as a recorded model call in the judge report, so the saved evidence cannot imply a new live call on the credential-free public demo.
+
 ## 0.1.41 — 2026-09-17
 
 - Make the judge tour bring its report heading into the visible viewport on narrow screens as well as desktop.
