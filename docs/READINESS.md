@@ -10,6 +10,8 @@ The homepage portfolio figures now come from `/api/benchmark`. The endpoint vali
 
 The judge-tour button now uses that server-verified pair. If a newer model-backed pair loses a screenshot or receipt, the benchmark stays on that pair and fails closed even when an older pair is intact; the open homepage rechecks integrity on a ten-second schedule and withdraws the tour and portfolio claim.
 
+On narrow screens the tour scrolls its focused report heading into view, then offers four links into the saved model risk map, browser observations, bounded advice and verified delta. The public tour makes no fresh model calls.
+
 On a fresh public-demo install without saved model records, browser-only runs remain usable but the homepage labels model evidence unavailable, disables the saved judge tour and withholds the certified portfolio headline. The public demo cannot make live model calls.
 
 The primary appointment demonstration provides a stronger product proof than the original notes fixture. Its baseline exhibits two distinct defects; the candidate repairs both while preserving an existing validation invariant. The runner contains no appointment-specific execution branch.

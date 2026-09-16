@@ -12,7 +12,7 @@ A PR-preview QA agent that turns a change description into a bounded risk map, e
 
 **Natural-narration demo video:** https://youtu.be/O8Ijn85__6U
 
-**Verified source release:** https://github.com/K1Andayesh/release-witness/releases/tag/v0.1.40
+**Verified source release:** https://github.com/K1Andayesh/release-witness/releases/tag/v0.1.41
 
 **Required runtime:** saved qualifying runs show `nvidia/Nemotron-3_5-Lightning` executing through Nebius Token Factory, including returned model identity, provider, latency and token usage. The hosted judge tour replays those verified records without requiring credentials or spending judge credits.
 
@@ -54,7 +54,7 @@ The command exits `0` only when every supported check passes, `1` for a failure 
 
 The default Harbour Appointments scenario has a baseline with two seeded defects and a repaired candidate. **Run baseline + candidate** executes the pair sequentially and opens the comparison automatically. Booking persistence and sold-out availability change from fail to pass; required-name validation remains passing; excluded coverage stays unverified. The candidate is supplied by the demo, not repaired automatically.
 
-For judges, a clean public-demo visit opens the current model-backed appointment candidate with its exact server-managed baseline already selected. **Start 90-second tour** returns to that strongest pair, **Second workflow proof** opens the independent model-backed Fieldnotes pair, **Exact deployed source** resolves to the immutable commit running in production, and **Benchmark receipt** exposes the portfolio totals, pair IDs, measured model contribution and aggregate digest from the same judge strip. Across both pairs, four versioned server-verified SHA-256 receipts cover report decisions, returned model, Nebius provider, timing, token totals and every stored screenshot hash. See `docs/EVALUATION.md` for scope and evidence IDs.
+For judges, a clean public-demo visit opens the current model-backed appointment candidate with its exact server-managed baseline already selected. **Start 90-second tour** brings the report into view and gives four direct steps through the saved Nemotron risk map, observed browser checks, bounded advice and verified before/after comparison. **Second workflow proof** opens the independent model-backed Fieldnotes pair, **Exact deployed source** resolves to the immutable commit running in production, and **Benchmark receipt** exposes the portfolio totals, pair IDs, measured model contribution and aggregate digest from the same judge strip. The public tour uses saved real model evidence without fresh model calls. Across both pairs, four versioned server-verified SHA-256 receipts cover report decisions, returned model, Nebius provider, timing, token totals and every stored screenshot hash. See `docs/EVALUATION.md` for scope and evidence IDs.
 
 Workflow definitions live in `manifests/`. They use a small allow-listed browser action language and may target included paths, explicit local HTTP preview URLs or read-only HTTPS pages. Add a validated JSON manifest and restart the server; runner code does not need a scenario-specific branch. See `docs/MANIFESTS.md`.
 

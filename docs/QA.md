@@ -1,5 +1,11 @@
 # Release Witness QA record
 
+## Mobile judge-tour visibility — 17 September 2026
+
+- Actual public Chrome at 390 × 844 previously focused the judge report after **Start 90-second tour** but left the heading 2,673 pixels below the viewport, with scroll position zero. At desktop width it happened to be visible. This made the tour appear unresponsive on a phone.
+- The local correction scrolls the focused heading into view and presents four evidence steps for model risk, browser observations, bounded advice and verified delta. Actual Chrome at 390 × 844 now places the heading at viewport top with scroll position 2,317; desktop does the same. The four-step layout was visually inspected at both widths.
+- The 22-test suite exercises mobile focus and visibility, evidence-step expansion and reflow. Axe 4.10.3 found zero automated violations on the local homepage, expanded comparison and benchmark receipt at 390 pixels; some contrast cases still require manual review. The public deployment must be checked separately after release.
+
 ## Automated accessibility audit — 17 September 2026
 
 - Actual Chrome on the public v0.1.39 judge route initially found serious WCAG color-contrast and touch-target issues in small labels, the footer and judge-resource links, plus repeated benchmark landmark names and an unlandmarked return link.

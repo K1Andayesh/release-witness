@@ -365,6 +365,49 @@ select {
 .report-heading p {
   font-size: 11px;
 }
+.tour-guide {
+  margin: 0 28px 24px;
+  padding: 18px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: #f7faf5;
+}
+.tour-guide h3 {
+  margin: 7px 0 15px;
+  font-size: 17px;
+}
+.tour-steps {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 8px;
+}
+.tour-steps button {
+  min-width: 0;
+  padding: 12px;
+  border: 1px solid #b9cdb8;
+  border-radius: 6px;
+  background: #fff;
+  color: #23312e;
+  text-align: left;
+  cursor: pointer;
+}
+.tour-steps button:hover,
+.tour-steps button:focus-visible {
+  border-color: var(--green);
+  background: #eef5ef;
+}
+.tour-steps strong,
+.tour-steps small {
+  display: block;
+}
+.tour-steps small {
+  margin-top: 5px;
+  color: var(--muted);
+  line-height: 1.45;
+}
+.tour-guide .fine-print {
+  margin-bottom: 0;
+}
 .metrics {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
@@ -636,6 +679,10 @@ footer {
     padding-left: 18px;
     padding-right: 18px;
   }
+  .tour-guide {
+    margin-left: 18px;
+    margin-right: 18px;
+  }
   .metrics,
   .interpretation {
     margin-left: 18px;
@@ -656,6 +703,9 @@ footer {
   }
 }
 @media (max-width: 700px) {
+  .tour-steps {
+    grid-template-columns: 1fr;
+  }
   .topbar {
     padding: 0 5%;
     height: 70px;

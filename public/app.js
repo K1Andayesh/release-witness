@@ -23,6 +23,7 @@ let selected = initialRoute.runId,
   routeBaseline = initialRoute.baselineId,
   setupSelection = "",
   focusReportAfterRender = false,
+  tourActive = false,
   currentStatus = {},
   pairProgress = "",
   showAllRuns = false,
@@ -204,10 +205,10 @@ $("#portfolio-proof").addEventListener("click", (event) => {
   if (!runId || !baselineId) return;
   selected = runId;
   routeBaseline = baselineId;
+  tourActive = false;
   focusReportAfterRender = true;
   if (location.hash.slice(1) !== targetHash) location.hash = targetHash;
   else render();
-  document.querySelector(".results")?.scrollIntoView({ behavior: "smooth" });
 });
 $("#suite").addEventListener("change", syncSetup);
 $("#build").addEventListener("change", syncBuild);
@@ -286,6 +287,7 @@ $("#judge-tour").addEventListener("click", () => {
     return;
   }
   const { candidate, baseline } = pair;
+  tourActive = true;
   routeBaseline = baseline.id;
   focusReportAfterRender = true;
   const targetHash = routeHash(candidate.id, baseline.id);
@@ -293,7 +295,6 @@ $("#judge-tour").addEventListener("click", () => {
   selected = candidate.id;
   if (changedRun) location.hash = targetHash;
   else render();
-  document.querySelector(".results")?.scrollIntoView({ behavior: "smooth" });
 });
 window.addEventListener("hashchange", () => {
   const route = routeState();
@@ -323,6 +324,7 @@ function render() {
   document.querySelectorAll("[data-run]").forEach(
     (button) =>
       (button.onclick = () => {
+        tourActive = false;
         routeBaseline = "";
         location.hash = button.dataset.run;
       }),
@@ -358,14 +360,21 @@ function render() {
           ? "The run needs more evidence."
           : "The checked workflows passed.";
   const analysis = run.analysis;
+  const tourPair = strongestJudgePair();
+  const tourGuide =
+    tourActive &&
+    tourPair?.candidate.id === run.id &&
+    tourPair.baseline.id === routeBaseline
+      ? `<nav class="tour-guide" aria-label="90-second evidence trail"><p class="eyebrow">JUDGE PATH · ABOUT 90 SECONDS</p><h3>Follow the evidence to the release decision.</h3><div class="tour-steps"><button type="button" data-tour-target="risk-map"><strong>01 · Model risk</strong><small>See what Nemotron mapped to the reviewed checks.</small></button><button type="button" data-tour-target="browser-checks"><strong>02 · Browser observation</strong><small>Open a check to see expected and observed behavior.</small></button><button type="button" data-tour-target="model-advice"><strong>03 · Bounded advice</strong><small>See the next action tied to recorded evidence.</small></button><button type="button" data-tour-target="before-after"><strong>04 · Verified delta</strong><small>Inspect the baseline and repair side by side.</small></button></div><p class="fine-print">These are saved real Nemotron calls; this public demo makes no fresh model calls. Browser assertions own the verdicts.</p></nav>`
+      : "";
   $("#report").innerHTML =
     `<div class="report-heading"><p class="eyebrow">02 / WITNESS REPORT <span>${esc(run.id.slice(0, 8))}</span></p><h2>${verdict}</h2><p class="muted">${esc(run.targetName || "Fieldnotes")} · ${esc(run.buildLabel || run.build)} <span> / ${esc(run.suite)} / ${esc(new Date(run.createdAt).toLocaleTimeString())}</span></p></div>
-  ${run.error ? `<p class="error">${esc(run.error)}</p>` : ""}<div class="metrics"><div><strong class="pass">${count("pass")}</strong><span>Passed</span></div><div><strong class="fail">${count("fail")}</strong><span>Failed</span></div><div><strong>${count("not-tested")}</strong><span>Not tested</span></div><div><strong>${run.checks.reduce((n, c) => n + c.screenshots.length, 0)}</strong><span>Screenshots</span></div></div><div id="comparison-summary" role="status" aria-live="polite"></div>
+  ${tourGuide}${run.error ? `<p class="error">${esc(run.error)}</p>` : ""}<div class="metrics"><div><strong class="pass">${count("pass")}</strong><span>Passed</span></div><div><strong class="fail">${count("fail")}</strong><span>Failed</span></div><div><strong>${count("not-tested")}</strong><span>Not tested</span></div><div><strong>${run.checks.reduce((n, c) => n + c.screenshots.length, 0)}</strong><span>Screenshots</span></div></div><div id="comparison-summary" role="status" aria-live="polite"></div>
   ${run.attestation ? `<section class="receipt" id="integrity-result" role="status" aria-live="polite"><div><strong>VERIFYING EVIDENCE RECEIPT…</strong><span>Checking the saved report and every screenshot.</span></div><code>SHA-256 ${esc(run.attestation.digest.slice(0, 16))}…</code></section>` : ""}
-  ${run.plan ? `<section class="plan"><div class="plan-title"><p class="eyebrow">${run.plan.state === "complete" ? "NEMOTRON RISK MAP" : "STANDARD RISK MAP"}</p>${run.plan.state === "complete" ? '<span class="model-proof">LIVE MODEL RECORD</span>' : ""}</div><p>${esc(run.plan.order.join(" → "))}</p><p class="fine-print">Change under review: ${esc(run.change || "Not recorded")}</p><p class="muted">${esc(run.plan.reason)}</p>${run.plan.error ? `<p class="error">${esc(run.plan.error)}</p>` : ""}${run.plan.state === "complete" ? `<p class="model-meta">${esc(run.plan.returnedModel || run.plan.model)} via ${esc(run.plan.provider)} · ${(run.plan.durationMs / 1000).toFixed(1)}s · ${run.plan.usage?.total_tokens ?? "Unknown"} tokens</p>` : ""}<p class="fine-print">Every reviewed check still runs. The model maps change risk; browser assertions determine results.</p></section>` : ""}
-  <div class="checklist">${run.checks.map((c) => `<details id="check-${c.id}" class="check" ${c.status === "fail" ? "open" : ""}><summary><span class="status-symbol ${c.status}">${c.status === "pass" ? "✓" : c.status === "fail" ? "!" : "–"}</span><span class="check-name"><strong>${esc(c.title)}</strong><small>${esc(c.id)} ${c.durationMs ? `· ${(c.durationMs / 1000).toFixed(1)}s` : ""}</small></span><span class="badge ${c.status}">${label(c.status)}</span><span class="chevron">⌄</span></summary><div class="check-body">${planRisk(run, c.id) ? `<div class="risk-hypothesis"><span class="eyebrow">CHANGE RISK</span><p>${esc(planRisk(run, c.id))}</p></div>` : ""}<div class="observations"><div><span class="eyebrow">EXPECTED</span><p>${esc(c.expected)}</p></div><div><span class="eyebrow">OBSERVED</span><p>${esc(c.observed)}</p></div></div>${c.steps.length ? `<h3>Reproduce this check</h3><ol>${c.steps.map((s) => `<li>${esc(s)}</li>`).join("")}</ol>` : ""}<div class="shots">${c.screenshots.map((s) => `<a href="${s.url}" target="_blank" rel="noopener"><img src="${s.url}" alt="${esc(c.title)} — ${s.label}" loading="lazy"><span>${s.label} ↗</span></a>`).join("")}</div>${c.logs.length ? `<h3>Browser errors</h3><pre>${esc(c.logs.join("\n"))}</pre>` : ""}</div></details>`).join("")}</div>
-  <section class="interpretation"><div class="section-label"><span>03 / MODEL INTERPRETATION</span><span class="tag">ADVISORY</span></div><h3>Suggested next check</h3>${analysis.state === "complete" ? `<p class="model-text">${esc(analysis.action ? analysis.text : "Historical model wording is retained in the JSON export; it predates the bounded action contract.")}</p><p class="fine-print">Evidence: ${esc((analysis.evidenceIds || []).join(", ") || "See recorded checks")}</p><p class="model-meta">${esc(analysis.model)} via Nebius · ${(analysis.durationMs / 1000).toFixed(1)}s · ${analysis.usage?.total_tokens ?? "Unknown"} tokens</p>` : analysis.state === "failed" ? `<p class="error">${esc(analysis.error)}</p>` : `<p class="muted">${analysis.state === "skipped" ? "Model interpretation was not requested. The browser results stand on their own." : "Nemotron will interpret the observations after the browser checks finish."}</p>`}<p class="fine-print">Model suggestions are not executed checks and do not change the results above.</p></section>
-  <section class="comparison"><label for="baseline">Compare with an earlier run</label><select id="baseline"><option value="">Choose a baseline…</option>${all
+  ${run.plan ? `<section class="plan" id="risk-map"><div class="plan-title"><p class="eyebrow">${run.plan.state === "complete" ? "NEMOTRON RISK MAP" : "STANDARD RISK MAP"}</p>${run.plan.state === "complete" ? '<span class="model-proof">LIVE MODEL RECORD</span>' : ""}</div><p>${esc(run.plan.order.join(" → "))}</p><p class="fine-print">Change under review: ${esc(run.change || "Not recorded")}</p><p class="muted">${esc(run.plan.reason)}</p>${run.plan.error ? `<p class="error">${esc(run.plan.error)}</p>` : ""}${run.plan.state === "complete" ? `<p class="model-meta">${esc(run.plan.returnedModel || run.plan.model)} via ${esc(run.plan.provider)} · ${(run.plan.durationMs / 1000).toFixed(1)}s · ${run.plan.usage?.total_tokens ?? "Unknown"} tokens</p>` : ""}<p class="fine-print">Every reviewed check still runs. The model maps change risk; browser assertions determine results.</p></section>` : ""}
+  <div class="checklist" id="browser-checks">${run.checks.map((c) => `<details id="check-${c.id}" class="check" ${c.status === "fail" ? "open" : ""}><summary><span class="status-symbol ${c.status}">${c.status === "pass" ? "✓" : c.status === "fail" ? "!" : "–"}</span><span class="check-name"><strong>${esc(c.title)}</strong><small>${esc(c.id)} ${c.durationMs ? `· ${(c.durationMs / 1000).toFixed(1)}s` : ""}</small></span><span class="badge ${c.status}">${label(c.status)}</span><span class="chevron">⌄</span></summary><div class="check-body">${planRisk(run, c.id) ? `<div class="risk-hypothesis"><span class="eyebrow">CHANGE RISK</span><p>${esc(planRisk(run, c.id))}</p></div>` : ""}<div class="observations"><div><span class="eyebrow">EXPECTED</span><p>${esc(c.expected)}</p></div><div><span class="eyebrow">OBSERVED</span><p>${esc(c.observed)}</p></div></div>${c.steps.length ? `<h3>Reproduce this check</h3><ol>${c.steps.map((s) => `<li>${esc(s)}</li>`).join("")}</ol>` : ""}<div class="shots">${c.screenshots.map((s) => `<a href="${s.url}" target="_blank" rel="noopener"><img src="${s.url}" alt="${esc(c.title)} — ${s.label}" loading="lazy"><span>${s.label} ↗</span></a>`).join("")}</div>${c.logs.length ? `<h3>Browser errors</h3><pre>${esc(c.logs.join("\n"))}</pre>` : ""}</div></details>`).join("")}</div>
+  <section class="interpretation" id="model-advice"><div class="section-label"><span>03 / MODEL INTERPRETATION</span><span class="tag">ADVISORY</span></div><h3>Suggested next check</h3>${analysis.state === "complete" ? `<p class="model-text">${esc(analysis.action ? analysis.text : "Historical model wording is retained in the JSON export; it predates the bounded action contract.")}</p><p class="fine-print">Evidence: ${esc((analysis.evidenceIds || []).join(", ") || "See recorded checks")}</p><p class="model-meta">${esc(analysis.model)} via Nebius · ${(analysis.durationMs / 1000).toFixed(1)}s · ${analysis.usage?.total_tokens ?? "Unknown"} tokens</p>` : analysis.state === "failed" ? `<p class="error">${esc(analysis.error)}</p>` : `<p class="muted">${analysis.state === "skipped" ? "Model interpretation was not requested. The browser results stand on their own." : "Nemotron will interpret the observations after the browser checks finish."}</p>`}<p class="fine-print">Model suggestions are not executed checks and do not change the results above.</p></section>
+  <section class="comparison" id="before-after"><label for="baseline">Compare with an earlier run</label><select id="baseline"><option value="">Choose a baseline…</option>${all
     .filter(
       (r) =>
         r.id !== run.id &&
@@ -379,6 +388,25 @@ function render() {
     )
     .join("")}</select><div id="comparison-result"></div></section>
   <div class="report-actions"><a href="/api/runs/${run.id}/report" target="_blank" rel="noopener">View report ↗</a><a href="/api/runs/${run.id}/export" download>Download report</a><a href="/api/runs/${run.id}" target="_blank" rel="noopener">Open JSON ↗</a><span>${busy(run) ? "Evidence is being captured." : currentStatus.publicDemo ? "Saved in demo evidence store · available after reload" : "Saved locally · available after reload"}</span></div>`;
+  for (const button of document.querySelectorAll(
+    "#report [data-tour-target]",
+  )) {
+    button.onclick = () => {
+      const target = document.getElementById(button.dataset.tourTarget);
+      if (!target) return;
+      const detail = ["browser-checks", "before-after"].includes(target.id)
+        ? target.querySelector("details")
+        : null;
+      if (detail) detail.open = true;
+      const focusTarget =
+        detail?.querySelector("summary") ||
+        target.querySelector("h3, .eyebrow") ||
+        target;
+      if (!focusTarget.matches("summary")) focusTarget.tabIndex = -1;
+      target.scrollIntoView({ block: "start" });
+      focusTarget.focus({ preventScroll: true });
+    };
+  }
   $("#baseline").disabled = run.state !== "complete";
   $("#baseline").onchange = async () => {
     const target = $("#comparison-result");
@@ -434,6 +462,7 @@ function render() {
     if (heading) {
       heading.tabIndex = -1;
       heading.focus({ preventScroll: true });
+      heading.scrollIntoView({ block: "start" });
     }
     focusReportAfterRender = false;
   }
