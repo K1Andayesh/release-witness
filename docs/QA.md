@@ -1,4 +1,12 @@
-# First vertical-slice QA — 9 September 2026
+# Release Witness QA record
+
+## Browser-only pair cannot displace model-backed benchmark — 16 September 2026
+
+- Actual Chrome used **Run baseline + candidate** on the local public demo with live model calls disabled. The newer browser-only appointment pair `275e683f` → `6c679ce7` completed and its before/after comparison showed two resolved defects, one preserved invariant and one unverified coverage boundary.
+- Before and after that run, `/api/benchmark` selected the same saved model-backed appointment pair `15ebbae0-7309-4607-a752-f9306afd0395`, retained four verified model runs and 16 screenshots across both workflows, and returned the same local SHA-256 attestation `596d39fc45aba9450aede8f6c6927f8712b335844a3d950d8d135219f302238e`.
+- A contract regression creates a newer browser-only pair and asserts that the selected pair and attestation remain unchanged. Existing screenshot-tamper coverage still requires the selected evidence to fail closed.
+
+## First vertical-slice QA — 9 September 2026
 
 Actual product UI tested through Chrome at http://127.0.0.1:4317. The product's runner independently launched isolated headless Chrome 152.0.7977.65 against the local fixture. No checks ran against user production apps.
 

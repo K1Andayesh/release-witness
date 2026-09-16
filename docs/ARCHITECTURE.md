@@ -36,7 +36,7 @@ flowchart LR
 - Mutating workflows are limited to included application paths and explicit loopback previews. Explicit HTTPS targets must use read-only actions, and the browser context blocks unrelated origins.
 - Reports are written atomically. Completed runs receive a versioned SHA-256 receipt over decisions, returned model identity, provider, model timing, token totals and screenshot hashes.
 - A comparison request freshly verifies both receipts and reads every referenced screenshot before reporting that the pair is verified.
-- The portfolio endpoint scores only manifest-declared ground truth and withholds the aggregate claim unless every latest workflow pair and screenshot receipt verifies.
+- The portfolio endpoint scores only manifest-declared ground truth and withholds the aggregate claim unless each selected model-backed workflow pair, model record and screenshot receipt verifies. Newer browser-only demo pairs cannot displace the selected evidence.
 - The benchmark report hashes a stable certification object containing the verified pair identities, scored states, totals, both run-receipt digests, exact release version, source URL, immutable Git commit and downloadable source-archive hash. Its timestamp and human-readable presentation remain outside the digest so repeated verification of the same source and evidence produces the same receipt.
 - Model contribution is reported only when both paired runs have complete catalog-grounded plans, allow-listed advice, exact NVIDIA/Nebius identity, verified runtime-covering receipts and intact screenshot files.
 - The hosted public demo disables live model spending and exposes only runs from the active public manifest catalog. The saved qualifying model records remain inspectable.

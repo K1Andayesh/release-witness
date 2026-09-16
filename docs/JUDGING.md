@@ -2,7 +2,7 @@
 
 Release Witness is entered in **Best Apps and Agents**. This guide maps the shipped evidence to the four equally weighted judging criteria in the official rules.
 
-Verified source release: https://github.com/K1Andayesh/release-witness/releases/tag/v0.1.35
+Verified source release: https://github.com/K1Andayesh/release-witness/releases/tag/v0.1.36
 
 ## Technological implementation
 
@@ -11,7 +11,7 @@ Verified source release: https://github.com/K1Andayesh/release-witness/releases/
 - Strict schemas require one risk hypothesis for every allow-listed check. The model cannot omit checks, add checks or determine a verdict.
 - A server-managed job runs the reviewed contract against baseline and candidate in isolated Chrome contexts, then persists their relationship across reloads. Loading the comparison freshly verifies both receipts and every referenced screenshot file.
 - Deterministic assertions produce the verdicts. SHA-256 receipts are recomputed from each report and every stored screenshot before the UI shows verification.
-- The portfolio benchmark is server-derived rather than editorial: manifest ground truth identifies seeded defects and invariants, and `/api/benchmark` verifies the latest paired results, four receipts and all 16 screenshot files before the homepage can show 3/3. It separately verifies that both appointment plans cover every allowed check and both advisories cite allow-listed evidence. `/api/benchmark/report` presents the same certification as a scannable, printable receipt with the 3/3 defect-detection and repair results, both verified workflows, pair IDs, model measurements, four run-receipt digests, an aggregate SHA-256 digest and direct comparison links. The digest binds the exact release version, source URL, immutable commit and downloadable source-archive hash shown on the page.
+- The portfolio benchmark is server-derived rather than editorial: manifest ground truth identifies seeded defects and invariants, and `/api/benchmark` verifies the newest completed model-backed pair for each workflow, four receipts and all 16 screenshot files before the homepage can show 3/3. New browser-only demo pairs cannot replace that evidence. It separately verifies that both appointment plans cover every allowed check and both advisories cite allow-listed evidence. `/api/benchmark/report` presents the same certification as a scannable, printable receipt with the 3/3 defect-detection and repair results, both verified workflows, pair IDs, model measurements, four run-receipt digests, an aggregate SHA-256 digest and direct comparison links. The digest binds the exact release version, source URL, immutable commit and downloadable source-archive hash shown on the page.
 - Twenty-two automated tests and the public GitHub Actions workflow cover contracts, persisted pair identity, failure handling, tamper detection, release-source, commit and archive binding, concurrency, restart recovery, paired execution, judge-tour reload restoration and a real-Chrome smoke run.
 - The [`architecture and trust-boundary map`](ARCHITECTURE.md) makes the authority split, execution boundary and fail-closed behavior reviewable without reading the implementation first.
 

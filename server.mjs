@@ -249,7 +249,7 @@ export async function startServer({
     const suites = [];
     for (const manifest of definitions) {
       const groundTruth = manifest.benchmark;
-      const candidate = [...runs.values()]
+      const candidates = [...runs.values()]
         .filter(
           (run) =>
             run.suite === manifest.id &&
@@ -258,11 +258,23 @@ export async function startServer({
             run.comparisonBaselineId,
         )
         .sort((a, b) => b.createdAt.localeCompare(a.createdAt))
-        .find((run) => {
+        .filter((run) => {
           const baseline = runs.get(run.comparisonBaselineId);
           const pair = pairs.get(run.pairId);
           return verifyPairRelationship(manifest, pair, baseline, run);
         });
+      // A judge can run a new browser-only pair in public demo mode. Keep the
+      // competition benchmark on the newest model-backed pair when one exists.
+      // Receipt validation still happens below, so altered evidence fails closed.
+      const candidate =
+        candidates.find((run) => {
+          const baseline = runs.get(run.comparisonBaselineId);
+          return [baseline, run].every(
+            (item) =>
+              item?.plan?.state === "complete" &&
+              item?.analysis?.state === "complete",
+          );
+        }) || candidates[0];
       const baseline = candidate
         ? runs.get(candidate.comparisonBaselineId)
         : undefined;
@@ -409,7 +421,7 @@ export async function startServer({
     const complete =
       definitions.length > 0 &&
       suites.length === definitions.length &&
-      suites.every((suite) => suite.verified);
+      suites.every((suite) => suite.verified && suite.modelEvidence.verified);
     const release = {
       version: packageMetadata.version,
       source: `${sourceRepository}/releases/tag/v${packageMetadata.version}`,

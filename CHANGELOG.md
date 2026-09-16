@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.1.36 — 2026-09-16
+
+- Keep the published benchmark on the newest completed model-backed pair for each workflow when visitors create newer browser-only demo pairs.
+- Require verified model evidence before certifying the aggregate portfolio; still recheck the chosen pair's receipts and screenshots so altered evidence fails closed.
+- Cover this selection with a regression test and an actual Chrome paired run.
+
 ## 0.1.35 — 2026-09-16
 
 - Separate defect detection from repair resolution in the headline judge metric.
