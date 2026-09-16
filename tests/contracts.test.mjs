@@ -27,6 +27,32 @@ async function directory() {
   await mkdir(runs);
   return pathToFileURL(runs + "/");
 }
+
+async function accessibilityViolations(page, base) {
+  const source = await readFile(
+    new URL("../node_modules/axe-core/axe.min.js", import.meta.url),
+  );
+  await page.route(`${base}/__audit__/axe.min.js`, (route) =>
+    route.fulfill({
+      status: 200,
+      contentType: "application/javascript",
+      body: source,
+    }),
+  );
+  await page.addScriptTag({ url: `${base}/__audit__/axe.min.js` });
+  const result = await page.evaluate(() =>
+    window.axe.run(document, {
+      runOnly: {
+        type: "tag",
+        values: ["wcag2a", "wcag2aa", "wcag21aa", "wcag22aa", "best-practice"],
+      },
+    }),
+  );
+  return result.violations.map((violation) => ({
+    id: violation.id,
+    targets: violation.nodes.map((node) => node.target),
+  }));
+}
 test("advice is restricted to real check actions, never invented features", () => {
   const checks = [
     { id: "persistence", title: "Persistence" },
@@ -617,10 +643,10 @@ test("server-managed pairs persist their relationship and comparison", async (t)
     (suite) => suite.id === "booking-v1",
   );
   assert.equal(benchmark.complete, false);
-  assert.equal(benchmark.release.version, "0.1.39");
+  assert.equal(benchmark.release.version, "0.1.40");
   assert.equal(
     benchmark.release.source,
-    "https://github.com/K1Andayesh/release-witness/releases/tag/v0.1.39",
+    "https://github.com/K1Andayesh/release-witness/releases/tag/v0.1.40",
   );
   assert.equal(
     benchmark.release.commit,
@@ -636,7 +662,7 @@ test("server-managed pairs persist their relationship and comparison", async (t)
   );
   assert.equal(
     benchmark.release.archiveSource,
-    "https://github.com/K1Andayesh/release-witness/releases/download/v0.1.39/release-witness-publication-ready-v0.1.39-r1.tar.gz",
+    "https://github.com/K1Andayesh/release-witness/releases/download/v0.1.40/release-witness-publication-ready-v0.1.40-r1.tar.gz",
   );
   assert.equal(bookingBenchmark.verified, true);
   assert.equal(bookingBenchmark.defectsDetected, 2);
@@ -659,7 +685,7 @@ test("server-managed pairs persist their relationship and comparison", async (t)
   assert.match(benchmarkReportText, /<main class="benchmark-report">/);
   assert.match(benchmarkReportText, /Portfolio certified: no/);
   assert.match(benchmarkReportText, /data-status="not-certified"/);
-  assert.match(benchmarkReportText, /Release 0\.1\.39 source/);
+  assert.match(benchmarkReportText, /Release 0\.1\.40 source/);
   assert.match(benchmarkReportText, /Commit 01234567/);
   assert.match(benchmarkReportText, /Source archive SHA-256 abcdefabcdef/);
   assert.match(benchmarkReportText, new RegExp(`data-pair-id="${pair.id}"`));
@@ -1170,6 +1196,7 @@ test("the judge-tour comparison survives a browser reload", async (t) => {
   await proof.locator("summary").click();
   assert.match(await proof.innerText(), /Booking disappeared\./);
   assert.match(await proof.innerText(), /Booking remained\./);
+  assert.deepEqual(await accessibilityViolations(page, base), []);
   await page.setViewportSize({ width: 390, height: 844 });
   const widths = await page.evaluate(() => ({
     inner: window.innerWidth,
@@ -1199,9 +1226,9 @@ test("the judge-tour comparison survives a browser reload", async (t) => {
   );
   assert.equal(
     await benchmarkPage
-      .getByRole("link", { name: "Release 0.1.39 source ↗" })
+      .getByRole("link", { name: "Release 0.1.40 source ↗" })
       .getAttribute("href"),
-    "https://github.com/K1Andayesh/release-witness/releases/tag/v0.1.39",
+    "https://github.com/K1Andayesh/release-witness/releases/tag/v0.1.40",
   );
   assert.equal(
     await benchmarkPage
@@ -1223,6 +1250,7 @@ test("the judge-tour comparison survives a browser reload", async (t) => {
       .getAttribute("href"),
     `${base}/#${notesCandidateId}~${notesBaselineId}`,
   );
+  assert.deepEqual(await accessibilityViolations(benchmarkPage, base), []);
   await benchmarkPage.emulateMedia({ forcedColors: "active" });
   assert.equal(
     await benchmarkPage
@@ -1362,7 +1390,7 @@ test("public demo mode excludes local projects and model spending", async (t) =>
   );
   const status = await (await fetch(`${base}/api/status`)).json();
   assert.equal(status.modelConfigured, false);
-  assert.equal(status.version, "0.1.39");
+  assert.equal(status.version, "0.1.40");
   assert.equal(status.publicDemo, true);
   const integrity = await (
     await fetch(`${base}/api/runs/${receiptId}/integrity`)

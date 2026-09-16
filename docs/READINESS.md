@@ -22,7 +22,7 @@ The public demo at https://release-witness.139-99-135-89.sslip.io exposes only s
 
 Before final submission:
 
-- Complete representative screen-reader/assistive-technology, Windows OS high-contrast, 200% zoom and non-Chrome QA. Automated Chrome now covers 390 × 844 reflow, forced-colours affordances, the visible skip link and judge-tour focus movement.
+- Complete representative screen-reader/assistive-technology and Windows OS high-contrast QA. Actual Chrome for Testing 200% browser zoom, the Edge judge route and narrow-screen reflow have been checked. Automated real-Chrome axe scans cover the expanded judge comparison and benchmark receipt; they do not replace a native screen-reader session.
 - Review provider credits and the configured development limit before further full model batches. Model-enabled runs require two remaining calls and remain disabled in the hosted public demo.
 - Keep the hosted test build restricted to synthetic scenarios; authentication, tenant isolation and worker hardening remain required before public multi-user use with private projects.
 - Obtain action-time confirmation for the final rules acceptance and submission, then preserve the visible submitted confirmation.

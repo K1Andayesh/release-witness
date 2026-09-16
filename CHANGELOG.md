@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.1.40 — 2026-09-17
+
+- Correct insufficient small-text contrast and enlarge the judge-resource links' touch targets.
+- Give the benchmark's per-workflow evidence landmarks distinct names and make metric groups and homepage outcomes validly labelled for assistive technology.
+- Add real-Chrome axe checks of the expanded judge comparison and benchmark receipt to the regression suite; desktop and narrow-screen audits now report zero automated violations in the tested states.
+
 ## 0.1.39 — 2026-09-17
 
 - Correct the singular resolved-concern label in both comparison summaries when a workflow has one repaired defect.

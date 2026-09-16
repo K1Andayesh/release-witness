@@ -1,5 +1,11 @@
 # Release Witness QA record
 
+## Automated accessibility audit — 17 September 2026
+
+- Actual Chrome on the public v0.1.39 judge route initially found serious WCAG color-contrast and touch-target issues in small labels, the footer and judge-resource links, plus repeated benchmark landmark names and an unlandmarked return link.
+- The v0.1.40 change darkens small-text colours, gives judge-resource links 26-pixel minimum targets, gives the homepage and benchmark metric labels valid group semantics, names receipt and model-evidence regions by workflow, and places the benchmark return link in a labelled navigation region.
+- The same axe 4.10.3 WCAG 2/2.1/2.2 A/AA and best-practice scan reports zero automated violations on the local saved-evidence homepage, expanded appointment comparison and benchmark receipt at desktop and 390-pixel widths. A real-Chrome contract test guards the expanded comparison and receipt. Axe still marks some colour-contrast cases for manual review, and this does not prove native screen-reader or Windows OS high-contrast behavior.
+
 ## Corrupted newer model pair — 17 September 2026
 
 - A controlled local test produced two model-backed Harbour Appointments pairs through an injected Nemotron-shaped provider response; no live provider calls or private project data were used. The older pair stayed receipt-valid. Altering one screenshot in the newer pair made `/api/benchmark` select that newer pair but return `verified: false`, `modelEvidence.verified: false` and `complete: false`.

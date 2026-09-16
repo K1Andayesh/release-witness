@@ -2,7 +2,7 @@
 
 Release Witness is entered in **Best Apps and Agents**. This guide maps the shipped evidence to the four equally weighted judging criteria in the official rules.
 
-Verified source release: https://github.com/K1Andayesh/release-witness/releases/tag/v0.1.39
+Verified source release: https://github.com/K1Andayesh/release-witness/releases/tag/v0.1.40
 
 ## Technological implementation
 
@@ -24,6 +24,7 @@ Verified source release: https://github.com/K1Andayesh/release-witness/releases/
 - The comparison separates resolved, regressed, unchanged and unverified checks instead of collapsing them into one score.
 - Every decision expands into its model hypothesis, reviewed expectation, observed behavior, reproduction steps, screenshots and receipt status. Changed checks also place the baseline and candidate observations and screenshots side by side.
 - The responsive public UI and benchmark receipt were checked at 390 × 844 as well as desktop size, with no horizontal overflow. The receipt also has a dedicated print layout. The main keyboard path includes a visible skip link and moves focus to the judge-tour report.
+- A desktop and 390-pixel real-Chrome accessibility pass found and fixed low-contrast small labels, undersized judge-resource links and ambiguous benchmark landmarks. Automated axe checks of the expanded comparison and receipt now report zero violations in the tested states; native screen-reader and OS high-contrast testing remain open.
 
 ## Potential impact
 

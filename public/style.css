@@ -7,7 +7,7 @@
   color: #23312e;
   background: #f6f7f3;
   font-synthesis: none;
-  --muted: #65716c;
+  --muted: #526158;
   --line: #dce2da;
   --green: #215f45;
   --red: #a94331;
@@ -120,7 +120,7 @@ button:disabled {
   font-size: 10px;
   font-weight: 650;
   letter-spacing: 1.7px;
-  color: #687a68;
+  color: #4f6554;
 }
 .intro h1 {
   font-size: clamp(32px, 3.4vw, 48px);
@@ -562,7 +562,7 @@ footer {
   display: flex;
   justify-content: space-between;
   gap: 20px;
-  color: #788274;
+  color: #526158;
   font-size: 10px;
   margin-top: 38px;
   line-height: 1.7;
@@ -822,6 +822,12 @@ footer {
   justify-content: flex-end;
   gap: 14px;
   font-size: 11px;
+}
+.judge-actions nav a {
+  display: inline-flex;
+  min-height: 26px;
+  align-items: center;
+  padding: 5px 1px;
 }
 .proof-points {
   display: grid;
