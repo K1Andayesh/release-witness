@@ -399,6 +399,8 @@ function render() {
       );
       const total = (change) =>
         diff.changes.filter((item) => item.change === change).length;
+      const resolvedCount = total("resolved");
+      const resolvedLabel = `${resolvedCount} ${resolvedCount === 1 ? "concern" : "concerns"} resolved`;
       const receipts = [diff.receipts?.before, diff.receipts?.after].filter(
         Boolean,
       );
@@ -409,8 +411,8 @@ function render() {
         receipts.length === 2
           ? `<div class="pair-receipts ${verifiedReceipts === 2 ? "verified" : "invalid"}"><strong>${verifiedReceipts}/2 evidence receipts verified</strong><span>${receipts.reduce((count, receipt) => count + receipt.fileCount, 0)} screenshot files freshly rechecked from disk for this comparison.</span></div>`
           : "";
-      summary.innerHTML = `<section class="release-delta"><div><span class="eyebrow">CONTROLLED BENCHMARK · RELEASE DELTA</span><strong>${total("resolved")} concerns resolved</strong></div><span>${total("regression")} regressions · ${total("unchanged")} unchanged · ${total("unverified")} unverified</span></section>`;
-      target.innerHTML = `<div class="comparison-callout" role="status" aria-live="polite"><strong>${total("resolved")} concerns resolved</strong><span>${total("regression")} regressions · ${total("unchanged")} unchanged · ${total("unverified")} unverified</span></div>${receiptProof}<table><thead><tr><th>Check</th><th>Before</th><th>Now</th><th>Change</th></tr></thead><tbody>${diff.changes.map((c) => `<tr><td>${esc(c.title)}</td><td>${esc(c.before)}</td><td>${esc(c.after)}</td><td>${esc(c.change)}</td></tr>`).join("")}</tbody></table>${diff.changes.map(comparisonEvidence).join("")}<p class="fine-print">Open a changed check to inspect both observations and screenshots. Only matching checks are comparable; untested coverage stays unverified.</p>`;
+      summary.innerHTML = `<section class="release-delta"><div><span class="eyebrow">CONTROLLED BENCHMARK · RELEASE DELTA</span><strong>${resolvedLabel}</strong></div><span>${total("regression")} regressions · ${total("unchanged")} unchanged · ${total("unverified")} unverified</span></section>`;
+      target.innerHTML = `<div class="comparison-callout" role="status" aria-live="polite"><strong>${resolvedLabel}</strong><span>${total("regression")} regressions · ${total("unchanged")} unchanged · ${total("unverified")} unverified</span></div>${receiptProof}<table><thead><tr><th>Check</th><th>Before</th><th>Now</th><th>Change</th></tr></thead><tbody>${diff.changes.map((c) => `<tr><td>${esc(c.title)}</td><td>${esc(c.before)}</td><td>${esc(c.after)}</td><td>${esc(c.change)}</td></tr>`).join("")}</tbody></table>${diff.changes.map(comparisonEvidence).join("")}<p class="fine-print">Open a changed check to inspect both observations and screenshots. Only matching checks are comparable; untested coverage stays unverified.</p>`;
     } catch (error) {
       target.textContent = error.message;
       summary.replaceChildren();

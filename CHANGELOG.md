@@ -1,5 +1,10 @@
 # Changelog
 
+## 0.1.39 — 2026-09-17
+
+- Correct the singular resolved-concern label in both comparison summaries when a workflow has one repaired defect.
+- Verify the published judge path in Microsoft Edge, including the second workflow, receipt, focus transfer and narrow-screen reflow.
+
 ## 0.1.38 — 2026-09-17
 
 - Gate the judge tour on the server-verified model-backed pair instead of inferring proof from saved run metadata.
