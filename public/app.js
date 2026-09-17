@@ -388,12 +388,36 @@ function render() {
     )
     .join("")}</select><div id="comparison-result"></div></section>
   <div class="report-actions"><a href="/api/runs/${run.id}/report" target="_blank" rel="noopener">View report ↗</a><a href="/api/runs/${run.id}/export" download>Download report</a><a href="/api/runs/${run.id}" target="_blank" rel="noopener">Open JSON ↗</a><span>${busy(run) ? "Evidence is being captured." : currentStatus.publicDemo ? "Saved in demo evidence store · available after reload" : "Saved locally · available after reload"}</span></div>`;
+  const waitForComparisonEvidence = (target) =>
+    new Promise((resolve) => {
+      const result = target.querySelector("#comparison-result");
+      if (!result || result.querySelector("details")) return resolve();
+      let timer;
+      const finish = () => {
+        observer.disconnect();
+        clearTimeout(timer);
+        resolve();
+      };
+      const observer = new MutationObserver(() => {
+        if (result.querySelector("details") || result.textContent.trim())
+          finish();
+      });
+      observer.observe(result, { childList: true, subtree: true });
+      timer = setTimeout(finish, 10000);
+    });
   for (const button of document.querySelectorAll(
     "#report [data-tour-target]",
   )) {
-    button.onclick = () => {
+    button.onclick = async () => {
       const target = document.getElementById(button.dataset.tourTarget);
       if (!target) return;
+      if (target.id === "before-after" && !target.querySelector("details")) {
+        target.tabIndex = -1;
+        target.focus();
+        target.scrollIntoView({ block: "start" });
+        await waitForComparisonEvidence(target);
+        if (!target.isConnected) return;
+      }
       const detail = ["browser-checks", "before-after"].includes(target.id)
         ? target.querySelector("details")
         : null;

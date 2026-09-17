@@ -1,5 +1,10 @@
 # Changelog
 
+## 0.1.44 — 2026-09-17
+
+- Make **Verified delta** wait for the saved comparison to finish loading before expanding and focusing its evidence. A fast click on a slow connection now lands on the changed check instead of leaving the judge at the comparison section.
+- Cover the delayed-response path in real Chrome with a deliberately slowed comparison request.
+
 ## 0.1.43 — 2026-09-17
 
 - Keep the evidence item in view when a judge selects a tour step on a short or 200%-zoomed screen; the verified-delta step now centres its expanded comparison check instead of scrolling only to the enclosing section.

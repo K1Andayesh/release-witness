@@ -1,5 +1,10 @@
 # Release Witness QA record
 
+## Slow comparison response in judge tour — 17 September 2026
+
+- A controlled public Chrome check delayed `/api/compare` by 700 ms. Clicking **Verified delta** immediately after starting the tour focused the comparison section before its changed checks existed; when the response arrived, the first summary was neither focused nor visible in a 390 × 450 viewport. The focused summary measured 526–567 CSS pixels below the 450-pixel viewport.
+- The tour now waits for the pending comparison content or error, with a bounded ten-second fallback, then expands and centres the changed check if it arrived. The same delayed Chrome path focuses the summary at 204–245 CSS pixels. The contract suite includes the delayed route and verifies focus and short-viewport visibility.
+
 ## Guided comparison at 200% browser zoom — 17 September 2026
 
 - The v0.1.42 four-step judge tour fit a 400-CSS-pixel viewport at actual 200% Chrome for Testing zoom, but after **Verified delta** the focused changed-check summary sat at 497 CSS pixels in a 450-pixel-tall viewport. The section itself had scrolled to the top; the evidence item was still below the fold.
