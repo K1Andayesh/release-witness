@@ -1,5 +1,10 @@
 # Changelog
 
+## 0.1.47 — 2026-09-17
+
+- Upgrade newly completed runs to v3 SHA-256 receipts over the full saved report record except the receipt itself. A changed model explanation, advisory text, check title or provider response detail now invalidates the receipt rather than leaving the judge-facing text under a valid hash.
+- Continue reading older v2 receipts for historical runs, but require v3 receipts for the certified model-backed portfolio. Re-attest the four existing synthetic benchmark reports without changing their run fields or making new Nebius calls; the new source-bound aggregate records their new digests.
+
 ## 0.1.46 — 2026-09-17
 
 - Exercise both shipped workflows in GitHub Actions: the Fieldnotes candidate now receives a real Chrome CLI smoke run alongside Harbour Appointments, checking note persistence, validation and duplicate prevention end to end.

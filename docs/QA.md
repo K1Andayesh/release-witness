@@ -1,5 +1,12 @@
 # Release Witness QA record
 
+## Full-record v3 receipt audit — 17 September 2026
+
+- A copy of a saved v2 appointment report kept its SHA-256 receipt valid when only its model advisory text or plan reason was changed. Those strings were displayed in the judge report but omitted from the v2 digest. The original production evidence was not changed during this audit.
+- New v3 run receipts hash the complete saved run record except the receipt itself. The four saved synthetic benchmark runs were copied to an isolated staging directory, verified against their old v2 receipts, and re-attested without changing any run field or making a new provider call. Legacy v2 runs remain readable but cannot certify the model-backed portfolio.
+- The 23-test contract covers changed advice, explanation and check title; each invalidates its v3 receipt. An isolated public-demo server with the re-attested four-run staging set certified two workflows, four model runs, four receipts and 16 screenshots. Actual Chrome showed the saved Nemotron tour and exact paired proof. A second isolated server with only the appointment advice changed withheld the aggregate and disabled the tour in Chrome, while the intact Fieldnotes evidence stayed independently verified.
+- A run digest is a self-consistency check. Re-attestation is a local migration of recorded evidence, not a new Nebius inference or an externally signed proof.
+
 ## Returned-model certification guard — 17 September 2026
 
 - A saved appointment plan's `returnedModel` field could be removed without changing its v2 SHA-256 receipt: that receipt records the chosen model value through a requested-model fallback. The previous aggregate verifier also used the fallback and still certified the pair. This did not prove a wrong live provider call, but it let incomplete saved response metadata pass the model-identity check.
@@ -203,7 +210,7 @@ No receipts are deleted or hidden from the API. A routed selected run and its co
 
 - Fresh server-managed appointment pair `15ebbae0` ran baseline `b2998668` and candidate `790c7762` with four live calls to `nvidia/Nemotron-3_5-Lightning` through Nebius Token Factory.
 - The plans produced six grounded hypotheses across the two runs and covered every allow-listed check exactly once. Both post-run advisories selected an allow-listed evidence ID. The combined recorded model work was 1,460 tokens and 3.78 seconds.
-- Fresh Fieldnotes pair `7fc874fb` reran the independent workflow without model calls. All four current benchmark reports use `run-v2` receipts that bind model/provider/timing/token metadata where present, as well as decisions, observations and screenshot hashes.
+- Fresh Fieldnotes pair `7fc874fb` reran the independent workflow without model calls. At that point, all four benchmark reports used `run-v2` receipts that bound model/provider/timing/token metadata where present, as well as decisions, observations and screenshot hashes. The current benchmark uses v3 receipts as described above.
 - The local portfolio endpoint verified 3/3 repairs, three invariants, zero regressions, four receipts, 16 screenshots, two Nemotron runs, six grounded hypotheses and two advisories. Its aggregate receipt was `794189c7291ace23668433e00f0afd0c956d6748849601293292bc35ce8699b1` before deployment.
 - The integration suite now executes four deterministic provider calls in a real server-managed Chrome pair and checks these model measurements. Changing a receipted runtime token count invalidates the run; changing a screenshot removes both functional and model-evidence certification.
 - Actual Chrome kept the verified model contribution visible after repeated refreshes. At 390 × 844 it reported `scrollWidth=390` with no horizontal overflow.
