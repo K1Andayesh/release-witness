@@ -1,5 +1,11 @@
 # Release Witness QA record
 
+## Returned-model certification guard — 17 September 2026
+
+- A saved appointment plan's `returnedModel` field could be removed without changing its v2 SHA-256 receipt: that receipt records the chosen model value through a requested-model fallback. The previous aggregate verifier also used the fallback and still certified the pair. This did not prove a wrong live provider call, but it let incomplete saved response metadata pass the model-identity check.
+- Certification now requires the request and provider-returned model IDs to match Nemotron 3.5 Lightning, plus HTTP 200 and a completed stop reason on both planning and advice calls. A regression removes the returned field, confirms that the old receipt still verifies, and confirms that model certification fails closed.
+- The 23-test suite passes. Actual local Chrome with copies of the four synthetic saved model-backed runs showed the intact portfolio certified with four model runs and the judge tour enabled; after removing one saved returned-model field, it withheld aggregate certification and disabled the tour. The Fieldnotes model record remained separately verified. No fresh Nebius call was made. The run receipts are self-consistency hashes, not provider-signed attestations.
+
 ## Slow comparison response in judge tour — 17 September 2026
 
 - A controlled public Chrome check delayed `/api/compare` by 700 ms. Clicking **Verified delta** immediately after starting the tour focused the comparison section before its changed checks existed; when the response arrived, the first summary was neither focused nor visible in a 390 × 450 viewport. The focused summary measured 526–567 CSS pixels below the 450-pixel viewport.

@@ -10,6 +10,7 @@ import {
   attestBenchmark,
   attestRun,
   compareRuns,
+  measureModelContribution,
   verdict,
   verifyAttestation,
   verifyPairRelationship,
@@ -219,6 +220,59 @@ test("run receipts detect decision or evidence-reference changes", () => {
   assert.equal(verifyAttestation(run), true);
   run.checks[0].observed = "Changed after receipt.";
   assert.equal(verifyAttestation(run), false);
+});
+
+test("model certification requires returned provider identity even when the v2 receipt still verifies", () => {
+  const run = {
+    id: "provider-record",
+    state: "complete",
+    suite: "suite",
+    build: "candidate",
+    change: "Check a saved item.",
+    checks: [{ id: "save", status: "pass", screenshots: [] }],
+    plan: {
+      state: "complete",
+      order: ["save"],
+      reason: "The saved item may be lost.",
+      risks: [{ checkId: "save", hypothesis: "The saved item may be lost." }],
+      model: "nvidia/Nemotron-3_5-Lightning",
+      returnedModel: "nvidia/Nemotron-3_5-Lightning",
+      provider: "Nebius Token Factory",
+      httpStatus: 200,
+      finishReason: "stop",
+      durationMs: 100,
+      usage: { total_tokens: 10 },
+    },
+    analysis: {
+      state: "complete",
+      action: "repeat-check",
+      evidenceIds: ["save"],
+      model: "nvidia/Nemotron-3_5-Lightning",
+      returnedModel: "nvidia/Nemotron-3_5-Lightning",
+      provider: "Nebius Token Factory",
+      httpStatus: 200,
+      finishReason: "stop",
+      durationMs: 50,
+      usage: { total_tokens: 5 },
+    },
+  };
+  run.attestation = attestRun(run);
+  const runs = [run, structuredClone(run)];
+  const manifest = { checks: [{ id: "save" }] };
+  assert.equal(measureModelContribution(manifest, runs, 2).verified, true);
+  const missingResponseIdentity = structuredClone(runs);
+  delete missingResponseIdentity[0].plan.returnedModel;
+  assert.equal(verifyAttestation(missingResponseIdentity[0]), true);
+  assert.equal(
+    measureModelContribution(manifest, missingResponseIdentity, 2).verified,
+    false,
+  );
+  const incompleteResponse = structuredClone(runs);
+  incompleteResponse[0].analysis.finishReason = "length";
+  assert.equal(
+    measureModelContribution(manifest, incompleteResponse, 2).verified,
+    false,
+  );
 });
 
 test("benchmark receipts bind the exact release source, commit and archive", () => {
@@ -643,10 +697,10 @@ test("server-managed pairs persist their relationship and comparison", async (t)
     (suite) => suite.id === "booking-v1",
   );
   assert.equal(benchmark.complete, false);
-  assert.equal(benchmark.release.version, "0.1.44");
+  assert.equal(benchmark.release.version, "0.1.45");
   assert.equal(
     benchmark.release.source,
-    "https://github.com/K1Andayesh/release-witness/releases/tag/v0.1.44",
+    "https://github.com/K1Andayesh/release-witness/releases/tag/v0.1.45",
   );
   assert.equal(
     benchmark.release.commit,
@@ -662,7 +716,7 @@ test("server-managed pairs persist their relationship and comparison", async (t)
   );
   assert.equal(
     benchmark.release.archiveSource,
-    "https://github.com/K1Andayesh/release-witness/releases/download/v0.1.44/release-witness-publication-ready-v0.1.44-r1.tar.gz",
+    "https://github.com/K1Andayesh/release-witness/releases/download/v0.1.45/release-witness-publication-ready-v0.1.45-r1.tar.gz",
   );
   assert.equal(bookingBenchmark.verified, true);
   assert.equal(bookingBenchmark.defectsDetected, 2);
@@ -685,7 +739,7 @@ test("server-managed pairs persist their relationship and comparison", async (t)
   assert.match(benchmarkReportText, /<main class="benchmark-report">/);
   assert.match(benchmarkReportText, /Portfolio certified: no/);
   assert.match(benchmarkReportText, /data-status="not-certified"/);
-  assert.match(benchmarkReportText, /Release 0\.1\.44 source/);
+  assert.match(benchmarkReportText, /Release 0\.1\.45 source/);
   assert.match(benchmarkReportText, /Commit 01234567/);
   assert.match(benchmarkReportText, /Source archive SHA-256 abcdefabcdef/);
   assert.match(benchmarkReportText, new RegExp(`data-pair-id="${pair.id}"`));
@@ -918,7 +972,10 @@ test("the judge-tour comparison survives a browser reload", async (t) => {
       ],
       reason: "Reviewed model record.",
       model: "nvidia/Nemotron-3_5-Lightning",
+      returnedModel: "nvidia/Nemotron-3_5-Lightning",
       provider: "Nebius Token Factory",
+      httpStatus: 200,
+      finishReason: "stop",
       durationMs: 1,
       usage: { total_tokens: 1 },
     },
@@ -928,7 +985,10 @@ test("the judge-tour comparison survives a browser reload", async (t) => {
       text: "Expand the explicitly unverified coverage.",
       evidenceIds: ["coverage"],
       model: "nvidia/Nemotron-3_5-Lightning",
+      returnedModel: "nvidia/Nemotron-3_5-Lightning",
       provider: "Nebius Token Factory",
+      httpStatus: 200,
+      finishReason: "stop",
       durationMs: 1,
       usage: { total_tokens: 1 },
     },
@@ -1292,9 +1352,9 @@ test("the judge-tour comparison survives a browser reload", async (t) => {
   );
   assert.equal(
     await benchmarkPage
-      .getByRole("link", { name: "Release 0.1.44 source ↗" })
+      .getByRole("link", { name: "Release 0.1.45 source ↗" })
       .getAttribute("href"),
-    "https://github.com/K1Andayesh/release-witness/releases/tag/v0.1.44",
+    "https://github.com/K1Andayesh/release-witness/releases/tag/v0.1.45",
   );
   assert.equal(
     await benchmarkPage
@@ -1456,7 +1516,7 @@ test("public demo mode excludes local projects and model spending", async (t) =>
   );
   const status = await (await fetch(`${base}/api/status`)).json();
   assert.equal(status.modelConfigured, false);
-  assert.equal(status.version, "0.1.44");
+  assert.equal(status.version, "0.1.45");
   assert.equal(status.publicDemo, true);
   const integrity = await (
     await fetch(`${base}/api/runs/${receiptId}/integrity`)

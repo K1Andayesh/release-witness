@@ -1,5 +1,10 @@
 # Changelog
 
+## 0.1.45 — 2026-09-17
+
+- Require the recorded Nemotron request and provider-returned model IDs, HTTP 200 status and completed stop reason before the portfolio certifies a model-backed run. A missing returned-model field can no longer pass by falling back to the requested model.
+- Add a regression showing that the prior v2 run receipt remains intact after that field is removed, while model certification now fails closed. Existing saved model-backed pairs retain certification because their recorded responses contain the required metadata.
+
 ## 0.1.44 — 2026-09-17
 
 - Make **Verified delta** wait for the saved comparison to finish loading before expanding and focusing its evidence. A fast click on a slow connection now lands on the changed check instead of leaving the judge at the comparison section.

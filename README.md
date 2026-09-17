@@ -12,7 +12,7 @@ A PR-preview QA agent that turns a change description into a bounded risk map, e
 
 **Natural-narration demo video:** https://youtu.be/O8Ijn85__6U
 
-**Verified source release:** https://github.com/K1Andayesh/release-witness/releases/tag/v0.1.44
+**Verified source release:** https://github.com/K1Andayesh/release-witness/releases/tag/v0.1.45
 
 **Required runtime:** saved qualifying runs show `nvidia/Nemotron-3_5-Lightning` executing through Nebius Token Factory, including returned model identity, provider, latency and token usage. The hosted judge tour replays those verified records without requiring credentials or spending judge credits.
 
@@ -68,7 +68,7 @@ npm test
 npm run format:check
 ```
 
-Twenty-two contract/failure tests pass. Actual Chrome verification covers the server-managed paired-run workflow, persisted pair identity, judge-tour comparison restoration after reload, receipt verification and tamper detection, release-source, commit and archive binding, both appointment defects, the repaired candidate, before/after comparison, model-budget gating, model planning/advice, provider-failure fallback and public-demo restrictions. See `docs/QA.md`, `docs/DEMO.md` and `docs/READINESS.md`.
+Twenty-three contract/failure tests pass. Actual Chrome verification covers the server-managed paired-run workflow, persisted pair identity, judge-tour comparison restoration after reload, receipt verification and tamper detection, release-source, commit and archive binding, both appointment defects, the repaired candidate, before/after comparison, model-budget gating, model planning/advice, provider-failure fallback and public-demo restrictions. See `docs/QA.md`, `docs/DEMO.md` and `docs/READINESS.md`.
 
 ## Model and scope controls
 
