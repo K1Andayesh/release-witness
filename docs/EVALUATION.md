@@ -42,7 +42,7 @@ The four runs contain 12 validated risk hypotheses, four allow-listed advisories
 
 The server-managed paired workflow classified both seeded failures as resolved, the required-name invariant as unchanged, and excluded coverage as unverified. It produced zero regressions and did not convert unknown coverage into a pass. Both Nemotron plans covered all three allow-listed checks with a grounded hypothesis, and both advisories cited an allow-listed evidence ID. The pair relationship survives reloads, and the server independently recomputed each versioned report receipt and all eight screenshot hashes from disk before displaying verification.
 
-The model received only the reviewed check catalog and expected behavior. It returned one validated risk hypothesis for every check and ordered the complete catalog. The browser runner still executed every check, and deterministic assertions produced every verdict. The post-run call selected one action from a server-owned catalog. Invalid model identifiers, omitted checks, provider failures and malformed outputs fail closed in the automated tests.
+The model received only the reviewed check catalog and expected behavior. It returned one validated risk hypothesis for every check and ordered the complete catalog. The browser runner executed every check in that validated order; report cards remain in workflow order to make baseline/candidate review stable. Deterministic assertions produced every verdict. The post-run call selected one action from a server-owned catalog. Invalid model identifiers, omitted checks, provider failures and malformed outputs fail closed in the automated tests.
 
 Appointment evidence IDs:
 

@@ -6,13 +6,13 @@
 
 ![Release Witness — Evidence before confidence](public/assets/release-witness-cover-v1.jpg)
 
-A PR-preview QA agent that turns a change description into a bounded risk map, executes the same reviewed browser contract against a baseline and candidate, and compares the evidence. NVIDIA Nemotron through Nebius maps the change to every reviewed check and chooses a constrained advisory next action; deterministic browser assertions own every verdict.
+A PR-preview QA agent that turns a change description into a bounded risk map, executes the same reviewed browser contract against a baseline and candidate, and compares the evidence. NVIDIA Nemotron through Nebius maps the change to every reviewed check, orders their execution and chooses a constrained advisory next action; deterministic browser assertions own every verdict.
 
 **Public competition demo:** https://release-witness.139-99-135-89.sslip.io
 
 **Natural-narration demo video:** https://youtu.be/O8Ijn85__6U
 
-**Verified source release:** https://github.com/K1Andayesh/release-witness/releases/tag/v0.1.47
+**Verified source release:** https://github.com/K1Andayesh/release-witness/releases/tag/v0.1.48
 
 **Required runtime:** saved qualifying runs show `nvidia/Nemotron-3_5-Lightning` executing through Nebius Token Factory, including returned model identity, provider, latency and token usage. The hosted judge tour replays those verified records without requiring credentials or spending judge credits.
 

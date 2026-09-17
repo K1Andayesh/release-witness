@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.1.48 — 2026-09-17
+
+- Make Nemotron's actual execution-order role explicit beside the saved risk map. The runner already follows the validated model order while keeping every reviewed check and leaving verdicts to Chrome assertions; report cards remain in workflow order for comparison. No model call, browser verdict or benchmark observation changes.
+
 ## 0.1.47 — 2026-09-17
 
 - Upgrade newly completed runs to v3 SHA-256 receipts over the full saved report record except the receipt itself. A changed model explanation, advisory text, check title or provider response detail now invalidates the receipt rather than leaving the judge-facing text under a valid hash.

@@ -1,5 +1,11 @@
 # Release Witness QA record
 
+## Nemotron execution-order clarity — 17 September 2026
+
+- The validated `run.plan.order` drives the runner's Chrome loop; every catalogued check remains required, while report cards use workflow order for stable comparison. The previous risk-map copy did not state this actual model contribution, making the priority list appear potentially decorative.
+- The v0.1.48 copy identifies the selected execution order, confirms Chrome ran every reviewed check in it, and keeps browser assertions as the verdict authority. Actual local Chrome with copied synthetic v3 evidence displayed the new explanation, a verified candidate receipt, the two-resolution comparison and explicit not-tested coverage. No run evidence or provider response changed.
+- Syntax, formatting and 23 contract tests passed. A clean release-archive and public deployment check are required before calling this a published improvement.
+
 ## Full-record v3 receipt audit — 17 September 2026
 
 - A copy of a saved v2 appointment report kept its SHA-256 receipt valid when only its model advisory text or plan reason was changed. Those strings were displayed in the judge report but omitted from the v2 digest. The original production evidence was not changed during this audit.
