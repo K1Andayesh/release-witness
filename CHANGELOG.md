@@ -1,5 +1,10 @@
 # Changelog
 
+## 0.1.43 — 2026-09-17
+
+- Keep the evidence item in view when a judge selects a tour step on a short or 200%-zoomed screen; the verified-delta step now centres its expanded comparison check instead of scrolling only to the enclosing section.
+- Guard focused evidence visibility on a 390 × 450 Chrome viewport.
+
 ## 0.1.42 — 2026-09-17
 
 - Identify completed Nemotron planning as a recorded model call in the judge report, so the saved evidence cannot imply a new live call on the credential-free public demo.

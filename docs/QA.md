@@ -1,5 +1,11 @@
 # Release Witness QA record
 
+## Guided comparison at 200% browser zoom — 17 September 2026
+
+- The v0.1.42 four-step judge tour fit a 400-CSS-pixel viewport at actual 200% Chrome for Testing zoom, but after **Verified delta** the focused changed-check summary sat at 497 CSS pixels in a 450-pixel-tall viewport. The section itself had scrolled to the top; the evidence item was still below the fold.
+- The corrected step scrolls its focused summary into the middle of the viewport. The same actual-zoom audit now measures the summary at 204–245 CSS pixels, verifies all four guide controls and both expanded evidence targets, and finds no horizontal overflow on the homepage, tour, second workflow or benchmark receipt. A real-Chrome regression also checks focus and visibility at 390 × 450.
+- Chromium's headless screenshot capture at this native zoom/scroll position returned a blank or coordinate-shifted image, so the zoom finding rests on DOM focus, geometry, hit testing and check expansion rather than screenshot-based visual review. No screen-reader or Windows OS high-contrast conclusion follows from this audit.
+
 ## Recorded-model label audit — 17 September 2026
 
 - Actual public Chrome showed **LIVE MODEL RECORD** beside the saved Nemotron risk map while the same page disabled live model calls and said **Live calls disabled · saved model-backed tour available**. The evidence is a real recorded provider call, but “live” could suggest that opening the report triggers a new call.

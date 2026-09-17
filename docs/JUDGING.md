@@ -2,7 +2,7 @@
 
 Release Witness is entered in **Best Apps and Agents**. This guide maps the shipped evidence to the four equally weighted judging criteria in the official rules.
 
-Verified source release: https://github.com/K1Andayesh/release-witness/releases/tag/v0.1.42
+Verified source release: https://github.com/K1Andayesh/release-witness/releases/tag/v0.1.43
 
 ## Technological implementation
 
@@ -18,6 +18,7 @@ Verified source release: https://github.com/K1Andayesh/release-witness/releases/
 ## Design
 
 - A clean public-demo visit opens directly on the strongest saved model-backed comparison without credentials or model spend. **Start 90-second tour** brings that pair's report visibly into view, then gives four direct steps through its saved model risk map, browser observations, bounded advice and verified before/after delta. **Second workflow proof** opens the independent model-backed Fieldnotes comparison, and **Benchmark receipt** opens the portfolio certification from the same judge strip. The entry point also links to the public source and natural 1:47 two-workflow walkthrough.
+- Each evidence step keeps its focused item visible on a short or zoomed viewport; selecting **Verified delta** expands and centres the changed check rather than stopping at the comparison section heading.
 - If saved model evidence is unavailable, the public demo disables the judge tour and marks the portfolio and model evidence unavailable. Browser-only checks remain usable without implying an NVIDIA model result.
 - The tour follows the server-verified appointment pair. An open page rechecks the benchmark every ten seconds and disables the tour if that pair's screenshot or receipt integrity fails; an older valid pair cannot mask a newer failed pair.
 - A controlled-benchmark release delta places the measured two resolutions and zero regressions directly below the result metrics.

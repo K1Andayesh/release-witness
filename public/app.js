@@ -403,7 +403,9 @@ function render() {
         target.querySelector("h3, .eyebrow") ||
         target;
       if (!focusTarget.matches("summary")) focusTarget.tabIndex = -1;
-      target.scrollIntoView({ block: "start" });
+      (detail ? focusTarget : target).scrollIntoView({
+        block: detail ? "center" : "start",
+      });
       focusTarget.focus({ preventScroll: true });
     };
   }
