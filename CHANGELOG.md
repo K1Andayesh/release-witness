@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.1.49 — 2026-09-18
+
+- Make the saved Nemotron or standard risk map a level-three heading. The judge tour now moves screen-reader focus to a named section consistent with the other tour steps; browser execution, model evidence and verdicts are unchanged.
+
 ## 0.1.48 — 2026-09-17
 
 - Make Nemotron's actual execution-order role explicit beside the saved risk map. The runner already follows the validated model order while keeping every reviewed check and leaving verdicts to Chrome assertions; report cards remain in workflow order for comparison. No model call, browser verdict or benchmark observation changes.

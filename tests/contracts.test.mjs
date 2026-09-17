@@ -709,10 +709,10 @@ test("server-managed pairs persist their relationship and comparison", async (t)
     (suite) => suite.id === "booking-v1",
   );
   assert.equal(benchmark.complete, false);
-  assert.equal(benchmark.release.version, "0.1.48");
+  assert.equal(benchmark.release.version, "0.1.49");
   assert.equal(
     benchmark.release.source,
-    "https://github.com/K1Andayesh/release-witness/releases/tag/v0.1.48",
+    "https://github.com/K1Andayesh/release-witness/releases/tag/v0.1.49",
   );
   assert.equal(
     benchmark.release.commit,
@@ -728,7 +728,7 @@ test("server-managed pairs persist their relationship and comparison", async (t)
   );
   assert.equal(
     benchmark.release.archiveSource,
-    "https://github.com/K1Andayesh/release-witness/releases/download/v0.1.48/release-witness-publication-ready-v0.1.48-r1.tar.gz",
+    "https://github.com/K1Andayesh/release-witness/releases/download/v0.1.49/release-witness-publication-ready-v0.1.49-r1.tar.gz",
   );
   assert.equal(bookingBenchmark.verified, true);
   assert.equal(bookingBenchmark.defectsDetected, 2);
@@ -751,7 +751,7 @@ test("server-managed pairs persist their relationship and comparison", async (t)
   assert.match(benchmarkReportText, /<main class="benchmark-report">/);
   assert.match(benchmarkReportText, /Portfolio certified: no/);
   assert.match(benchmarkReportText, /data-status="not-certified"/);
-  assert.match(benchmarkReportText, /Release 0\.1\.48 source/);
+  assert.match(benchmarkReportText, /Release 0\.1\.49 source/);
   assert.match(benchmarkReportText, /Commit 01234567/);
   assert.match(benchmarkReportText, /Source archive SHA-256 abcdefabcdef/);
   assert.match(benchmarkReportText, new RegExp(`data-pair-id="${pair.id}"`));
@@ -1250,6 +1250,15 @@ test("the judge-tour comparison survives a browser reload", async (t) => {
       .evaluate((element) => element === document.activeElement),
     true,
   );
+  const riskHeading = page.getByRole("heading", {
+    name: "NEMOTRON RISK MAP",
+    level: 3,
+  });
+  await page.getByRole("button", { name: /01 · Model risk/ }).click();
+  assert.equal(
+    await riskHeading.evaluate((element) => element === document.activeElement),
+    true,
+  );
   assert.equal(new URL(page.url()).hash, `#${candidateId}~${baselineId}`);
 
   await page.route("**/api/compare?**", async (route) => {
@@ -1364,9 +1373,9 @@ test("the judge-tour comparison survives a browser reload", async (t) => {
   );
   assert.equal(
     await benchmarkPage
-      .getByRole("link", { name: "Release 0.1.48 source ↗" })
+      .getByRole("link", { name: "Release 0.1.49 source ↗" })
       .getAttribute("href"),
-    "https://github.com/K1Andayesh/release-witness/releases/tag/v0.1.48",
+    "https://github.com/K1Andayesh/release-witness/releases/tag/v0.1.49",
   );
   assert.equal(
     await benchmarkPage
@@ -1528,7 +1537,7 @@ test("public demo mode excludes local projects and model spending", async (t) =>
   );
   const status = await (await fetch(`${base}/api/status`)).json();
   assert.equal(status.modelConfigured, false);
-  assert.equal(status.version, "0.1.48");
+  assert.equal(status.version, "0.1.49");
   assert.equal(status.publicDemo, true);
   const integrity = await (
     await fetch(`${base}/api/runs/${receiptId}/integrity`)

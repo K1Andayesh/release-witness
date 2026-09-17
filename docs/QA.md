@@ -1,5 +1,11 @@
 # Release Witness QA record
 
+## Risk-map heading navigation — 18 September 2026
+
+- In the deployed v0.1.48 tour, actual Chrome moved focus to a paragraph labelled “NEMOTRON RISK MAP”; Chrome's accessibility tree exposed it as a paragraph, while the report title and bounded-advice target were headings. A screen-reader user following headings could therefore miss this tour destination.
+- v0.1.49 renders the risk-map label as a level-three heading for both model-backed and standard plans. The existing real-Chrome tour contract now requires that heading and checks that the first tour step focuses it. In an isolated local Chrome session with the intact synthetic saved evidence, the heading was focused and visible; visual inspection showed no layout regression. This checks browser semantics, not native screen-reader speech.
+- Syntax, formatting and all 23 contract tests pass. Clean-archive, public-deployment and release checks are still required before calling the fix published.
+
 ## Nemotron execution-order clarity — 17 September 2026
 
 - The validated `run.plan.order` drives the runner's Chrome loop; every catalogued check remains required, while report cards use workflow order for stable comparison. The previous risk-map copy did not state this actual model contribution, making the priority list appear potentially decorative.
