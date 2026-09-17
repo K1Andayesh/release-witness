@@ -24,6 +24,8 @@ The included appointment demo starts with two seeded defects: a booking disappea
 
 The first users are small product teams reviewing pull requests without a dedicated QA function. The product gives the reviewer a compact answer to three questions: what risk did the change create, what did Chrome actually observe, and which claims remain untested? A one-click judge tour opens the strongest saved Nemotron-backed comparison without requiring credentials or spending credits.
 
+Judge quick path: open the [credential-free demo](https://release-witness.139-99-135-89.sslip.io), choose **Start 90-second tour** to inspect the recorded model risk map, Chrome observations, bounded advice and verified delta, then open the [certified benchmark receipt](https://release-witness.139-99-135-89.sslip.io/api/benchmark/report) for both workflow comparisons, returned-model verification and the exact release source. The hosted tour replays saved real Nebius calls; it makes no fresh inference request.
+
 ## Why the idea is different
 
 The model's authority stops before the verdict. Nemotron must map the change to every reviewed check, but the manifest defines coverage, Chrome produces observations and deterministic assertions decide outcomes. The product's final artifact is therefore a release receipt that connects model reasoning, browser evidence, explicit unknowns and exact source provenance. A fluent model answer cannot turn missing evidence into confidence.
@@ -46,7 +48,7 @@ The hardest part was keeping model assistance useful without letting it become t
 - Added a server-derived portfolio verifier that checks declared ground truth, durable pair relationships, four versioned run receipts and all 16 screenshot files before certifying the public 3/3 result.
 - Bound the exact release, immutable Git commit and downloadable source-archive SHA-256 into a responsive, printable benchmark receipt with direct links to both comparisons and all four source run-receipt digests.
 - Designed a one-click judge path from bounded model risk to browser observations, side-by-side repair evidence and explicit unknowns, verified on desktop and at 390 × 844 without horizontal overflow.
-- Covered model schemas, provider failures, tampering, unsafe targets, concurrency, restart recovery, paired execution, public-demo isolation and the real-Chrome judge journey with 22 passing tests and public CI.
+- Covered model schemas, provider failures, tampering, unsafe targets, concurrency, restart recovery, paired execution, public-demo isolation and the real-Chrome judge journey with 23 passing tests and public CI.
 
 ## What we learned
 
@@ -71,8 +73,9 @@ Release Witness was created during the hackathon submission period. The applicat
 ## Public links
 
 - Source repository: https://github.com/K1Andayesh/release-witness
-- Verified source release: https://github.com/K1Andayesh/release-witness/releases/tag/v0.1.45
+- Verified source release: https://github.com/K1Andayesh/release-witness/releases/tag/v0.1.46
 - Working demo: https://release-witness.139-99-135-89.sslip.io
+- Certified benchmark receipt: https://release-witness.139-99-135-89.sslip.io/api/benchmark/report
 - Demo video, under three minutes: https://youtu.be/O8Ijn85__6U
 
 ## Gallery asset

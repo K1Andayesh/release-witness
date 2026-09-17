@@ -24,3 +24,5 @@ jobs:
       - run: npm run format:check
       - name: Run browser smoke suite
         run: npm run witness -- --suite booking-v1 --build candidate --port 4321 --change "CI smoke test of the repaired appointment candidate."
+      - name: Run Fieldnotes browser smoke suite
+        run: npm run witness -- --suite notes-v1 --build fixed --port 4323 --change "CI smoke test of the repaired Fieldnotes candidate."

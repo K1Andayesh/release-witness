@@ -1,5 +1,10 @@
 # Changelog
 
+## 0.1.46 — 2026-09-17
+
+- Exercise both shipped workflows in GitHub Actions: the Fieldnotes candidate now receives a real Chrome CLI smoke run alongside Harbour Appointments, checking note persistence, validation and duplicate prevention end to end.
+- Prepare a shorter judge path in the Devpost draft with a direct benchmark-receipt link and the correct 23-test count. The saved Devpost story still needs to be updated separately.
+
 ## 0.1.45 — 2026-09-17
 
 - Require the recorded Nemotron request and provider-returned model IDs, HTTP 200 status and completed stop reason before the portfolio certifies a model-backed run. A missing returned-model field can no longer pass by falling back to the requested model.
