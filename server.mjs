@@ -549,6 +549,8 @@ export async function startServer({
         } catch {
           return reply(res, 400, { error: "Invalid JSON." });
         }
+        if (input === null || Array.isArray(input) || typeof input !== "object")
+          return reply(res, 400, { error: "Expected a JSON object." });
         const manifest = manifests.get(input.suite);
         const paired = url.pathname === "/api/pairs";
         const build = paired

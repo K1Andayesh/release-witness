@@ -1,5 +1,10 @@
 # Release Witness QA record
 
+## Public request body boundary — 18 September 2026
+
+- On public v0.1.50, a same-origin `null` JSON body to `/api/pairs` returned 500 even though it created no run and left the server healthy. Array, numeric and syntactically invalid JSON bodies returned 400; the run list remained at 23.
+- v0.1.51 requires a JSON object before reading its fields, returning a specific 400 for null, arrays and primitives on both creation routes. The existing local HTTP test exercises the null case for both routes. This fixes a misleading server error, not a target-override or authorization gap.
+
 ## Export receipt verification — 18 September 2026
 
 - The v0.1.49 downloadable Markdown and printable HTML report showed a recorded SHA-256 digest without rechecking the underlying screenshot files when opened. The on-screen integrity and benchmark routes did recheck them, but an exported report could appear current after its evidence changed.

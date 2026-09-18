@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.1.51 — 2026-09-18
+
+- Reject JSON `null`, arrays and primitive request bodies with a clear 400 on both run-creation routes. An invalid request no longer appears as a server failure; it creates no run and leaves the bounded public demo available.
+
 ## 0.1.50 — 2026-09-18
 
 - Recheck the saved report receipt and every screenshot when serving the Markdown export or printable HTML report. Each now states VERIFIED or NOT VERIFIED with the reason, so a recorded digest cannot look current after evidence is altered or missing. The report keeps its explicit not-tested checks and limited-coverage caveat.
