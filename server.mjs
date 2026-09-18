@@ -768,6 +768,7 @@ ${metric(modelDuration(benchmark.totals.modelDurationMsVerified), "verified mode
       if (/^\/api\/runs\/[a-f0-9-]+\/(export|report)$/.test(url.pathname)) {
         const run = runs.get(url.pathname.split("/")[3]);
         if (!run) return reply(res, 404, { error: "Run not found." });
+        const integrity = await verifyEvidence(run);
         const lines = [
           `# Release Witness report ${run.id}`,
           `Build: ${run.build} | Suite: ${run.suite} | Created: ${run.createdAt}`,
@@ -775,6 +776,7 @@ ${metric(modelDuration(benchmark.totals.modelDurationMsVerified), "verified mode
           ...(run.attestation
             ? [`Evidence receipt: SHA-256 ${run.attestation.digest}`]
             : []),
+          `Receipt verification: ${integrity.verified ? "VERIFIED" : "NOT VERIFIED"} — ${integrity.reason}`,
           "",
           "Only the listed checks were executed. This is not an overall release approval.",
           "",

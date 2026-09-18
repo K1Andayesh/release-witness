@@ -1,5 +1,10 @@
 # Release Witness QA record
 
+## Export receipt verification — 18 September 2026
+
+- The v0.1.49 downloadable Markdown and printable HTML report showed a recorded SHA-256 digest without rechecking the underlying screenshot files when opened. The on-screen integrity and benchmark routes did recheck them, but an exported report could appear current after its evidence changed.
+- v0.1.50 verifies the saved run record and every screenshot on each export/report request and prints the current verification result and reason beside the recorded digest. A controlled test changes a screenshot in an isolated synthetic run: both report formats then say NOT VERIFIED while intact evidence says VERIFIED. Explicit not-tested coverage and the limited-approval caveat remain in the export. A verified receipt is a self-consistency check, not an external signature.
+
 ## Risk-map heading navigation — 18 September 2026
 
 - In the deployed v0.1.48 tour, actual Chrome moved focus to a paragraph labelled “NEMOTRON RISK MAP”; Chrome's accessibility tree exposed it as a paragraph, while the report title and bounded-advice target were headings. A screen-reader user following headings could therefore miss this tour destination.

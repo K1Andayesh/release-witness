@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.1.50 — 2026-09-18
+
+- Recheck the saved report receipt and every screenshot when serving the Markdown export or printable HTML report. Each now states VERIFIED or NOT VERIFIED with the reason, so a recorded digest cannot look current after evidence is altered or missing. The report keeps its explicit not-tested checks and limited-coverage caveat.
+
 ## 0.1.49 — 2026-09-18
 
 - Make the saved Nemotron or standard risk map a level-three heading. The judge tour now moves screen-reader focus to a named section consistent with the other tour steps; browser execution, model evidence and verdicts are unchanged.

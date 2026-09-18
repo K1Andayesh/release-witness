@@ -709,10 +709,10 @@ test("server-managed pairs persist their relationship and comparison", async (t)
     (suite) => suite.id === "booking-v1",
   );
   assert.equal(benchmark.complete, false);
-  assert.equal(benchmark.release.version, "0.1.49");
+  assert.equal(benchmark.release.version, "0.1.50");
   assert.equal(
     benchmark.release.source,
-    "https://github.com/K1Andayesh/release-witness/releases/tag/v0.1.49",
+    "https://github.com/K1Andayesh/release-witness/releases/tag/v0.1.50",
   );
   assert.equal(
     benchmark.release.commit,
@@ -728,7 +728,7 @@ test("server-managed pairs persist their relationship and comparison", async (t)
   );
   assert.equal(
     benchmark.release.archiveSource,
-    "https://github.com/K1Andayesh/release-witness/releases/download/v0.1.49/release-witness-publication-ready-v0.1.49-r1.tar.gz",
+    "https://github.com/K1Andayesh/release-witness/releases/download/v0.1.50/release-witness-publication-ready-v0.1.50-r1.tar.gz",
   );
   assert.equal(bookingBenchmark.verified, true);
   assert.equal(bookingBenchmark.defectsDetected, 2);
@@ -751,7 +751,7 @@ test("server-managed pairs persist their relationship and comparison", async (t)
   assert.match(benchmarkReportText, /<main class="benchmark-report">/);
   assert.match(benchmarkReportText, /Portfolio certified: no/);
   assert.match(benchmarkReportText, /data-status="not-certified"/);
-  assert.match(benchmarkReportText, /Release 0\.1\.49 source/);
+  assert.match(benchmarkReportText, /Release 0\.1\.50 source/);
   assert.match(benchmarkReportText, /Commit 01234567/);
   assert.match(benchmarkReportText, /Source archive SHA-256 abcdefabcdef/);
   assert.match(benchmarkReportText, new RegExp(`data-pair-id="${pair.id}"`));
@@ -830,6 +830,11 @@ test("server-managed pairs persist their relationship and comparison", async (t)
   const newerCandidate = await (
     await fetch(`${base}/api/runs/${newerPair.candidateId}`)
   ).json();
+  const intactExport = await (
+    await fetch(`${base}/api/runs/${newerCandidate.id}/export`)
+  ).text();
+  assert.match(intactExport, /Receipt verification: VERIFIED/);
+  assert.match(intactExport, /not-tested/);
   const newerBenchmark = await (await fetch(`${base}/api/benchmark`)).json();
   assert.equal(
     newerBenchmark.suites.find((suite) => suite.id === "booking-v1").pairId,
@@ -858,6 +863,15 @@ test("server-managed pairs persist their relationship and comparison", async (t)
     new URL(`${newerCandidate.id}/${screenshotName}`, dir),
     "tampered-benchmark-evidence",
   );
+  for (const format of ["export", "report"]) {
+    const response = await fetch(
+      `${base}/api/runs/${newerCandidate.id}/${format}`,
+    );
+    assert.equal(response.status, 200);
+    const body = await response.text();
+    assert.match(body, /Receipt verification: NOT VERIFIED/);
+    assert.match(body, /A stored screenshot does not match its recorded hash/);
+  }
   const tamperedBenchmark = await (await fetch(`${base}/api/benchmark`)).json();
   assert.equal(
     tamperedBenchmark.suites.find((suite) => suite.id === "booking-v1").pairId,
@@ -897,6 +911,11 @@ test("server-managed pairs persist their relationship and comparison", async (t)
   assert.match(
     await page.locator("#benchmark-defects-label").innerText(),
     /unavailable/,
+  );
+  await page.goto(`${base}/api/runs/${newerCandidate.id}/report`);
+  assert.match(
+    await page.locator("main pre").innerText(),
+    /Receipt verification: NOT VERIFIED — A stored screenshot does not match its recorded hash/,
   );
 });
 
@@ -1373,9 +1392,9 @@ test("the judge-tour comparison survives a browser reload", async (t) => {
   );
   assert.equal(
     await benchmarkPage
-      .getByRole("link", { name: "Release 0.1.49 source ↗" })
+      .getByRole("link", { name: "Release 0.1.50 source ↗" })
       .getAttribute("href"),
-    "https://github.com/K1Andayesh/release-witness/releases/tag/v0.1.49",
+    "https://github.com/K1Andayesh/release-witness/releases/tag/v0.1.50",
   );
   assert.equal(
     await benchmarkPage
@@ -1537,7 +1556,7 @@ test("public demo mode excludes local projects and model spending", async (t) =>
   );
   const status = await (await fetch(`${base}/api/status`)).json();
   assert.equal(status.modelConfigured, false);
-  assert.equal(status.version, "0.1.49");
+  assert.equal(status.version, "0.1.50");
   assert.equal(status.publicDemo, true);
   const integrity = await (
     await fetch(`${base}/api/runs/${receiptId}/integrity`)
