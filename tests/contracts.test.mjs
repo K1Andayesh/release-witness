@@ -10,6 +10,7 @@ import {
   attestBenchmark,
   attestRun,
   compareRuns,
+  measureBrowserEvidence,
   measureModelContribution,
   verdict,
   verifyAttestation,
@@ -241,6 +242,7 @@ test("model certification and v3 receipts require returned provider identity", (
     suite: "suite",
     build: "candidate",
     change: "Check a saved item.",
+    browser: "153.0.8010.36",
     checks: [{ id: "save", status: "pass", screenshots: [] }],
     plan: {
       state: "complete",
@@ -272,6 +274,20 @@ test("model certification and v3 receipts require returned provider identity", (
   const runs = [run, structuredClone(run)];
   const manifest = { checks: [{ id: "save" }] };
   assert.equal(measureModelContribution(manifest, runs, 2).verified, true);
+  assert.deepEqual(measureBrowserEvidence(runs, 2), {
+    verified: true,
+    product: "Google Chrome",
+    runsVerified: 2,
+    versions: ["153.0.8010.36"],
+    reason:
+      "Both execution records include receipt-bound Google Chrome versions.",
+  });
+  const missingBrowserVersion = structuredClone(runs);
+  delete missingBrowserVersion[0].browser;
+  assert.equal(
+    measureBrowserEvidence(missingBrowserVersion, 2).verified,
+    false,
+  );
   const missingResponseIdentity = structuredClone(runs);
   delete missingResponseIdentity[0].plan.returnedModel;
   assert.equal(verifyAttestation(missingResponseIdentity[0]), false);
@@ -720,10 +736,10 @@ test("server-managed pairs persist their relationship and comparison", async (t)
     (suite) => suite.id === "booking-v1",
   );
   assert.equal(benchmark.complete, false);
-  assert.equal(benchmark.release.version, "0.1.51");
+  assert.equal(benchmark.release.version, "0.1.52");
   assert.equal(
     benchmark.release.source,
-    "https://github.com/K1Andayesh/release-witness/releases/tag/v0.1.51",
+    "https://github.com/K1Andayesh/release-witness/releases/tag/v0.1.52",
   );
   assert.equal(
     benchmark.release.commit,
@@ -739,7 +755,7 @@ test("server-managed pairs persist their relationship and comparison", async (t)
   );
   assert.equal(
     benchmark.release.archiveSource,
-    "https://github.com/K1Andayesh/release-witness/releases/download/v0.1.51/release-witness-publication-ready-v0.1.51-r1.tar.gz",
+    "https://github.com/K1Andayesh/release-witness/releases/download/v0.1.52/release-witness-publication-ready-v0.1.52-r1.tar.gz",
   );
   assert.equal(bookingBenchmark.verified, true);
   assert.equal(bookingBenchmark.defectsDetected, 2);
@@ -755,6 +771,14 @@ test("server-managed pairs persist their relationship and comparison", async (t)
   assert.equal(bookingBenchmark.modelEvidence.advisoriesVerified, 2);
   assert.equal(bookingBenchmark.modelEvidence.tokensVerified, 40);
   assert.ok(bookingBenchmark.modelEvidence.durationMsVerified >= 0);
+  assert.equal(bookingBenchmark.browserEvidence.verified, true);
+  assert.equal(bookingBenchmark.browserEvidence.product, "Google Chrome");
+  assert.equal(bookingBenchmark.browserEvidence.runsVerified, 2);
+  assert.match(
+    bookingBenchmark.browserEvidence.versions[0],
+    /^\d+\.\d+\.\d+\.\d+$/,
+  );
+  assert.equal(benchmark.totals.browserRunsVerified, 2);
   assert.match(benchmark.attestation.digest, /^[a-f0-9]{64}$/);
   const benchmarkReport = await fetch(`${base}/api/benchmark/report`);
   assert.equal(benchmarkReport.status, 200);
@@ -762,9 +786,11 @@ test("server-managed pairs persist their relationship and comparison", async (t)
   assert.match(benchmarkReportText, /<main class="benchmark-report">/);
   assert.match(benchmarkReportText, /Portfolio certified: no/);
   assert.match(benchmarkReportText, /data-status="not-certified"/);
-  assert.match(benchmarkReportText, /Release 0\.1\.51 source/);
+  assert.match(benchmarkReportText, /Release 0\.1\.52 source/);
   assert.match(benchmarkReportText, /Commit 01234567/);
   assert.match(benchmarkReportText, /Source archive SHA-256 abcdefabcdef/);
+  assert.match(benchmarkReportText, /Google Chrome runs verified: 2/);
+  assert.match(benchmarkReportText, /VERIFIED BROWSER EXECUTION/);
   assert.match(benchmarkReportText, new RegExp(`data-pair-id="${pair.id}"`));
   assert.match(benchmarkReportText, /Open Harbour Appointments comparison/);
   assert.match(benchmarkReportText, /aria-label="defects detected: 2\/2"/);
@@ -845,6 +871,12 @@ test("server-managed pairs persist their relationship and comparison", async (t)
     await fetch(`${base}/api/runs/${newerCandidate.id}/export`)
   ).text();
   assert.match(intactExport, /Receipt verification: VERIFIED/);
+  assert.match(
+    intactExport,
+    new RegExp(
+      `Browser: Google Chrome ${newerCandidate.browser.replaceAll(".", "\\.")}`,
+    ),
+  );
   assert.match(intactExport, /not-tested/);
   const newerBenchmark = await (await fetch(`${base}/api/benchmark`)).json();
   assert.equal(
@@ -859,6 +891,9 @@ test("server-managed pairs persist their relationship and comparison", async (t)
     .getByText("Open the strongest baseline-to-candidate proof", {
       exact: false,
     })
+    .waitFor();
+  await page
+    .getByText(`Chrome ${newerCandidate.browser}`, { exact: false })
     .waitFor();
   assert.equal(
     await page
@@ -994,6 +1029,7 @@ test("the judge-tour comparison survives a browser reload", async (t) => {
     change: "Verify both booking rules.",
     createdAt: time.toISOString(),
     state: "complete",
+    browser: "153.0.8010.36",
     checks: checks(repaired),
     plan: {
       state: "complete",
@@ -1135,6 +1171,7 @@ test("the judge-tour comparison survives a browser reload", async (t) => {
     change: "Verify note persistence.",
     createdAt: time.toISOString(),
     state: "complete",
+    browser: "153.0.8010.36",
     checks: notesChecks(repaired),
     plan: {
       state: "standard",
@@ -1403,9 +1440,9 @@ test("the judge-tour comparison survives a browser reload", async (t) => {
   );
   assert.equal(
     await benchmarkPage
-      .getByRole("link", { name: "Release 0.1.51 source ↗" })
+      .getByRole("link", { name: "Release 0.1.52 source ↗" })
       .getAttribute("href"),
-    "https://github.com/K1Andayesh/release-witness/releases/tag/v0.1.51",
+    "https://github.com/K1Andayesh/release-witness/releases/tag/v0.1.52",
   );
   assert.equal(
     await benchmarkPage
@@ -1567,7 +1604,7 @@ test("public demo mode excludes local projects and model spending", async (t) =>
   );
   const status = await (await fetch(`${base}/api/status`)).json();
   assert.equal(status.modelConfigured, false);
-  assert.equal(status.version, "0.1.51");
+  assert.equal(status.version, "0.1.52");
   assert.equal(status.publicDemo, true);
   const integrity = await (
     await fetch(`${base}/api/runs/${receiptId}/integrity`)

@@ -6,6 +6,7 @@ import {
   attestBenchmark,
   attestRun,
   compareRuns,
+  measureBrowserEvidence,
   measureModelContribution,
   verifyAttestation,
   verifyPairRelationship,
@@ -325,13 +326,18 @@ export async function startServer({
         [baseline, candidate],
         receiptsVerified,
       );
+      const browserEvidence = measureBrowserEvidence(
+        [baseline, candidate],
+        receiptsVerified,
+      );
       const verified =
         defectsDetected === groundTruth.knownDefectIds.length &&
         repairsResolved === groundTruth.knownDefectIds.length &&
         invariantsPreserved === groundTruth.invariantIds.length &&
         regressions === 0 &&
         boundariesUnverified === 1 &&
-        receiptsVerified === 2;
+        receiptsVerified === 2 &&
+        browserEvidence.verified;
       const failures = [];
       if (defectsDetected !== groundTruth.knownDefectIds.length)
         failures.push("The baseline did not expose every declared defect.");
@@ -345,6 +351,8 @@ export async function startServer({
         failures.push("The coverage boundary was not retained as unverified.");
       if (receiptsVerified !== 2)
         failures.push("Both evidence receipts did not verify.");
+      if (!browserEvidence.verified)
+        failures.push("Both receipt-bound Chrome versions did not verify.");
       suites.push({
         id: manifest.id,
         name: manifest.name,
@@ -370,6 +378,7 @@ export async function startServer({
         },
         modelBacked: modelEvidence.verified,
         modelEvidence,
+        browserEvidence,
       });
     }
     const totals = suites.reduce(
@@ -401,6 +410,9 @@ export async function startServer({
         modelDurationMsVerified:
           summary.modelDurationMsVerified +
           (suite.modelEvidence?.durationMsVerified || 0),
+        browserRunsVerified:
+          summary.browserRunsVerified +
+          (suite.browserEvidence?.runsVerified || 0),
       }),
       {
         knownDefects: 0,
@@ -416,6 +428,7 @@ export async function startServer({
         advisoriesVerified: 0,
         modelTokensVerified: 0,
         modelDurationMsVerified: 0,
+        browserRunsVerified: 0,
       },
     );
     const complete =
@@ -453,6 +466,7 @@ export async function startServer({
           screenshotFilesVerified,
           receiptDigests,
           modelEvidence,
+          browserEvidence,
         }) => ({
           id,
           verified,
@@ -469,6 +483,7 @@ export async function startServer({
           screenshotFilesVerified,
           receiptDigests,
           modelEvidence,
+          browserEvidence,
         }),
       ),
       totals,
@@ -655,6 +670,7 @@ export async function startServer({
         const suiteCards = benchmark.suites
           .map((suite) => {
             const model = suite.modelEvidence;
+            const browser = suite.browserEvidence;
             const comparisonUrl = suite.route
               ? `${reportOrigin}/${suite.route}`
               : "";
@@ -687,6 +703,11 @@ export async function startServer({
         : ""
     }
   </section>
+  <section class="suite-browser-proof ${browser?.verified ? "verified" : "unused"}" aria-label="${escapeHtml(suite.name)} browser execution evidence">
+    <span class="eyebrow">${browser?.verified ? "VERIFIED BROWSER EXECUTION" : "BROWSER EXECUTION"}</span>
+    <p>${escapeHtml(browser?.reason || "Browser execution evidence is unavailable.")}</p>
+    ${browser?.verified ? `<p class="fine-print">${browser.runsVerified} receipt-bound runs · ${escapeHtml(browser.product)} ${escapeHtml(browser.versions.join(", "))}</p>` : ""}
+  </section>
   ${comparisonUrl ? `<a class="comparison-link" href="${escapeHtml(comparisonUrl)}">Open ${escapeHtml(suite.name)} comparison →</a>` : ""}
 </article>`;
           })
@@ -709,6 +730,7 @@ ${metric(benchmark.totals.riskHypothesesVerified, "grounded hypotheses", `Ground
 ${metric(benchmark.totals.advisoriesVerified, "allow-listed advisories", `Allow-listed advisories verified: ${benchmark.totals.advisoriesVerified}`)}
 ${metric(Number(benchmark.totals.modelTokensVerified).toLocaleString(), "verified model tokens", `Verified model tokens: ${benchmark.totals.modelTokensVerified}`)}
 ${metric(modelDuration(benchmark.totals.modelDurationMsVerified), "verified model time", `Verified model duration: ${modelDuration(benchmark.totals.modelDurationMsVerified)}`)}
+${metric(benchmark.totals.browserRunsVerified, "Chrome runs verified", `Google Chrome runs verified: ${benchmark.totals.browserRunsVerified}`)}
 </div></section><section aria-labelledby="workflow-evidence"><div class="report-section-heading"><div><span class="eyebrow">TRACEABLE ARTIFACTS</span><h2 id="workflow-evidence">Workflow evidence</h2></div><p>Each card links to the exact baseline-to-candidate comparison.</p></div><div class="benchmark-suite-grid">${suiteCards}</div></section><aside class="benchmark-boundary"><strong>Evidence boundary</strong><p>This receipt covers the controlled included scenarios. It is not a claim about all production defects or a third-party signature.</p></aside></main><footer class="benchmark-report-footer"><span>Release Witness · evidence before confidence</span><a href="/api/benchmark">Open machine-readable JSON →</a></footer></div></body></html>`,
           "text/html; charset=utf-8",
         );
@@ -774,6 +796,7 @@ ${metric(modelDuration(benchmark.totals.modelDurationMsVerified), "verified mode
         const lines = [
           `# Release Witness report ${run.id}`,
           `Build: ${run.build} | Suite: ${run.suite} | Created: ${run.createdAt}`,
+          `Browser: ${run.browser ? `Google Chrome ${run.browser}` : "Not recorded"}`,
           `Outcome: ${verdict(run)}`,
           ...(run.attestation
             ? [`Evidence receipt: SHA-256 ${run.attestation.digest}`]

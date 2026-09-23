@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.1.52 — 2026-09-23
+
+- Require a valid receipt-bound Google Chrome version on both runs before a workflow can certify. Surface the exact browser version in the witness report, exports and portfolio receipt, alongside a new four-run browser total. Model advice remains bounded and deterministic browser assertions retain verdict authority.
+
 ## 0.1.51 — 2026-09-18
 
 - Reject JSON `null`, arrays and primitive request bodies with a clear 400 on both run-creation routes. An invalid request no longer appears as a server failure; it creates no run and leaves the bounded public demo available.

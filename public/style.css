@@ -1294,7 +1294,7 @@ footer {
   border-color: #c9d9bc;
 }
 .model-summary-metrics {
-  grid-template-columns: repeat(5, minmax(0, 1fr));
+  grid-template-columns: repeat(6, minmax(0, 1fr));
   background: #fff;
 }
 .benchmark-suite-grid {
@@ -1405,6 +1405,22 @@ footer {
   font-size: 10px;
   line-height: 1.65;
 }
+.suite-browser-proof {
+  margin-top: 10px;
+  padding: 12px 14px;
+  border-left: 3px solid #7ea8aa;
+  background: #edf5f4;
+}
+.suite-browser-proof.unused {
+  border-left-color: #b7bcb4;
+  background: #f3f4f1;
+}
+.suite-browser-proof p {
+  margin: 7px 0 0;
+  color: var(--muted);
+  font-size: 10px;
+  line-height: 1.65;
+}
 .model-proof-facts {
   display: flex;
   flex-wrap: wrap;
@@ -1489,16 +1505,12 @@ footer {
     border-right: 0;
   }
   .benchmark-metrics .benchmark-metric:nth-last-child(-n + 2),
+  .model-summary-metrics .benchmark-metric:nth-last-child(-n + 2),
   .suite-metrics .benchmark-metric:nth-last-child(-n + 2) {
     border-bottom: 0;
   }
   .suite-metrics {
     grid-template-columns: repeat(2, minmax(0, 1fr));
-  }
-  .model-summary-metrics .benchmark-metric:last-child {
-    grid-column: 1 / -1;
-    border-top: 1px solid var(--line);
-    border-bottom: 0;
   }
   .benchmark-boundary {
     grid-template-columns: 1fr;
@@ -1544,7 +1556,8 @@ footer {
   .benchmark-suite-card,
   .benchmark-boundary,
   .receipt-digests,
-  .suite-model-proof {
+  .suite-model-proof,
+  .suite-browser-proof {
     border: 1px solid ButtonText !important;
   }
   :focus-visible {

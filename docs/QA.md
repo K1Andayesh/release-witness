@@ -1,5 +1,11 @@
 # Release Witness QA record
 
+## Receipt-bound Chrome provenance — 23 September 2026
+
+- Saved reports already included the exact browser version inside their v3 full-record receipt, but the judge-facing report and benchmark did not display it or require it independently for portfolio certification. A missing browser field could therefore be re-attested and still satisfy the controlled benchmark.
+- v0.1.52 requires both runs in each benchmark pair to carry valid receipt-bound four-part Chrome versions. The run report and human-readable export show the exact version; the portfolio reports four verified Chrome runs and each workflow card shows its recorded version set. A regression rejects a missing version. This proves recorded Chrome execution provenance for the controlled runs, not coverage of other browsers.
+- Actual Google Chrome opened the saved judge tour and showed `Chrome 153.0.8010.36` on its witness report. The benchmark receipt rendered two verified browser-evidence groups and four verified Chrome runs at desktop and 390-pixel widths with no horizontal overflow. The full suite remains 23 passing tests.
+
 ## Public request body boundary — 18 September 2026
 
 - On public v0.1.50, a same-origin `null` JSON body to `/api/pairs` returned 500 even though it created no run and left the server healthy. Array, numeric and syntactically invalid JSON bodies returned 400; the run list remained at 23.
