@@ -12,7 +12,7 @@ A PR-preview QA agent that turns a change description into a bounded risk map, e
 
 **Natural-narration demo video:** https://youtu.be/O8Ijn85__6U
 
-**Verified source release:** https://github.com/K1Andayesh/release-witness/releases/tag/v0.1.52
+**Verified source release:** https://github.com/K1Andayesh/release-witness/releases/tag/v0.1.53
 
 **Required runtime:** saved qualifying runs show `nvidia/Nemotron-3_5-Lightning` executing through Nebius Token Factory, including returned model identity, provider, latency and token usage. The hosted judge tour replays those verified records without requiring credentials or spending judge credits.
 
@@ -32,6 +32,8 @@ Across two included ground-truth workflows, Release Witness detected **3/3 known
 The competition case is mapped directly to the four equally weighted judging criteria in [`docs/JUDGING.md`](docs/JUDGING.md).
 
 The [`architecture and trust-boundary map`](docs/ARCHITECTURE.md) shows the full path from change description and bounded Nemotron planning to isolated Chrome assertions, durable receipts and a freshly verified release comparison.
+
+Production deployment is fail-closed: [`scripts/verify-deployment.mjs`](scripts/verify-deployment.mjs) checks the running version, commit, archive and complete benchmark evidence chain after restart. [`scripts/deploy-verified-source.sh`](scripts/deploy-verified-source.sh) restores the prior release and provenance configuration if that check or the restart fails.
 
 ## Run
 
@@ -68,7 +70,7 @@ npm test
 npm run format:check
 ```
 
-Twenty-three contract/failure tests pass. Actual Chrome verification covers the server-managed paired-run workflow, persisted pair identity, judge-tour comparison restoration after reload, receipt verification and tamper detection, release-source, commit and archive binding, both appointment defects, the repaired candidate, before/after comparison, model-budget gating, model planning/advice, provider-failure fallback and public-demo restrictions. See `docs/QA.md`, `docs/DEMO.md` and `docs/READINESS.md`.
+Twenty-four contract/failure tests pass. Actual Chrome verification covers the server-managed paired-run workflow, persisted pair identity, judge-tour comparison restoration after reload, receipt verification and tamper detection, release-source, commit and archive binding, deployment readiness, both appointment defects, the repaired candidate, before/after comparison, model-budget gating, model planning/advice, provider-failure fallback and public-demo restrictions. See `docs/QA.md`, `docs/DEMO.md` and `docs/READINESS.md`.
 
 ## Model and scope controls
 

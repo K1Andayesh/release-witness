@@ -1,5 +1,11 @@
 # Release Witness QA record
 
+## Fail-closed deployment verification — 24 September 2026
+
+- The previous deployment helper verified archive hashes and Git's embedded commit before switching the active release, then checked only that the application and Caddy services were active. A process could therefore be active with the wrong runtime provenance or an uncertified benchmark and still let the deployment command finish successfully.
+- v0.1.53 adds a post-restart verifier for the exact version, commit, archive, portfolio receipt and complete workflow/model/browser evidence chains. The tracked deployment helper restores the previous release symlink and its systemd provenance configuration if restart or verification fails. A contract test rejects mismatched provenance, an incomplete browser chain and any regression; the verifier also read the live public v0.1.52 deployment successfully before this release.
+- The local v0.1.53 gate accepted the intact two-workflow evidence set with four receipts, 16 screenshots, four Nemotron records and four Chrome records. Actual Google Chrome then opened the judge tour and certified report with the exact release provenance visible and no desktop overflow. Syntax, formatting, shell parsing, the production dependency audit and all 24 tests passed.
+
 ## Receipt-bound Chrome provenance — 23 September 2026
 
 - Saved reports already included the exact browser version inside their v3 full-record receipt, but the judge-facing report and benchmark did not display it or require it independently for portfolio certification. A missing browser field could therefore be re-attested and still satisfy the controlled benchmark.

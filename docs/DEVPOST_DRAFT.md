@@ -48,7 +48,7 @@ The hardest part was keeping model assistance useful without letting it become t
 - Added a server-derived portfolio verifier that checks declared ground truth, durable pair relationships, four versioned run receipts, all 16 screenshot files and four receipt-bound Google Chrome execution records before certifying the public 3/3 result.
 - Bound the exact release, immutable Git commit and downloadable source-archive SHA-256 into a responsive, printable benchmark receipt with direct links to both comparisons and all four source run-receipt digests.
 - Designed a one-click judge path from bounded model risk to browser observations, side-by-side repair evidence and explicit unknowns, verified on desktop and at 390 × 844 without horizontal overflow.
-- Covered model schemas, provider failures, tampering, unsafe targets, concurrency, restart recovery, paired execution, public-demo isolation and the real-Chrome judge journey with 23 passing tests and public CI.
+- Covered model schemas, provider failures, tampering, unsafe targets, concurrency, restart and deployment recovery, paired execution, public-demo isolation and the real-Chrome judge journey with 24 passing tests and public CI.
 
 ## What we learned
 
@@ -73,7 +73,7 @@ Release Witness was created during the hackathon submission period. The applicat
 ## Public links
 
 - Source repository: https://github.com/K1Andayesh/release-witness
-- Verified source release: https://github.com/K1Andayesh/release-witness/releases/tag/v0.1.52
+- Verified source release: https://github.com/K1Andayesh/release-witness/releases/tag/v0.1.53
 - Working demo: https://release-witness.139-99-135-89.sslip.io
 - Certified benchmark receipt: https://release-witness.139-99-135-89.sslip.io/api/benchmark/report
 - Demo video, under three minutes: https://youtu.be/O8Ijn85__6U

@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.1.53 — 2026-09-24
+
+- Add a fail-closed deployment gate that verifies the running version, commit, source archive, certified workflow chain, receipts, screenshots, Nemotron records and Chrome records after every service restart. A failed restart or evidence/provenance check restores the previous release and its systemd provenance before returning failure.
+
 ## 0.1.52 — 2026-09-23
 
 - Require a valid receipt-bound Google Chrome version on both runs before a workflow can certify. Surface the exact browser version in the witness report, exports and portfolio receipt, alongside a new four-run browser total. Model advice remains bounded and deterministic browser assertions retain verdict authority.
