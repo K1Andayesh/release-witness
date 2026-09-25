@@ -2,7 +2,7 @@
 
 Release Witness is entered in **Best Apps and Agents**. This guide maps the shipped evidence to the four equally weighted judging criteria in the official rules.
 
-Verified source release: https://github.com/K1Andayesh/release-witness/releases/tag/v0.1.53
+Verified source release: https://github.com/K1Andayesh/release-witness/releases/tag/v0.1.54
 
 ## Technological implementation
 
@@ -16,6 +16,7 @@ Verified source release: https://github.com/K1Andayesh/release-witness/releases/
 - The portfolio benchmark is server-derived rather than editorial: manifest ground truth identifies seeded defects and invariants, and `/api/benchmark` verifies the newest completed model-backed pair for each workflow, four receipts, all 16 screenshot files and four receipt-bound Google Chrome execution records before the homepage can show 3/3. New browser-only demo pairs cannot replace that evidence. It separately verifies that both appointment plans cover every allowed check and both advisories cite allow-listed evidence. `/api/benchmark/report` presents the same certification as a scannable, printable receipt with the 3/3 defect-detection and repair results, both verified workflows, pair IDs, exact Chrome versions, model measurements, four run-receipt digests, an aggregate SHA-256 digest and direct comparison links. The digest binds the exact release version, source URL, immutable commit and downloadable source-archive hash shown on the page.
 - Twenty-four automated tests and the public GitHub Actions workflow cover contracts, persisted pair identity, failure handling, tamper detection, release-source, commit and archive binding, deployment readiness, concurrency, restart recovery, paired execution, judge-tour reload restoration and a real-Chrome smoke run.
 - The production release gate re-reads `/api/status` and `/api/benchmark` after restart and requires the exact version, commit, archive, certified workflow chain, receipts, screenshot files, Nemotron records and Chrome records. A failed restart or verification restores the previous release symlink and its systemd provenance configuration.
+- `/api/readiness` exposes that same validator as a live machine-readable receipt. It returns HTTP 200 with the verified release and evidence totals only when the full chain is ready, or HTTP 503 with explicit failures; the printable benchmark links to it directly.
 - The [`architecture and trust-boundary map`](ARCHITECTURE.md) makes the authority split, execution boundary and fail-closed behavior reviewable without reading the implementation first.
 
 ## Design

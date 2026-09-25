@@ -15,6 +15,7 @@ import {
 import { loadManifests, publicCatalog } from "./lib/manifests.mjs";
 import { modelAllowance } from "./lib/provider.mjs";
 import { pathToFileURL } from "node:url";
+import { validateDeployment } from "./lib/deployment.mjs";
 
 export async function startServer({
   port = Number(process.env.PORT || 4317),
@@ -496,6 +497,38 @@ export async function startServer({
       attestation: attestBenchmark(certification, release),
     };
   }
+  async function statusSummary() {
+    return {
+      busy,
+      publicDemo,
+      modelConfigured: Boolean(
+        !publicDemo &&
+        process.env.NEBIUS_API_KEY &&
+        process.env.NEBIUS_INFERENCE_APPROVED === "true",
+      ),
+      modelAllowance: await modelAllowance(directory),
+      model: process.env.NEBIUS_MODEL || "nvidia/Nemotron-3_5-Lightning",
+      version: packageMetadata.version,
+      releaseCommit: normalizedSourceCommit,
+      releaseArchiveSha256: normalizedSourceArchiveSha256,
+    };
+  }
+  async function readinessSummary() {
+    const [status, benchmark] = await Promise.all([
+      statusSummary(),
+      benchmarkSummary(),
+    ]);
+    return {
+      checkedAt: new Date().toISOString(),
+      ...validateDeployment({
+        status,
+        benchmark,
+        expectedVersion: packageMetadata.version,
+        expectedCommit: normalizedSourceCommit || "",
+        expectedArchiveSha256: normalizedSourceArchiveSha256 || "",
+      }),
+    };
+  }
   function escapeHtml(value) {
     return String(value ?? "").replace(
       /[&<>"']/g,
@@ -731,25 +764,16 @@ ${metric(benchmark.totals.advisoriesVerified, "allow-listed advisories", `Allow-
 ${metric(Number(benchmark.totals.modelTokensVerified).toLocaleString(), "verified model tokens", `Verified model tokens: ${benchmark.totals.modelTokensVerified}`)}
 ${metric(modelDuration(benchmark.totals.modelDurationMsVerified), "verified model time", `Verified model duration: ${modelDuration(benchmark.totals.modelDurationMsVerified)}`)}
 ${metric(benchmark.totals.browserRunsVerified, "Chrome runs verified", `Google Chrome runs verified: ${benchmark.totals.browserRunsVerified}`)}
-</div></section><section aria-labelledby="workflow-evidence"><div class="report-section-heading"><div><span class="eyebrow">TRACEABLE ARTIFACTS</span><h2 id="workflow-evidence">Workflow evidence</h2></div><p>Each card links to the exact baseline-to-candidate comparison.</p></div><div class="benchmark-suite-grid">${suiteCards}</div></section><aside class="benchmark-boundary"><strong>Evidence boundary</strong><p>This receipt covers the controlled included scenarios. It is not a claim about all production defects or a third-party signature.</p></aside></main><footer class="benchmark-report-footer"><span>Release Witness · evidence before confidence</span><a href="/api/benchmark">Open machine-readable JSON →</a></footer></div></body></html>`,
+</div></section><section aria-labelledby="workflow-evidence"><div class="report-section-heading"><div><span class="eyebrow">TRACEABLE ARTIFACTS</span><h2 id="workflow-evidence">Workflow evidence</h2></div><p>Each card links to the exact baseline-to-candidate comparison.</p></div><div class="benchmark-suite-grid">${suiteCards}</div></section><aside class="benchmark-boundary"><strong>Evidence boundary</strong><p>This receipt covers the controlled included scenarios. It is not a claim about all production defects or a third-party signature.</p></aside></main><footer class="benchmark-report-footer"><span>Release Witness · evidence before confidence</span><nav aria-label="Machine-readable evidence"><a href="/api/readiness">Open deployment readiness →</a><a href="/api/benchmark">Open benchmark JSON →</a></nav></footer></div></body></html>`,
           "text/html; charset=utf-8",
         );
       }
       if (url.pathname === "/api/status")
-        return reply(res, 200, {
-          busy,
-          publicDemo,
-          modelConfigured: Boolean(
-            !publicDemo &&
-            process.env.NEBIUS_API_KEY &&
-            process.env.NEBIUS_INFERENCE_APPROVED === "true",
-          ),
-          modelAllowance: await modelAllowance(directory),
-          model: process.env.NEBIUS_MODEL || "nvidia/Nemotron-3_5-Lightning",
-          version: packageMetadata.version,
-          releaseCommit: normalizedSourceCommit,
-          releaseArchiveSha256: normalizedSourceArchiveSha256,
-        });
+        return reply(res, 200, await statusSummary());
+      if (url.pathname === "/api/readiness") {
+        const readiness = await readinessSummary();
+        return reply(res, readiness.ready ? 200 : 503, readiness);
+      }
       if (/^\/api\/pairs\/[a-f0-9-]+$/.test(url.pathname)) {
         const pair = pairs.get(url.pathname.split("/").pop());
         return reply(

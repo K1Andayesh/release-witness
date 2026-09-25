@@ -1462,6 +1462,11 @@ footer {
   margin-top: 26px;
   padding: 0 4px;
 }
+.benchmark-report-footer nav {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px 18px;
+}
 
 @media (max-width: 850px) {
   .benchmark-model-summary,

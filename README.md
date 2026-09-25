@@ -12,7 +12,7 @@ A PR-preview QA agent that turns a change description into a bounded risk map, e
 
 **Natural-narration demo video:** https://youtu.be/O8Ijn85__6U
 
-**Verified source release:** https://github.com/K1Andayesh/release-witness/releases/tag/v0.1.53
+**Verified source release:** https://github.com/K1Andayesh/release-witness/releases/tag/v0.1.54
 
 **Required runtime:** saved qualifying runs show `nvidia/Nemotron-3_5-Lightning` executing through Nebius Token Factory, including returned model identity, provider, latency and token usage. The hosted judge tour replays those verified records without requiring credentials or spending judge credits.
 
@@ -33,7 +33,7 @@ The competition case is mapped directly to the four equally weighted judging cri
 
 The [`architecture and trust-boundary map`](docs/ARCHITECTURE.md) shows the full path from change description and bounded Nemotron planning to isolated Chrome assertions, durable receipts and a freshly verified release comparison.
 
-Production deployment is fail-closed: [`scripts/verify-deployment.mjs`](scripts/verify-deployment.mjs) checks the running version, commit, archive and complete benchmark evidence chain after restart. [`scripts/deploy-verified-source.sh`](scripts/deploy-verified-source.sh) restores the prior release and provenance configuration if that check or the restart fails.
+Production deployment is fail-closed: [`scripts/verify-deployment.mjs`](scripts/verify-deployment.mjs) checks the running version, commit, archive and complete benchmark evidence chain after restart. [`scripts/deploy-verified-source.sh`](scripts/deploy-verified-source.sh) restores the prior release and provenance configuration if that check or the restart fails. The same validation is public as a machine-readable [`/api/readiness`](https://release-witness.139-99-135-89.sslip.io/api/readiness) receipt that returns 503 rather than claiming readiness when any required evidence is incomplete.
 
 ## Run
 

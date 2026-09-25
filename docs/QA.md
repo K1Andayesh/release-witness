@@ -1,5 +1,11 @@
 # Release Witness QA record
 
+## Public fail-closed readiness receipt — 25 September 2026
+
+- v0.1.53 enforced release readiness inside the deployment process, but a judge or monitor still had to combine `/api/status` and `/api/benchmark` to reproduce that decision. The printable receipt described evidence and provenance but did not link to the operational gate.
+- v0.1.54 publishes the shared validator at `/api/readiness`: exact live version, commit and archive plus certified defect/repair totals, zero regressions, workflow chains, run receipts, screenshots, Nemotron records and Chrome records are all required for HTTP 200. Any missing condition produces HTTP 503 and specific failures. The benchmark receipt links to this JSON under a named navigation landmark.
+- An intact local production-evidence copy returned 200 with two workflows, four receipts, 16 screenshots, four Nemotron records and four Chrome records; the existing incomplete benchmark fixture returned 503 with the missing-certification reason. Actual Google Chrome followed the new link to the readiness JSON, and the report footer remained readable without horizontal overflow at desktop and 390-pixel widths.
+
 ## Fail-closed deployment verification — 24 September 2026
 
 - The previous deployment helper verified archive hashes and Git's embedded commit before switching the active release, then checked only that the application and Caddy services were active. A process could therefore be active with the wrong runtime provenance or an uncertified benchmark and still let the deployment command finish successfully.

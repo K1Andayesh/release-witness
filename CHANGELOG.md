@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.1.54 — 2026-09-25
+
+- Publish `/api/readiness` as a fail-closed operational receipt. It returns 200 only when the live version, commit and archive match and the complete workflow, receipt, screenshot, Nemotron and Chrome evidence chains verify; otherwise it returns 503 with specific failures. Link it from the human-readable benchmark report.
+
 ## 0.1.53 — 2026-09-24
 
 - Add a fail-closed deployment gate that verifies the running version, commit, source archive, certified workflow chain, receipts, screenshots, Nemotron records and Chrome records after every service restart. A failed restart or evidence/provenance check restores the previous release and its systemd provenance before returning failure.
