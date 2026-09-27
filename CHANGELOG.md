@@ -1,5 +1,10 @@
 # Changelog
 
+## 0.1.55 — 2026-09-27
+
+- Added a direct **Live readiness** link to the homepage judge resources so a reviewer can inspect the fail-closed deployment and evidence-chain decision without first finding it in the benchmark receipt.
+- Extended the actual-Chrome judge-path contract to require the readiness link and kept the resource row responsive at the tested desktop and narrow viewports.
+
 ## 0.1.54 — 2026-09-25
 
 - Publish `/api/readiness` as a fail-closed operational receipt. It returns 200 only when the live version, commit and archive match and the complete workflow, receipt, screenshot, Nemotron and Chrome evidence chains verify; otherwise it returns 503 with specific failures. Link it from the human-readable benchmark report.
