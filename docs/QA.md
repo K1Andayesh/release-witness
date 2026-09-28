@@ -1,5 +1,11 @@
 # Release Witness QA record
 
+## Concise portfolio status announcement — 28 September 2026
+
+- The homepage verification figures load asynchronously, but their container was not a live region. A screen-reader user could reach the page before those figures settled without receiving a concise signal that the evidence check had completed.
+- v0.1.56 adds a visually hidden polite status region. A complete benchmark announces the verified defect, repair, receipt, screenshot, Nemotron-run and workflow totals once; an incomplete benchmark announces that verified competition evidence is unavailable while browser-only checks remain available.
+- The update compares the next message with the current text before writing, so the ten-second integrity refresh does not repeatedly announce unchanged evidence. The actual-Chrome contract checks the live-region semantics and fail-closed message; the intact public benchmark is checked separately for its evidence-derived totals. This verifies browser accessibility semantics, not representative native screen-reader speech.
+
 ## Public fail-closed readiness receipt — 25 September 2026
 
 - v0.1.53 enforced release readiness inside the deployment process, but a judge or monitor still had to combine `/api/status` and `/api/benchmark` to reproduce that decision. The printable receipt described evidence and provenance but did not link to the operational gate.

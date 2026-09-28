@@ -1,5 +1,10 @@
 # Changelog
 
+## 0.1.56 — 2026-09-28
+
+- Added one concise polite screen-reader status announcement after the asynchronous portfolio verification completes, including the evidence-derived defect, repair, receipt, screenshot, Nemotron-run and workflow totals.
+- Suppressed unchanged ten-second refresh announcements and extended the actual-Chrome contract to verify the live-region semantics and message.
+
 ## 0.1.55 — 2026-09-27
 
 - Added a direct **Live readiness** link to the homepage judge resources so a reviewer can inspect the fail-closed deployment and evidence-chain decision without first finding it in the benchmark receipt.

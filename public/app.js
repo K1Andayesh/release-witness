@@ -49,6 +49,10 @@ function strongestJudgePair() {
   return candidate && baseline ? { candidate, baseline } : null;
 }
 function renderBenchmark(benchmark) {
+  const announcePortfolio = (message) => {
+    const target = $("#portfolio-status");
+    if (target.textContent.trim() !== message) target.textContent = message;
+  };
   const exactSource =
     benchmark.release?.commitSource || benchmark.release?.source;
   if (exactSource) {
@@ -93,6 +97,9 @@ function renderBenchmark(benchmark) {
     $("#benchmark-model-runs").textContent = "—";
     $("#benchmark-model-runs-label").textContent =
       "verified model evidence unavailable";
+    announcePortfolio(
+      "Verified competition evidence is unavailable. Browser-only checks remain available.",
+    );
     return;
   }
   const { totals, suites } = benchmark;
@@ -106,6 +113,9 @@ function renderBenchmark(benchmark) {
   $("#benchmark-model-runs").textContent = totals.modelRunsVerified;
   $("#benchmark-model-runs-label").textContent =
     `receipt-verified Nemotron runs across ${modelSuites.length} workflows`;
+  announcePortfolio(
+    `Verified competition evidence ready: ${totals.defectsDetected} of ${totals.knownDefects} seeded defects detected, ${totals.repairsResolved} repairs resolved, ${totals.receiptsVerified} receipts, ${totals.screenshotFilesVerified} screenshots, and ${totals.modelRunsVerified} Nemotron runs across ${suites.length} workflows.`,
+  );
 }
 const comparisonEvidence = (change) => {
   if (["unchanged", "unverified"].includes(change.change)) return "";
