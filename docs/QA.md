@@ -1,5 +1,11 @@
 # Release Witness QA record
 
+## Concise screenshot-link names — 29 September 2026
+
+- A first-time public Chrome judge pass found that linked evidence images exposed both their image alternative text and visible caption in the same accessible name, producing labels such as `Booking survives reload — Before reload Before reload ↗`.
+- v0.1.57 gives each screenshot link one explicit check-and-state label, treats the nested image and visible caption as presentational for naming, and applies the same rule to the before/after comparison.
+- The actual-Chrome contract requires one concise accessible link name in both the witness report and comparison. The visible evidence cards, image URLs and receipt-bound files are unchanged.
+
 ## Concise portfolio status announcement — 28 September 2026
 
 - The homepage verification figures load asynchronously, but their container was not a live region. A screen-reader user could reach the page before those figures settled without receiving a concise signal that the evidence check had completed.

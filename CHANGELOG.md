@@ -1,5 +1,10 @@
 # Changelog
 
+## 0.1.57 — 2026-09-29
+
+- Removed duplicated screenshot-link announcements from the witness report and before/after evidence by giving each linked image one explicit accessible name while retaining its visible caption.
+- Extended the actual-Chrome judge-tour contract to require the concise report and comparison screenshot-link names.
+
 ## 0.1.56 — 2026-09-28
 
 - Added one concise polite screen-reader status announcement after the asynchronous portfolio verification completes, including the evidence-derived defect, repair, receipt, screenshot, Nemotron-run and workflow totals.
