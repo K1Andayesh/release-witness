@@ -14,6 +14,8 @@ A PR-preview QA agent that turns a change description into a bounded risk map, e
 
 **Verified source release:** https://github.com/K1Andayesh/release-witness/releases/tag/v0.1.57
 
+**Submission readiness:** [verified Devpost finalization gate](docs/SUBMISSION-READINESS.md)
+
 **Required runtime:** saved qualifying runs show `nvidia/Nemotron-3_5-Lightning` executing through Nebius Token Factory, including returned model identity, provider, latency and token usage. The hosted judge tour replays those verified records without requiring credentials or spending judge credits.
 
 ## Judge evidence map
