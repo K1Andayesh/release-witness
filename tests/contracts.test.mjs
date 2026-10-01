@@ -349,7 +349,7 @@ test("benchmark receipts bind the exact release source, commit and archive", () 
 });
 
 test("deployment readiness requires exact provenance and complete evidence", () => {
-  const expectedVersion = "0.1.57";
+  const expectedVersion = "0.1.58";
   const expectedCommit = "a".repeat(40);
   const expectedArchiveSha256 = "b".repeat(64);
   const status = {
@@ -803,10 +803,10 @@ test("server-managed pairs persist their relationship and comparison", async (t)
       "The benchmark is not certified.",
     ),
   );
-  assert.equal(benchmark.release.version, "0.1.57");
+  assert.equal(benchmark.release.version, "0.1.58");
   assert.equal(
     benchmark.release.source,
-    "https://github.com/K1Andayesh/release-witness/releases/tag/v0.1.57",
+    "https://github.com/K1Andayesh/release-witness/releases/tag/v0.1.58",
   );
   assert.equal(
     benchmark.release.commit,
@@ -822,7 +822,7 @@ test("server-managed pairs persist their relationship and comparison", async (t)
   );
   assert.equal(
     benchmark.release.archiveSource,
-    "https://github.com/K1Andayesh/release-witness/releases/download/v0.1.57/release-witness-publication-ready-v0.1.57-r1.tar.gz",
+    "https://github.com/K1Andayesh/release-witness/releases/download/v0.1.58/release-witness-publication-ready-v0.1.58-r1.tar.gz",
   );
   assert.equal(bookingBenchmark.verified, true);
   assert.equal(bookingBenchmark.defectsDetected, 2);
@@ -853,7 +853,7 @@ test("server-managed pairs persist their relationship and comparison", async (t)
   assert.match(benchmarkReportText, /<main class="benchmark-report">/);
   assert.match(benchmarkReportText, /Portfolio certified: no/);
   assert.match(benchmarkReportText, /data-status="not-certified"/);
-  assert.match(benchmarkReportText, /Release 0\.1\.57 source/);
+  assert.match(benchmarkReportText, /Release 0\.1\.58 source/);
   assert.match(benchmarkReportText, /Commit 01234567/);
   assert.match(benchmarkReportText, /Source archive SHA-256 abcdefabcdef/);
   assert.match(benchmarkReportText, /Google Chrome runs verified: 2/);
@@ -1499,6 +1499,10 @@ test("the judge-tour comparison survives a browser reload", async (t) => {
   assert.match(await proof.innerText(), /Booking disappeared\./);
   assert.match(await proof.innerText(), /Booking remained\./);
   assert.deepEqual(await accessibilityViolations(page, base), []);
+  assert.equal(
+    await page.locator(".intro > .eyebrow").innerText(),
+    "BEST APPS AND AGENTS · EVIDENCE BEFORE CONFIDENCE",
+  );
   await page.setViewportSize({ width: 390, height: 844 });
   const widths = await page.evaluate(() => ({
     inner: window.innerWidth,
@@ -1542,9 +1546,9 @@ test("the judge-tour comparison survives a browser reload", async (t) => {
   );
   assert.equal(
     await benchmarkPage
-      .getByRole("link", { name: "Release 0.1.57 source ↗" })
+      .getByRole("link", { name: "Release 0.1.58 source ↗" })
       .getAttribute("href"),
-    "https://github.com/K1Andayesh/release-witness/releases/tag/v0.1.57",
+    "https://github.com/K1Andayesh/release-witness/releases/tag/v0.1.58",
   );
   assert.equal(
     await benchmarkPage
@@ -1706,7 +1710,7 @@ test("public demo mode excludes local projects and model spending", async (t) =>
   );
   const status = await (await fetch(`${base}/api/status`)).json();
   assert.equal(status.modelConfigured, false);
-  assert.equal(status.version, "0.1.57");
+  assert.equal(status.version, "0.1.58");
   assert.equal(status.publicDemo, true);
   const integrity = await (
     await fetch(`${base}/api/runs/${receiptId}/integrity`)

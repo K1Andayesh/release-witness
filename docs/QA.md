@@ -1,5 +1,11 @@
 # Release Witness QA record
 
+## Visible track fit — 1 October 2026
+
+- The authenticated Devpost draft correctly selects **Best apps and agents**, and the official rules still make track fit a Stage One pass/fail decision, but the public demo's first visible screen did not name the track.
+- v0.1.58 adds `BEST APPS AND AGENTS` to the existing hero eyebrow before the evidence claim. It does not expand the benchmark, model authority or product claims.
+- The actual-Chrome contract requires the exact visible track label in the same pass that checks accessibility and the judge resources.
+
 ## Concise screenshot-link names — 29 September 2026
 
 - A first-time public Chrome judge pass found that linked evidence images exposed both their image alternative text and visible caption in the same accessible name, producing labels such as `Booking survives reload — Before reload Before reload ↗`.

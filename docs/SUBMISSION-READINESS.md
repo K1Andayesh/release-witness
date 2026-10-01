@@ -13,8 +13,8 @@ Checked in authenticated Google Chrome on **30 September 2026 (Australia/Sydney)
 ## Evidence to recheck immediately before submission
 
 1. Open the [public demo](https://release-witness.139-99-135-89.sslip.io) in Chrome and run **Start 90-second tour**.
-2. Confirm [live readiness](https://release-witness.139-99-135-89.sslip.io/api/readiness) returns `ready: true` for version `0.1.57`, commit `8cfdfece14ffbd967526fc414fc5cb929c3284aa`, two workflows, four receipts, 16 screenshots, four Nemotron records and four Chrome records.
-3. Confirm the [exact source release](https://github.com/K1Andayesh/release-witness/releases/tag/v0.1.57) and both downloadable archives are public.
+2. Confirm [live readiness](https://release-witness.139-99-135-89.sslip.io/api/readiness) returns `ready: true` for the same version and commit shown by the public demo, with two workflows, four receipts, 16 screenshots, four Nemotron records and four Chrome records.
+3. Confirm the exact source-release link shown by the public demo and both downloadable archives are public.
 4. Confirm the public 1:47 video and captions play from the rendered Devpost preview.
 5. Re-read the current Official Rules and verify the project remains eligible for **Best Apps and Agents** before accepting them.
 

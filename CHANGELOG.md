@@ -1,5 +1,10 @@
 # Changelog
 
+## 0.1.58 — 2026-10-01
+
+- Put the official **Best Apps and Agents** track in the first visible hero label so a judge can verify track fit before starting the evidence tour.
+- Extended the actual-Chrome judge-path contract to require the exact track label alongside the existing accessibility checks.
+
 ## 0.1.57 — 2026-09-29
 
 - Removed duplicated screenshot-link announcements from the witness report and before/after evidence by giving each linked image one explicit accessible name while retaining its visible caption.

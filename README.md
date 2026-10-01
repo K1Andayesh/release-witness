@@ -12,7 +12,7 @@ A PR-preview QA agent that turns a change description into a bounded risk map, e
 
 **Natural-narration demo video:** https://youtu.be/O8Ijn85__6U
 
-**Verified source release:** https://github.com/K1Andayesh/release-witness/releases/tag/v0.1.57
+**Verified source release:** https://github.com/K1Andayesh/release-witness/releases/tag/v0.1.58
 
 **Submission readiness:** [verified Devpost finalization gate](docs/SUBMISSION-READINESS.md)
 
