@@ -14,6 +14,8 @@ Best Apps and Agents
 
 ## Inspiration
 
+Release Witness is a **Best Apps and Agents** entry for small product teams without dedicated QA. NVIDIA Nemotron 3.5 Lightning runs through Nebius Token Factory to map each change to the complete reviewed check catalog; isolated Chrome assertions still own every verdict.
+
 Small teams often review a pull request with a mix of intuition, stale checklists and screenshots that are difficult to reproduce. A passing test suite can still miss the workflow that matters, while an AI summary can sound confident without having observed the product. Release Witness was built to join those pieces: execute a bounded browser contract, preserve the evidence and let a model advise only within what was actually checked.
 
 ## What it does
