@@ -782,7 +782,7 @@ ${metric(benchmark.totals.browserRunsVerified, "Chrome runs verified", `Google C
           pair || { error: "Pair not found." },
         );
       }
-      if (url.pathname === "/api/compare") {
+      if (["/api/compare", "/api/compare/export"].includes(url.pathname)) {
         const before = runs.get(url.searchParams.get("before")),
           after = runs.get(url.searchParams.get("after"));
         if (!before || !after)
@@ -792,10 +792,57 @@ ${metric(benchmark.totals.browserRunsVerified, "Chrome runs verified", `Google C
             before.attestation ? verifyEvidence(before) : null,
             after.attestation ? verifyEvidence(after) : null,
           ]);
+          const changes = compareRuns(before, after);
+          if (url.pathname.endsWith("/export")) {
+            const total = (change) =>
+              changes.filter((item) => item.change === change).length;
+            const receiptLine = (label, run, receipt) =>
+              `${label} receipt: ${receipt?.verified ? "VERIFIED" : "NOT VERIFIED"}${run.attestation ? ` | SHA-256 ${run.attestation.digest}` : ""} — ${receipt?.reason || "No evidence receipt is available."}`;
+            const lines = [
+              "# Release Witness comparison receipt",
+              `Suite: ${after.suite}`,
+              `Change under review: ${after.change || "Not recorded"}`,
+              `Baseline: ${before.buildLabel || before.build} | Run ${before.id} | Created ${before.createdAt}`,
+              `Candidate: ${after.buildLabel || after.build} | Run ${after.id} | Created ${after.createdAt}`,
+              `Browsers: baseline ${before.browser ? `Google Chrome ${before.browser}` : "not recorded"} | candidate ${after.browser ? `Google Chrome ${after.browser}` : "not recorded"}`,
+              `Release delta: ${total("resolved")} resolved | ${total("regression")} regressions | ${total("unchanged")} unchanged | ${total("still-failing")} still failing | ${total("unverified")} unverified`,
+              receiptLine("Baseline", before, beforeReceipt),
+              receiptLine("Candidate", after, afterReceipt),
+              "",
+              "Only matching checks from these two saved runs are compared. Untested coverage remains unverified; this receipt is not an overall release approval.",
+              "",
+            ];
+            for (const change of changes) {
+              lines.push(
+                `## ${change.title}: ${change.change}`,
+                `Before: ${change.before} — ${change.beforeObserved}`,
+                `Now: ${change.after} — ${change.afterObserved}`,
+                ...change.beforeScreenshots.map(
+                  (screenshot) =>
+                    `Before evidence: ${reportOrigin}${screenshot.url}${screenshot.sha256 ? ` | SHA-256 ${screenshot.sha256}` : ""}`,
+                ),
+                ...change.afterScreenshots.map(
+                  (screenshot) =>
+                    `Now evidence: ${reportOrigin}${screenshot.url}${screenshot.sha256 ? ` | SHA-256 ${screenshot.sha256}` : ""}`,
+                ),
+                "",
+              );
+            }
+            res.setHeader(
+              "Content-Disposition",
+              `attachment; filename="witness-comparison-${before.id.slice(0, 8)}-${after.id.slice(0, 8)}.md"`,
+            );
+            return reply(
+              res,
+              200,
+              lines.join("\n\n"),
+              "text/plain; charset=utf-8",
+            );
+          }
           return reply(res, 200, {
             before: before.id,
             after: after.id,
-            changes: compareRuns(before, after),
+            changes,
             receipts: {
               before: beforeReceipt,
               after: afterReceipt,

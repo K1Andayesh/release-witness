@@ -1,5 +1,11 @@
 # Release Witness QA record
 
+## Downloadable comparison receipt — 3 October 2026
+
+- A first-time judge could inspect a baseline-to-candidate delta in the browser, but the only downloadable report described one run at a time. A product reviewer could not preserve the actual repair decision as one shareable artifact.
+- v0.1.59 adds a pair-bound Markdown receipt with the release delta, baseline and candidate identities, exact Chrome versions, both run-receipt verification results, every check's before/after observation, screenshot links and explicit unverified boundaries.
+- The rendered comparison exposes one named download link whose URL binds both selected run IDs. Contract coverage verifies the attachment filename, two resolved checks, zero regressions, both verified receipts and the retained unverified boundary; the actual-Chrome judge path requires the exact link.
+
 ## Visible track fit — 1 October 2026
 
 - The authenticated Devpost draft correctly selects **Best apps and agents**, and the official rules still make track fit a Stage One pass/fail decision, but the public demo's first visible screen did not name the track.

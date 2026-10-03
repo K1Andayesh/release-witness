@@ -1,5 +1,10 @@
 # Changelog
 
+## 0.1.59 — 2026-10-03
+
+- Added a downloadable baseline-to-candidate comparison receipt with the release delta, both evidence-verification results, per-check observations, screenshot links and explicit unverified coverage.
+- Exposed the receipt beside the rendered comparison and extended the actual-Chrome judge-path contract to require its exact pair-bound URL.
+
 ## 0.1.58 — 2026-10-01
 
 - Put the official **Best Apps and Agents** track in the first visible hero label so a judge can verify track fit before starting the evidence tour.

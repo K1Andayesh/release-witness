@@ -12,7 +12,7 @@ A PR-preview QA agent that turns a change description into a bounded risk map, e
 
 **Natural-narration demo video:** https://youtu.be/O8Ijn85__6U
 
-**Verified source release:** https://github.com/K1Andayesh/release-witness/releases/tag/v0.1.58
+**Verified source release:** https://github.com/K1Andayesh/release-witness/releases/tag/v0.1.59
 
 **Submission readiness:** [verified Devpost finalization gate](docs/SUBMISSION-READINESS.md)
 
@@ -30,6 +30,8 @@ A PR-preview QA agent that turns a change description into a bounded risk map, e
 ## Verified benchmark
 
 Across two included ground-truth workflows, Release Witness detected **3/3 known defects (100%)** and correctly classified **3/3 repairs (100%)**, with **zero observed regressions**. It preserved three passing invariants, kept both excluded-coverage boundaries unverified and freshly verified all 16 screenshot hashes. Both benchmark pairs record **four receipt-verified Nemotron runs, 12 grounded risk hypotheses and four allow-listed advisories** through Nebius Token Factory, covering 2,848 tokens and 7.49 seconds of measured model work. The homepage reads these figures from the [server-derived benchmark endpoint](https://release-witness.139-99-135-89.sslip.io/api/benchmark), which checks manifest ground truth, paired results, four run receipts and every screenshot file before certifying the portfolio. A [human-readable benchmark receipt](https://release-witness.139-99-135-89.sslip.io/api/benchmark/report) presents the verified result, exact workflow and pair identities, measured model contribution, all four run-receipt digests and a deterministic aggregate SHA-256 digest that also binds the exact release version, source URL, immutable Git commit and downloadable source-archive hash. Each workflow card links to its exact baseline-to-candidate comparison, and the page is designed for desktop, mobile and print review. These figures describe the controlled included scenarios; they are not a claim about all production defects. See [`docs/EVALUATION.md`](docs/EVALUATION.md), the [model-backed appointment comparison](https://release-witness.139-99-135-89.sslip.io/#790c7762-e9bf-4ab7-abdb-31854091c15d~b2998668-7680-4f95-9811-76b7e6132e6a) and the [model-backed Fieldnotes comparison](https://release-witness.139-99-135-89.sslip.io/#ae47fe51-8953-4fd7-b096-ae9ef91df395~79e33d76-c634-44f7-aebf-534d240bfa56).
+
+Every rendered baseline-to-candidate comparison includes a downloadable Markdown receipt. It records the pair identities, release delta, both run-receipt verification results, per-check observations, evidence links and explicit unverified boundaries so a reviewer can attach the exact decision artifact to a pull request or release record.
 
 The competition case is mapped directly to the four equally weighted judging criteria in [`docs/JUDGING.md`](docs/JUDGING.md).
 
