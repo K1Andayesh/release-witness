@@ -800,6 +800,10 @@ ${metric(benchmark.totals.browserRunsVerified, "Chrome runs verified", `Google C
               `${label} receipt: ${receipt?.verified ? "VERIFIED" : "NOT VERIFIED"}${run.attestation ? ` | SHA-256 ${run.attestation.digest}` : ""} — ${receipt?.reason || "No evidence receipt is available."}`;
             const lines = [
               "# Release Witness comparison receipt",
+              `Release: ${packageMetadata.version}`,
+              `Source: ${normalizedSourceCommit ? `${sourceRepository}/tree/${normalizedSourceCommit} | Commit ${normalizedSourceCommit}` : "release commit not recorded"}`,
+              `Source archive SHA-256: ${normalizedSourceArchiveSha256 || "not recorded"}`,
+              `Live readiness: ${reportOrigin}/api/readiness`,
               `Suite: ${after.suite}`,
               `Change under review: ${after.change || "Not recorded"}`,
               `Baseline: ${before.buildLabel || before.build} | Run ${before.id} | Created ${before.createdAt}`,

@@ -2,7 +2,7 @@
 
 Release Witness is entered in **Best Apps and Agents**. This guide maps the shipped evidence to the four equally weighted judging criteria in the official rules.
 
-Verified source release: https://github.com/K1Andayesh/release-witness/releases/tag/v0.1.59
+Verified source release: https://github.com/K1Andayesh/release-witness/releases/tag/v0.1.60
 
 ## Technological implementation
 
@@ -28,7 +28,7 @@ Verified source release: https://github.com/K1Andayesh/release-witness/releases/
 - A controlled-benchmark release delta places the measured two resolutions and zero regressions directly below the result metrics.
 - The comparison separates resolved, regressed, unchanged and unverified checks instead of collapsing them into one score.
 - Every decision expands into its model hypothesis, reviewed expectation, observed behavior, reproduction steps, screenshots and receipt status. Changed checks also place the baseline and candidate observations and screenshots side by side.
-- Every comparison can be downloaded as a pair-bound Markdown receipt containing the release delta, both evidence-verification results, per-check observations, screenshot links and explicit unverified coverage for a pull-request or release record.
+- Every comparison can be downloaded as a pair-bound Markdown receipt containing the release delta, both evidence-verification results, per-check observations, screenshot links and explicit unverified coverage for a pull-request or release record. The artifact binds the running version, exact source commit and source-archive SHA-256 and links to the live fail-closed readiness decision.
 - The responsive public UI and benchmark receipt were checked at 390 × 844 as well as desktop size, with no horizontal overflow. The receipt also has a dedicated print layout. The main keyboard path includes a visible skip link and moves focus to the judge-tour report.
 - A desktop and 390-pixel real-Chrome accessibility pass found and fixed low-contrast small labels, undersized judge-resource links and ambiguous benchmark landmarks. A polite status region now announces one concise portfolio-verification result after the asynchronous benchmark check, while suppressing unchanged ten-second refreshes. Automated axe checks of the expanded comparison and receipt report zero violations in the tested states; native screen-reader speech and OS high-contrast testing remain open.
 - Linked witness and comparison screenshots expose one concise check-and-state accessible name instead of repeating their visible captions.

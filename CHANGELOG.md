@@ -1,5 +1,10 @@
 # Changelog
 
+## 0.1.60 — 2026-10-04
+
+- Bound each downloadable comparison receipt to the running release version, exact source commit and source-archive SHA-256.
+- Added the live fail-closed readiness URL so a forwarded receipt remains traceable to the deployed evidence chain.
+
 ## 0.1.59 — 2026-10-03
 
 - Added a downloadable baseline-to-candidate comparison receipt with the release delta, both evidence-verification results, per-check observations, screenshot links and explicit unverified coverage.

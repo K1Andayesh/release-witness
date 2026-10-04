@@ -1,5 +1,10 @@
 # Release Witness QA record
 
+## Source-bound comparison receipt — 4 October 2026
+
+- The v0.1.59 comparison receipt preserved the exact pair and browser evidence but did not identify the deployed application source. A forwarded receipt therefore required outside context to establish which release generated it.
+- v0.1.60 adds the running version, exact immutable source commit, source-archive SHA-256 and live fail-closed readiness URL to every comparison receipt. Contract coverage requires every field.
+
 ## Downloadable comparison receipt — 3 October 2026
 
 - A first-time judge could inspect a baseline-to-candidate delta in the browser, but the only downloadable report described one run at a time. A product reviewer could not preserve the actual repair decision as one shareable artifact.
