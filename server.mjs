@@ -707,6 +707,10 @@ export async function startServer({
             const comparisonUrl = suite.route
               ? `${reportOrigin}/${suite.route}`
               : "";
+            const comparisonReceiptUrl =
+              suite.baselineId && suite.candidateId
+                ? `/api/compare/export?before=${encodeURIComponent(suite.baselineId)}&after=${encodeURIComponent(suite.candidateId)}`
+                : "";
             return `<article class="benchmark-suite-card" data-suite-id="${escapeHtml(suite.id)}" data-pair-id="${escapeHtml(suite.pairId || "")}">
   <header><div><span class="eyebrow">WORKFLOW EVIDENCE</span><h3>${escapeHtml(suite.name)}</h3></div><span class="certification-chip ${suite.verified ? "verified" : "invalid"}">${suite.verified ? "Verified" : "Not verified"}</span></header>
   <p class="suite-reason">${escapeHtml(suite.reason)}</p>
@@ -741,7 +745,7 @@ export async function startServer({
     <p>${escapeHtml(browser?.reason || "Browser execution evidence is unavailable.")}</p>
     ${browser?.verified ? `<p class="fine-print">${browser.runsVerified} receipt-bound runs · ${escapeHtml(browser.product)} ${escapeHtml(browser.versions.join(", "))}</p>` : ""}
   </section>
-  ${comparisonUrl ? `<a class="comparison-link" href="${escapeHtml(comparisonUrl)}">Open ${escapeHtml(suite.name)} comparison →</a>` : ""}
+  ${comparisonUrl ? `<div class="suite-actions"><a class="comparison-link" href="${escapeHtml(comparisonUrl)}">Open ${escapeHtml(suite.name)} comparison →</a>${comparisonReceiptUrl ? `<a class="comparison-link secondary" href="${escapeHtml(comparisonReceiptUrl)}" download>Download ${escapeHtml(suite.name)} receipt ↓</a>` : ""}</div>` : ""}
 </article>`;
           })
           .join("");
@@ -764,7 +768,7 @@ ${metric(benchmark.totals.advisoriesVerified, "allow-listed advisories", `Allow-
 ${metric(Number(benchmark.totals.modelTokensVerified).toLocaleString(), "verified model tokens", `Verified model tokens: ${benchmark.totals.modelTokensVerified}`)}
 ${metric(modelDuration(benchmark.totals.modelDurationMsVerified), "verified model time", `Verified model duration: ${modelDuration(benchmark.totals.modelDurationMsVerified)}`)}
 ${metric(benchmark.totals.browserRunsVerified, "Chrome runs verified", `Google Chrome runs verified: ${benchmark.totals.browserRunsVerified}`)}
-</div></section><section aria-labelledby="workflow-evidence"><div class="report-section-heading"><div><span class="eyebrow">TRACEABLE ARTIFACTS</span><h2 id="workflow-evidence">Workflow evidence</h2></div><p>Each card links to the exact baseline-to-candidate comparison.</p></div><div class="benchmark-suite-grid">${suiteCards}</div></section><aside class="benchmark-boundary"><strong>Evidence boundary</strong><p>This receipt covers the controlled included scenarios. It is not a claim about all production defects or a third-party signature.</p></aside></main><footer class="benchmark-report-footer"><span>Release Witness · evidence before confidence</span><nav aria-label="Machine-readable evidence"><a href="/api/readiness">Open deployment readiness →</a><a href="/api/benchmark">Open benchmark JSON →</a></nav></footer></div></body></html>`,
+</div></section><section aria-labelledby="workflow-evidence"><div class="report-section-heading"><div><span class="eyebrow">TRACEABLE ARTIFACTS</span><h2 id="workflow-evidence">Workflow evidence</h2></div><p>Each verified card opens the exact comparison and downloads its source-bound receipt.</p></div><div class="benchmark-suite-grid">${suiteCards}</div></section><aside class="benchmark-boundary"><strong>Evidence boundary</strong><p>This receipt covers the controlled included scenarios. It is not a claim about all production defects or a third-party signature.</p></aside></main><footer class="benchmark-report-footer"><span>Release Witness · evidence before confidence</span><nav aria-label="Machine-readable evidence"><a href="/api/readiness">Open deployment readiness →</a><a href="/api/benchmark">Open benchmark JSON →</a></nav></footer></div></body></html>`,
           "text/html; charset=utf-8",
         );
       }

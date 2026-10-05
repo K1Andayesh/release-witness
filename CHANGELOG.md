@@ -1,5 +1,10 @@
 # Changelog
 
+## 0.1.61 — 2026-10-05
+
+- Added direct source-bound comparison-receipt downloads to each verified workflow card on the certified benchmark page.
+- Kept unavailable workflows fail-closed without a download action and clarified the one-page evidence path for judges.
+
 ## 0.1.60 — 2026-10-04
 
 - Bound each downloadable comparison receipt to the running release version, exact source commit and source-archive SHA-256.

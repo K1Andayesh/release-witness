@@ -349,7 +349,7 @@ test("benchmark receipts bind the exact release source, commit and archive", () 
 });
 
 test("deployment readiness requires exact provenance and complete evidence", () => {
-  const expectedVersion = "0.1.60";
+  const expectedVersion = "0.1.61";
   const expectedCommit = "a".repeat(40);
   const expectedArchiveSha256 = "b".repeat(64);
   const status = {
@@ -799,7 +799,7 @@ test("server-managed pairs persist their relationship and comparison", async (t)
   );
   const comparisonReceipt = await comparisonExport.text();
   assert.match(comparisonReceipt, /# Release Witness comparison receipt/);
-  assert.match(comparisonReceipt, /Release: 0\.1\.60/);
+  assert.match(comparisonReceipt, /Release: 0\.1\.61/);
   assert.match(
     comparisonReceipt,
     /Source: https:\/\/github\.com\/K1Andayesh\/release-witness\/tree\/0123456789abcdef0123456789abcdef01234567 \| Commit 0123456789abcdef0123456789abcdef01234567/,
@@ -833,10 +833,10 @@ test("server-managed pairs persist their relationship and comparison", async (t)
       "The benchmark is not certified.",
     ),
   );
-  assert.equal(benchmark.release.version, "0.1.60");
+  assert.equal(benchmark.release.version, "0.1.61");
   assert.equal(
     benchmark.release.source,
-    "https://github.com/K1Andayesh/release-witness/releases/tag/v0.1.60",
+    "https://github.com/K1Andayesh/release-witness/releases/tag/v0.1.61",
   );
   assert.equal(
     benchmark.release.commit,
@@ -852,7 +852,7 @@ test("server-managed pairs persist their relationship and comparison", async (t)
   );
   assert.equal(
     benchmark.release.archiveSource,
-    "https://github.com/K1Andayesh/release-witness/releases/download/v0.1.60/release-witness-publication-ready-v0.1.60-r1.tar.gz",
+    "https://github.com/K1Andayesh/release-witness/releases/download/v0.1.61/release-witness-publication-ready-v0.1.61-r1.tar.gz",
   );
   assert.equal(bookingBenchmark.verified, true);
   assert.equal(bookingBenchmark.defectsDetected, 2);
@@ -883,10 +883,17 @@ test("server-managed pairs persist their relationship and comparison", async (t)
   assert.match(benchmarkReportText, /<main class="benchmark-report">/);
   assert.match(benchmarkReportText, /Portfolio certified: no/);
   assert.match(benchmarkReportText, /data-status="not-certified"/);
-  assert.match(benchmarkReportText, /Release 0\.1\.60 source/);
+  assert.match(benchmarkReportText, /Release 0\.1\.61 source/);
   assert.match(benchmarkReportText, /Commit 01234567/);
   assert.match(benchmarkReportText, /Source archive SHA-256 abcdefabcdef/);
   assert.match(benchmarkReportText, /Google Chrome runs verified: 2/);
+  assert.match(
+    benchmarkReportText,
+    new RegExp(
+      `/api/compare/export\\?before=${baseline.id}&amp;after=${candidate.id}`,
+    ),
+  );
+  assert.match(benchmarkReportText, /Download Harbour Appointments receipt ↓/);
   assert.match(benchmarkReportText, /VERIFIED BROWSER EXECUTION/);
   assert.match(benchmarkReportText, /Open deployment readiness/);
   assert.match(benchmarkReportText, new RegExp(`data-pair-id="${pair.id}"`));
@@ -1582,9 +1589,9 @@ test("the judge-tour comparison survives a browser reload", async (t) => {
   );
   assert.equal(
     await benchmarkPage
-      .getByRole("link", { name: "Release 0.1.60 source ↗" })
+      .getByRole("link", { name: "Release 0.1.61 source ↗" })
       .getAttribute("href"),
-    "https://github.com/K1Andayesh/release-witness/releases/tag/v0.1.60",
+    "https://github.com/K1Andayesh/release-witness/releases/tag/v0.1.61",
   );
   assert.equal(
     await benchmarkPage
@@ -1746,7 +1753,7 @@ test("public demo mode excludes local projects and model spending", async (t) =>
   );
   const status = await (await fetch(`${base}/api/status`)).json();
   assert.equal(status.modelConfigured, false);
-  assert.equal(status.version, "0.1.60");
+  assert.equal(status.version, "0.1.61");
   assert.equal(status.publicDemo, true);
   const integrity = await (
     await fetch(`${base}/api/runs/${receiptId}/integrity`)

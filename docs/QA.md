@@ -1,5 +1,10 @@
 # Release Witness QA record
 
+## One-page comparison receipt downloads — 5 October 2026
+
+- The certified benchmark page linked to each exact workflow comparison, but a judge still had to open those views before downloading their source-bound receipts.
+- v0.1.61 adds one named download action to each verified workflow card. The unavailable-card branch remains without a download, and contract coverage requires the exact pair-bound URL.
+
 ## Source-bound comparison receipt — 4 October 2026
 
 - The v0.1.59 comparison receipt preserved the exact pair and browser evidence but did not identify the deployed application source. A forwarded receipt therefore required outside context to establish which release generated it.
