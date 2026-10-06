@@ -798,6 +798,15 @@ ${metric(benchmark.totals.browserRunsVerified, "Chrome runs verified", `Google C
           ]);
           const changes = compareRuns(before, after);
           if (url.pathname.endsWith("/export")) {
+            const benchmark = await benchmarkSummary();
+            const certifiedPair = benchmark.complete
+              ? benchmark.suites.find(
+                  (suite) =>
+                    suite.verified &&
+                    suite.baselineId === before.id &&
+                    suite.candidateId === after.id,
+                )
+              : null;
             const total = (change) =>
               changes.filter((item) => item.change === change).length;
             const receiptLine = (label, run, receipt) =>
@@ -808,6 +817,9 @@ ${metric(benchmark.totals.browserRunsVerified, "Chrome runs verified", `Google C
               `Source: ${normalizedSourceCommit ? `${sourceRepository}/tree/${normalizedSourceCommit} | Commit ${normalizedSourceCommit}` : "release commit not recorded"}`,
               `Source archive SHA-256: ${normalizedSourceArchiveSha256 || "not recorded"}`,
               `Live readiness: ${reportOrigin}/api/readiness`,
+              certifiedPair
+                ? `Portfolio certification: VERIFIED CURRENT PAIR | SHA-256 ${benchmark.attestation.digest}`
+                : "Portfolio certification: NOT VERIFIED FOR THIS PAIR — this comparison is not a current workflow pair in the complete certified portfolio.",
               `Suite: ${after.suite}`,
               `Change under review: ${after.change || "Not recorded"}`,
               `Baseline: ${before.buildLabel || before.build} | Run ${before.id} | Created ${before.createdAt}`,

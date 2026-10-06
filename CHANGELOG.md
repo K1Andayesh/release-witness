@@ -1,5 +1,10 @@
 # Changelog
 
+## 0.1.62 — 2026-10-06
+
+- Made comparison exports state whether the exact baseline/candidate pair belongs to the current complete certified portfolio.
+- Bound certified pair exports to the portfolio receipt digest and explicitly marked other saved comparisons as not portfolio-certified.
+
 ## 0.1.61 — 2026-10-05
 
 - Added direct source-bound comparison-receipt downloads to each verified workflow card on the certified benchmark page.

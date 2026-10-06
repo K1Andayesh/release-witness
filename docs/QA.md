@@ -1,5 +1,10 @@
 # Release Witness QA record
 
+## Pair-specific portfolio certification — 6 October 2026
+
+- A source-bound comparison receipt could still be downloaded for any saved pair, while only two exact pairs belong to the complete competition benchmark. Without an explicit distinction, a forwarded browser-only receipt could be mistaken for certified portfolio evidence.
+- v0.1.62 checks the exported baseline/candidate IDs against the current complete benchmark. Exact certified pairs include the portfolio SHA-256 digest; every other pair is marked `NOT VERIFIED FOR THIS PAIR` without weakening its own run-receipt evidence.
+
 ## One-page comparison receipt downloads — 5 October 2026
 
 - The certified benchmark page linked to each exact workflow comparison, but a judge still had to open those views before downloading their source-bound receipts.
