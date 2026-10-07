@@ -1,5 +1,11 @@
 # Release Witness QA record
 
+## Visible homepage portfolio certification — 7 October 2026
+
+- A first-time public Chrome judge pass found strong outcome totals and a separate benchmark link, but the first screen did not visibly bind those claims to the exact current portfolio receipt.
+- v0.1.63 adds a named certification row immediately below the totals. A complete benchmark displays its full SHA-256 digest and exact evidence scope; an incomplete benchmark displays `PORTFOLIO NOT CERTIFIED` and no digest while keeping the failure receipt available.
+- Contract coverage requires the fail-closed branch and direct receipt route. Actual public Chrome verification covers the complete certified branch at desktop and narrow width.
+
 ## Pair-specific portfolio certification — 6 October 2026
 
 - A source-bound comparison receipt could still be downloaded for any saved pair, while only two exact pairs belong to the complete competition benchmark. Without an explicit distinction, a forwarded browser-only receipt could be mistaken for certified portfolio evidence.

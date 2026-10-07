@@ -1,5 +1,10 @@
 # Changelog
 
+## 0.1.63 — 2026-10-07
+
+- Added a visible homepage certification row that binds the judge-facing portfolio totals to the exact current benchmark SHA-256 receipt.
+- Kept the same surface fail-closed: incomplete evidence displays `PORTFOLIO NOT CERTIFIED` and links to the failed benchmark receipt instead of showing a digest.
+
 ## 0.1.62 — 2026-10-06
 
 - Made comparison exports state whether the exact baseline/candidate pair belongs to the current complete certified portfolio.

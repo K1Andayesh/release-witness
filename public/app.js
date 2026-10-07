@@ -57,6 +57,7 @@ function renderBenchmark(benchmark) {
   };
   const exactSource =
     benchmark.release?.commitSource || benchmark.release?.source;
+  const portfolioCertification = $("#portfolio-certification");
   if (exactSource) {
     $("#source-link").href = exactSource;
     $("#source-link").textContent = "Exact deployed source ↗";
@@ -90,6 +91,17 @@ function renderBenchmark(benchmark) {
     $("#runtime-eyebrow").textContent = "MODEL EVIDENCE UNAVAILABLE";
   }
   if (!benchmark.complete) {
+    portfolioCertification.className = "portfolio-certification invalid";
+    portfolioCertification.dataset.status = "not-certified";
+    portfolioCertification.setAttribute(
+      "aria-label",
+      "Portfolio not certified. Open the benchmark receipt for the failed evidence checks.",
+    );
+    $("#portfolio-certification-label").textContent = "PORTFOLIO NOT CERTIFIED";
+    $("#portfolio-certification-scope").textContent =
+      "A complete verified workflow pair is required for every included benchmark.";
+    $("#portfolio-certification-digest").textContent =
+      "Evidence checks incomplete";
     $("#benchmark-defects").textContent = "—";
     $("#benchmark-defects-label").textContent =
       "verified benchmark unavailable";
@@ -105,6 +117,18 @@ function renderBenchmark(benchmark) {
     return;
   }
   const { totals, suites } = benchmark;
+  portfolioCertification.className = "portfolio-certification verified";
+  portfolioCertification.dataset.status = "certified";
+  portfolioCertification.setAttribute(
+    "aria-label",
+    `Certified portfolio receipt SHA-256 ${benchmark.attestation.digest}. Open the traceable benchmark receipt.`,
+  );
+  $("#portfolio-certification-label").textContent =
+    "CERTIFIED PORTFOLIO · EXACT CURRENT EVIDENCE";
+  $("#portfolio-certification-scope").textContent =
+    `${suites.length} workflow pairs · ${totals.receiptsVerified} run receipts · ${totals.screenshotFilesVerified} screenshots freshly verified`;
+  $("#portfolio-certification-digest").textContent =
+    `SHA-256 ${benchmark.attestation.digest}`;
   $("#benchmark-defects").textContent =
     `${totals.defectsDetected}/${totals.knownDefects}`;
   $("#benchmark-defects-label").textContent =
