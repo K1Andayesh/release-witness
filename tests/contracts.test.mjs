@@ -349,7 +349,7 @@ test("benchmark receipts bind the exact release source, commit and archive", () 
 });
 
 test("deployment readiness requires exact provenance and complete evidence", () => {
-  const expectedVersion = "0.1.63";
+  const expectedVersion = "0.1.64";
   const expectedCommit = "a".repeat(40);
   const expectedArchiveSha256 = "b".repeat(64);
   const status = {
@@ -799,7 +799,7 @@ test("server-managed pairs persist their relationship and comparison", async (t)
   );
   const comparisonReceipt = await comparisonExport.text();
   assert.match(comparisonReceipt, /# Release Witness comparison receipt/);
-  assert.match(comparisonReceipt, /Release: 0\.1\.63/);
+  assert.match(comparisonReceipt, /Release: 0\.1\.64/);
   assert.match(
     comparisonReceipt,
     /Source: https:\/\/github\.com\/K1Andayesh\/release-witness\/tree\/0123456789abcdef0123456789abcdef01234567 \| Commit 0123456789abcdef0123456789abcdef01234567/,
@@ -837,10 +837,10 @@ test("server-managed pairs persist their relationship and comparison", async (t)
       "The benchmark is not certified.",
     ),
   );
-  assert.equal(benchmark.release.version, "0.1.63");
+  assert.equal(benchmark.release.version, "0.1.64");
   assert.equal(
     benchmark.release.source,
-    "https://github.com/K1Andayesh/release-witness/releases/tag/v0.1.63",
+    "https://github.com/K1Andayesh/release-witness/releases/tag/v0.1.64",
   );
   assert.equal(
     benchmark.release.commit,
@@ -856,7 +856,7 @@ test("server-managed pairs persist their relationship and comparison", async (t)
   );
   assert.equal(
     benchmark.release.archiveSource,
-    "https://github.com/K1Andayesh/release-witness/releases/download/v0.1.63/release-witness-publication-ready-v0.1.63-r1.tar.gz",
+    "https://github.com/K1Andayesh/release-witness/releases/download/v0.1.64/release-witness-publication-ready-v0.1.64-r1.tar.gz",
   );
   assert.equal(bookingBenchmark.verified, true);
   assert.equal(bookingBenchmark.defectsDetected, 2);
@@ -887,7 +887,7 @@ test("server-managed pairs persist their relationship and comparison", async (t)
   assert.match(benchmarkReportText, /<main class="benchmark-report">/);
   assert.match(benchmarkReportText, /Portfolio certified: no/);
   assert.match(benchmarkReportText, /data-status="not-certified"/);
-  assert.match(benchmarkReportText, /Release 0\.1\.63 source/);
+  assert.match(benchmarkReportText, /Release 0\.1\.64 source/);
   assert.match(benchmarkReportText, /Commit 01234567/);
   assert.match(benchmarkReportText, /Source archive SHA-256 abcdefabcdef/);
   assert.match(benchmarkReportText, /Google Chrome runs verified: 2/);
@@ -1397,7 +1397,14 @@ test("the judge-tour comparison survives a browser reload", async (t) => {
     await page.locator("#runtime-model").innerText(),
     /nvidia\/Nemotron-3_5-Lightning via Nebius Token Factory/,
   );
-  assert.match(await page.locator("#runtime-meta").innerText(), /4 tokens/);
+  assert.equal(
+    await page.locator("#runtime-eyebrow").innerText(),
+    "PARTIAL NEMOTRON EVIDENCE · PORTFOLIO NOT CERTIFIED",
+  );
+  assert.match(
+    await page.locator("#runtime-meta").innerText(),
+    /2 receipt-verified runs across 1 of 2 workflows · portfolio claim withheld/,
+  );
   await page.locator("#comparison-result .comparison-callout").waitFor();
   assert.equal(new URL(page.url()).hash, `#${candidateId}~${baselineId}`);
   assert.equal(await page.locator("#baseline").inputValue(), baselineId);
@@ -1583,7 +1590,7 @@ test("the judge-tour comparison survives a browser reload", async (t) => {
   );
   assert.match(
     await page.locator("#portfolio-status").textContent(),
-    /Verified competition evidence is unavailable\. Browser-only checks remain available\./,
+    /Verified competition evidence is unavailable\. Partial Nemotron evidence remains separately labeled and does not certify the portfolio\./,
   );
   assert.equal(
     await page.locator("#portfolio-certification").getAttribute("data-status"),
@@ -1607,9 +1614,9 @@ test("the judge-tour comparison survives a browser reload", async (t) => {
   );
   assert.equal(
     await benchmarkPage
-      .getByRole("link", { name: "Release 0.1.63 source ↗" })
+      .getByRole("link", { name: "Release 0.1.64 source ↗" })
       .getAttribute("href"),
-    "https://github.com/K1Andayesh/release-witness/releases/tag/v0.1.63",
+    "https://github.com/K1Andayesh/release-witness/releases/tag/v0.1.64",
   );
   assert.equal(
     await benchmarkPage
@@ -1771,7 +1778,7 @@ test("public demo mode excludes local projects and model spending", async (t) =>
   );
   const status = await (await fetch(`${base}/api/status`)).json();
   assert.equal(status.modelConfigured, false);
-  assert.equal(status.version, "0.1.63");
+  assert.equal(status.version, "0.1.64");
   assert.equal(status.publicDemo, true);
   const integrity = await (
     await fetch(`${base}/api/runs/${receiptId}/integrity`)
@@ -1810,9 +1817,13 @@ test("public demo mode excludes local projects and model spending", async (t) =>
     await page.locator("#runtime-eyebrow").innerText(),
     "MODEL EVIDENCE UNAVAILABLE",
   );
+  assert.equal(
+    await page.locator("#runtime-model").innerText(),
+    "No certified saved Nemotron record",
+  );
   assert.match(
     await page.locator("#runtime-meta").innerText(),
-    /Live model calls are disabled here/,
+    /Browser-only checks remain usable; no model result is claimed\./,
   );
   await page.getByRole("button", { name: "Run baseline + candidate" }).click();
   await page.locator("#comparison-result .comparison-callout").waitFor();

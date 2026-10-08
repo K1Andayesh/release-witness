@@ -1,5 +1,11 @@
 # Release Witness QA record
 
+## Honest partial-model evidence state — 8 October 2026
+
+- An incomplete local portfolio exposed a contradictory runtime strip: the eyebrow said model evidence was unavailable while the same row still showed a valid saved Nemotron identity and runtime. A separate fallback could also surface an unrelated saved model run beneath the unavailable label.
+- v0.1.64 labels a verified subset as `PARTIAL NEMOTRON EVIDENCE · PORTFOLIO NOT CERTIFIED`, states the exact verified workflow count and explains that the portfolio claim is withheld. When no benchmark model evidence verifies, the row says `No certified saved Nemotron record` and explicitly claims no model result.
+- The judge tour remains disabled in both incomplete states. Browser contracts cover the partial and no-model branches; actual Chrome verifies the partial state visually and the production complete state remains fully certified.
+
 ## Visible homepage portfolio certification — 7 October 2026
 
 - A first-time public Chrome judge pass found strong outcome totals and a separate benchmark link, but the first screen did not visibly bind those claims to the exact current portfolio receipt.

@@ -83,12 +83,18 @@ function renderBenchmark(benchmark) {
     : null;
   if (benchmarkModelProof) {
     const proof = benchmarkModelProof;
-    $("#runtime-eyebrow").textContent = "VERIFIED NEMOTRON CONTRIBUTION";
+    $("#runtime-eyebrow").textContent = benchmark.complete
+      ? "VERIFIED NEMOTRON CONTRIBUTION"
+      : "PARTIAL NEMOTRON EVIDENCE · PORTFOLIO NOT CERTIFIED";
     $("#runtime-model").textContent = `${proof.model} via ${proof.provider}`;
-    $("#runtime-meta").textContent =
-      `${proof.runsVerified} receipt-verified runs across ${proof.workflowsVerified} ${proof.workflowsVerified === 1 ? "workflow" : "workflows"} · ${proof.riskHypothesesVerified} grounded risk hypotheses · ${proof.advisoriesVerified} allow-listed advisories · ${proof.tokensVerified.toLocaleString()} tokens · browser assertions own every verdict`;
+    $("#runtime-meta").textContent = benchmark.complete
+      ? `${proof.runsVerified} receipt-verified runs across ${proof.workflowsVerified} ${proof.workflowsVerified === 1 ? "workflow" : "workflows"} · ${proof.riskHypothesesVerified} grounded risk hypotheses · ${proof.advisoriesVerified} allow-listed advisories · ${proof.tokensVerified.toLocaleString()} tokens · browser assertions own every verdict`
+      : `${proof.runsVerified} receipt-verified runs across ${proof.workflowsVerified} of ${benchmark.suites.length} workflows · portfolio claim withheld until every workflow verifies`;
   } else {
     $("#runtime-eyebrow").textContent = "MODEL EVIDENCE UNAVAILABLE";
+    $("#runtime-model").textContent = "No certified saved Nemotron record";
+    $("#runtime-meta").textContent =
+      "Browser-only checks remain usable; no model result is claimed.";
   }
   if (!benchmark.complete) {
     portfolioCertification.className = "portfolio-certification invalid";
@@ -109,10 +115,13 @@ function renderBenchmark(benchmark) {
     $("#benchmark-files-label").textContent =
       "screenshot receipt check incomplete";
     $("#benchmark-model-runs").textContent = "—";
-    $("#benchmark-model-runs-label").textContent =
-      "verified model evidence unavailable";
+    $("#benchmark-model-runs-label").textContent = benchmarkModelProof
+      ? `${benchmarkModelProof.runsVerified} model runs verified separately · portfolio incomplete`
+      : "verified model evidence unavailable";
     announcePortfolio(
-      "Verified competition evidence is unavailable. Browser-only checks remain available.",
+      benchmarkModelProof
+        ? "Verified competition evidence is unavailable. Partial Nemotron evidence remains separately labeled and does not certify the portfolio."
+        : "Verified competition evidence is unavailable. Browser-only checks remain available.",
     );
     return;
   }
@@ -620,7 +629,7 @@ async function refresh() {
       signature = next;
       render();
     }
-    if (!benchmarkModelProof) {
+    if (!benchmarkSnapshot && !benchmarkModelProof) {
       const runtimeRun = all.find(
         (run) =>
           run.build === "candidate" &&

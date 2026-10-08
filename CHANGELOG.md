@@ -1,5 +1,10 @@
 # Changelog
 
+## 0.1.64 — 2026-10-08
+
+- Corrected the incomplete-portfolio runtime proof so verified model evidence from one workflow is labeled partial instead of unavailable or fully verified.
+- Prevented an unrelated saved model run from replacing the fail-closed benchmark state; no-model cases now explicitly claim no model result.
+
 ## 0.1.63 — 2026-10-07
 
 - Added a visible homepage certification row that binds the judge-facing portfolio totals to the exact current benchmark SHA-256 receipt.
