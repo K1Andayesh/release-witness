@@ -2,7 +2,7 @@
 
 Release Witness is entered in **Best Apps and Agents**. This guide maps the shipped evidence to the four equally weighted judging criteria in the official rules.
 
-Verified source release: https://github.com/K1Andayesh/release-witness/releases/tag/v0.1.64
+Verified source release: https://github.com/K1Andayesh/release-witness/releases/tag/v0.1.65
 
 ## Technological implementation
 
@@ -26,6 +26,7 @@ Verified source release: https://github.com/K1Andayesh/release-witness/releases/
 - Each evidence step keeps its focused item visible on a short or zoomed viewport; selecting **Verified delta** expands and centres the changed check rather than stopping at the comparison section heading.
 - If saved model evidence is unavailable, the public demo disables the judge tour and marks the portfolio and model evidence unavailable. Browser-only checks remain usable without implying an NVIDIA model result.
 - If Nemotron evidence verifies for only a subset of included workflows, the runtime strip labels it partial, states the exact verified workflow count and withholds the portfolio claim. It never presents a standalone saved run as certified portfolio evidence.
+- The printable benchmark receipt applies the same distinction to its portfolio heading and Nemotron summary, so an incomplete report cannot retain a certified-looking aggregate label.
 - The tour follows the server-verified appointment pair. An open page rechecks the benchmark every ten seconds and disables the tour if that pair's screenshot or receipt integrity fails; an older valid pair cannot mask a newer failed pair.
 - A controlled-benchmark release delta places the measured two resolutions and zero regressions directly below the result metrics.
 - The comparison separates resolved, regressed, unchanged and unverified checks instead of collapsing them into one score.

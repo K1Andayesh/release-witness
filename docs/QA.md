@@ -1,5 +1,10 @@
 # Release Witness QA record
 
+## Fail-closed printable benchmark summary — 9 October 2026
+
+- The printable report used a fixed `Verified portfolio` heading and `VERIFIED NEMOTRON CONTRIBUTION` label even when its own certification status was negative. The suite cards and numeric totals were accurate, but the aggregate copy contradicted the fail-closed decision.
+- v0.1.65 changes both headings from the server-derived benchmark state. A partial report states the exact model-verified workflow subset and withholds the portfolio claim; a no-model report explicitly claims no model result. The complete production report retains its verified labels.
+
 ## Honest partial-model evidence state — 8 October 2026
 
 - An incomplete local portfolio exposed a contradictory runtime strip: the eyebrow said model evidence was unavailable while the same row still showed a valid saved Nemotron identity and runtime. A separate fallback could also surface an unrelated saved model run beneath the unavailable label.

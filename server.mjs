@@ -700,6 +700,40 @@ export async function startServer({
           durationMs >= 1000
             ? `${(durationMs / 1000).toFixed(2)} s`
             : `${durationMs} ms`;
+        const workflowsVerified = benchmark.suites.filter(
+          (suite) => suite.verified,
+        ).length;
+        const modelWorkflowsVerified = benchmark.suites.filter(
+          (suite) => suite.modelEvidence?.verified,
+        ).length;
+        const portfolioSummary = benchmark.complete
+          ? {
+              eyebrow: "CONTROLLED RESULT",
+              heading: "Verified portfolio",
+            }
+          : {
+              eyebrow: "CONTROLLED RESULT · NOT CERTIFIED",
+              heading: "Portfolio evidence incomplete",
+            };
+        const modelSummary = benchmark.complete
+          ? {
+              eyebrow: "VERIFIED NEMOTRON CONTRIBUTION",
+              heading: "The model work is part of the receipt.",
+              description:
+                "The benchmark verifies exact model and provider identity, complete check coverage, grounded hypotheses, allow-listed advice, recorded runtime totals and intact browser evidence.",
+            }
+          : modelWorkflowsVerified > 0
+            ? {
+                eyebrow: "PARTIAL NEMOTRON EVIDENCE · PORTFOLIO NOT CERTIFIED",
+                heading: "Verified subset, withheld portfolio claim.",
+                description: `${modelWorkflowsVerified} of ${benchmark.suites.length} workflows has receipt-verified model evidence. The aggregate portfolio claim remains withheld until every workflow verifies.`,
+              }
+            : {
+                eyebrow: "MODEL EVIDENCE UNAVAILABLE",
+                heading: "No certified saved Nemotron record.",
+                description:
+                  "Browser-only evidence remains reviewable; this receipt claims no model result.",
+              };
         const suiteCards = benchmark.suites
           .map((suite) => {
             const model = suite.modelEvidence;
@@ -752,7 +786,7 @@ export async function startServer({
         return reply(
           res,
           200,
-          `<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="description" content="Server-verified Release Witness benchmark evidence"><title>Release Witness benchmark verification</title><link rel="stylesheet" href="/style.css"></head><body class="benchmark-report-page"><div class="benchmark-report-shell"><nav aria-label="Return to application"><a class="report-back" href="/">← Back to Release Witness</a></nav><header class="benchmark-report-hero"><div class="report-provenance"><a href="${escapeHtml(benchmark.release.source)}" target="_blank" rel="noopener">Release ${escapeHtml(benchmark.release.version)} source ↗</a>${benchmark.release.commitSource ? `<a href="${escapeHtml(benchmark.release.commitSource)}" target="_blank" rel="noopener">Commit ${escapeHtml(benchmark.release.commit.slice(0, 8))} ↗</a>` : ""}${benchmark.release.archiveSource ? `<a href="${escapeHtml(benchmark.release.archiveSource)}">Source archive ↗</a>` : ""}<span class="certification-status ${benchmark.complete ? "verified" : "invalid"}" data-status="${benchmark.complete ? "certified" : "not-certified"}">Portfolio certified: ${benchmark.complete ? "yes" : "no"}</span></div><p class="eyebrow">SERVER-VERIFIED BENCHMARK</p><h1>Evidence a judge can trace.</h1><p>The aggregate below is derived from manifest ground truth, durable pair identity, comparison states, four run receipts and every referenced screenshot.</p><div class="portfolio-receipt"><span>Portfolio receipt</span><code>SHA-256 ${escapeHtml(benchmark.attestation.digest)}</code><small>${escapeHtml(benchmark.attestation.scope)}</small>${benchmark.release.archiveSha256 ? `<small>Source archive SHA-256 ${escapeHtml(benchmark.release.archiveSha256)}</small>` : ""}</div></header><main class="benchmark-report"><section aria-labelledby="portfolio-summary"><div class="report-section-heading"><div><span class="eyebrow">CONTROLLED RESULT</span><h2 id="portfolio-summary">Verified portfolio</h2></div><p>Generated <time datetime="${escapeHtml(benchmark.generatedAt)}">${escapeHtml(benchmark.generatedAt)}</time></p></div><div class="benchmark-metrics">
+          `<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="description" content="Server-verified Release Witness benchmark evidence"><title>Release Witness benchmark verification</title><link rel="stylesheet" href="/style.css"></head><body class="benchmark-report-page"><div class="benchmark-report-shell"><nav aria-label="Return to application"><a class="report-back" href="/">← Back to Release Witness</a></nav><header class="benchmark-report-hero"><div class="report-provenance"><a href="${escapeHtml(benchmark.release.source)}" target="_blank" rel="noopener">Release ${escapeHtml(benchmark.release.version)} source ↗</a>${benchmark.release.commitSource ? `<a href="${escapeHtml(benchmark.release.commitSource)}" target="_blank" rel="noopener">Commit ${escapeHtml(benchmark.release.commit.slice(0, 8))} ↗</a>` : ""}${benchmark.release.archiveSource ? `<a href="${escapeHtml(benchmark.release.archiveSource)}">Source archive ↗</a>` : ""}<span class="certification-status ${benchmark.complete ? "verified" : "invalid"}" data-status="${benchmark.complete ? "certified" : "not-certified"}">Portfolio certified: ${benchmark.complete ? "yes" : "no"}</span></div><p class="eyebrow">SERVER-VERIFIED BENCHMARK</p><h1>Evidence a judge can trace.</h1><p>The aggregate below is derived from manifest ground truth, durable pair identity, comparison states, four run receipts and every referenced screenshot.</p><div class="portfolio-receipt"><span>Portfolio receipt</span><code>SHA-256 ${escapeHtml(benchmark.attestation.digest)}</code><small>${escapeHtml(benchmark.attestation.scope)}</small>${benchmark.release.archiveSha256 ? `<small>Source archive SHA-256 ${escapeHtml(benchmark.release.archiveSha256)}</small>` : ""}</div></header><main class="benchmark-report"><section aria-labelledby="portfolio-summary"><div class="report-section-heading"><div><span class="eyebrow">${escapeHtml(portfolioSummary.eyebrow)}</span><h2 id="portfolio-summary">${escapeHtml(portfolioSummary.heading)}</h2></div><p>Generated <time datetime="${escapeHtml(benchmark.generatedAt)}">${escapeHtml(benchmark.generatedAt)}</time></p></div><div class="benchmark-metrics">
 ${metric(`${benchmark.totals.defectsDetected}/${benchmark.totals.knownDefects}`, "defects detected", `Defects detected: ${benchmark.totals.defectsDetected}/${benchmark.totals.knownDefects}`)}
 ${metric(`${benchmark.totals.repairsResolved}/${benchmark.totals.knownDefects}`, "repairs resolved", `Repairs resolved: ${benchmark.totals.repairsResolved}/${benchmark.totals.knownDefects}`)}
 ${metric(benchmark.totals.invariantsPreserved, "invariants preserved", `Passing invariants preserved: ${benchmark.totals.invariantsPreserved}`)}
@@ -760,8 +794,8 @@ ${metric(benchmark.totals.regressions, "regressions", `Regressions: ${benchmark.
 ${metric(benchmark.totals.boundariesUnverified, "boundaries unverified", `Unverified coverage boundaries: ${benchmark.totals.boundariesUnverified}`)}
 ${metric(benchmark.totals.receiptsVerified, "run receipts", `Run receipts verified: ${benchmark.totals.receiptsVerified}`)}
 ${metric(benchmark.totals.screenshotFilesVerified, "screenshots", `Screenshot files verified: ${benchmark.totals.screenshotFilesVerified}`)}
-${metric(`${benchmark.suites.filter((suite) => suite.verified).length}/${benchmark.suites.length}`, "workflows verified", `Workflows verified: ${benchmark.suites.filter((suite) => suite.verified).length}/${benchmark.suites.length}`)}
-</div></section><section class="benchmark-model-summary" aria-labelledby="model-summary"><div><span class="eyebrow">VERIFIED NEMOTRON CONTRIBUTION</span><h2 id="model-summary">The model work is part of the receipt.</h2><p>The benchmark verifies exact model and provider identity, complete check coverage, grounded hypotheses, allow-listed advice, recorded runtime totals and intact browser evidence.</p></div><div class="model-summary-metrics">
+${metric(`${workflowsVerified}/${benchmark.suites.length}`, "workflows verified", `Workflows verified: ${workflowsVerified}/${benchmark.suites.length}`)}
+</div></section><section class="benchmark-model-summary" aria-labelledby="model-summary"><div><span class="eyebrow">${escapeHtml(modelSummary.eyebrow)}</span><h2 id="model-summary">${escapeHtml(modelSummary.heading)}</h2><p>${escapeHtml(modelSummary.description)}</p></div><div class="model-summary-metrics">
 ${metric(benchmark.totals.modelRunsVerified, "Nemotron runs verified", `Nemotron runs verified: ${benchmark.totals.modelRunsVerified}`)}
 ${metric(benchmark.totals.riskHypothesesVerified, "grounded hypotheses", `Grounded risk hypotheses verified: ${benchmark.totals.riskHypothesesVerified}`)}
 ${metric(benchmark.totals.advisoriesVerified, "allow-listed advisories", `Allow-listed advisories verified: ${benchmark.totals.advisoriesVerified}`)}

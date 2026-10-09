@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.1.65 — 2026-10-09
+
+- Made the printable benchmark report fail closed in incomplete states: its portfolio heading and Nemotron summary now distinguish partial verified evidence from no model evidence instead of showing a certified-looking aggregate label.
+
 ## 0.1.64 — 2026-10-08
 
 - Corrected the incomplete-portfolio runtime proof so verified model evidence from one workflow is labeled partial instead of unavailable or fully verified.
