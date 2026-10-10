@@ -1,5 +1,10 @@
 # Changelog
 
+## 0.1.66 — 2026-10-10
+
+- Complete the 90-second judge trail with a fifth **Portfolio receipt** step that opens the server-verified two-workflow aggregate and exact release provenance.
+- Cover the link destination and new-tab behavior in the actual-Chrome contract while retaining the four focused in-page evidence steps.
+
 ## 0.1.65 — 2026-10-09
 
 - Made the printable benchmark report fail closed in incomplete states: its portfolio heading and Nemotron summary now distinguish partial verified evidence from no model evidence instead of showing a certified-looking aggregate label.

@@ -1,5 +1,10 @@
 # Release Witness QA record
 
+## Guided portfolio receipt — 10 October 2026
+
+- The judge tour said it followed evidence to the release decision, but its four steps stopped at one workflow's before/after delta. The portfolio receipt that certifies both workflows and binds them to the exact source release remained outside the guided trail.
+- v0.1.66 adds a fifth **Portfolio receipt** step. It opens the server-verified aggregate in a new tab, keeping the pair comparison available while making the two-workflow certification, exact source, receipts and remaining limits part of the explicit judge path.
+
 ## Fail-closed printable benchmark summary — 9 October 2026
 
 - The printable report used a fixed `Verified portfolio` heading and `VERIFIED NEMOTRON CONTRIBUTION` label even when its own certification status was negative. The suite cards and numeric totals were accurate, but the aggregate copy contradicted the fail-closed decision.

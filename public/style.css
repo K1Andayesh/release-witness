@@ -392,7 +392,8 @@ select {
   grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: 8px;
 }
-.tour-steps button {
+.tour-steps button,
+.tour-steps a {
   min-width: 0;
   padding: 12px;
   border: 1px solid #b9cdb8;
@@ -401,9 +402,12 @@ select {
   color: #23312e;
   text-align: left;
   cursor: pointer;
+  text-decoration: none;
 }
 .tour-steps button:hover,
-.tour-steps button:focus-visible {
+.tour-steps button:focus-visible,
+.tour-steps a:hover,
+.tour-steps a:focus-visible {
   border-color: var(--green);
   background: #eef5ef;
 }
