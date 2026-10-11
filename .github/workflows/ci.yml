@@ -24,6 +24,10 @@ jobs:
       - run: npm run check
       - run: npm test
       - run: npm run format:check
+      - name: Verify deployment script syntax
+        run: bash -n scripts/deploy-verified-source.sh
+      - name: Audit production dependencies
+        run: npm audit --omit=dev
       - name: Run browser smoke suite
         run: npm run witness -- --suite booking-v1 --build candidate --port 4321 --change "CI smoke test of the repaired appointment candidate."
       - name: Run Fieldnotes browser smoke suite

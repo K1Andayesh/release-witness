@@ -74,7 +74,7 @@ npm test
 npm run format:check
 ```
 
-Twenty-four contract/failure tests pass. Actual Chrome verification covers the server-managed paired-run workflow, persisted pair identity, judge-tour comparison restoration after reload, receipt verification and tamper detection, release-source, commit and archive binding, deployment readiness, both appointment defects, the repaired candidate, before/after comparison, model-budget gating, model planning/advice, provider-failure fallback and public-demo restrictions. See `docs/QA.md`, `docs/DEMO.md` and `docs/READINESS.md`.
+Twenty-four contract/failure tests pass. Actual Chrome verification covers the server-managed paired-run workflow, persisted pair identity, judge-tour comparison restoration after reload, receipt verification and tamper detection, release-source, commit and archive binding, deployment readiness, both appointment defects, the repaired candidate, before/after comparison, model-budget gating, model planning/advice, provider-failure fallback and public-demo restrictions. CI also parses the tracked deployment script and audits production dependencies before running both workflow smokes. See `docs/QA.md`, `docs/DEMO.md` and `docs/READINESS.md`.
 
 ## Model and scope controls
 

@@ -1,5 +1,10 @@
 # Release Witness QA record
 
+## CI release-surface guards — 11 October 2026
+
+- Release checks repeatedly parsed the tracked deployment script and audited production dependencies locally, but the public CI workflow did not enforce either result. A future shell regression or vulnerable runtime dependency could therefore pass CI and be discovered only during packaging.
+- CI now runs `bash -n scripts/deploy-verified-source.sh` and `npm audit --omit=dev` before both real-Chrome workflow smokes. The application version and deployed v0.1.66 release remain unchanged because this strengthens the repository gate rather than the runtime.
+
 ## Guided portfolio receipt — 10 October 2026
 
 - The judge tour said it followed evidence to the release decision, but its four steps stopped at one workflow's before/after delta. The portfolio receipt that certifies both workflows and binds them to the exact source release remained outside the guided trail.
