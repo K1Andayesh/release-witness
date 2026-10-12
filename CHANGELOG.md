@@ -1,5 +1,10 @@
 # Changelog
 
+## 0.1.67 — 2026-10-12
+
+- Announce the guided portfolio receipt's new-tab transition in both its visible description and accessible name.
+- Require the actual-Chrome contract to verify the announcement while preserving the certified report destination.
+
 ## 0.1.66 — 2026-10-10
 
 - Complete the 90-second judge trail with a fifth **Portfolio receipt** step that opens the server-verified two-workflow aggregate and exact release provenance.

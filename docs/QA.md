@@ -1,5 +1,10 @@
 # Release Witness QA record
 
+## Announced portfolio-receipt context change — 12 October 2026
+
+- Actual public Chrome exposed the fifth judge-tour link as **05 · Portfolio receipt** but did not tell keyboard or screen-reader users that following it would open a new tab. The visible description also omitted that context change.
+- v0.1.67 gives the link a concise accessible destination and new-tab announcement, and adds the same warning to its visible description. The receipt route, four in-page tour actions and controlled benchmark are unchanged.
+
 ## CI release-surface guards — 11 October 2026
 
 - Release checks repeatedly parsed the tracked deployment script and audited production dependencies locally, but the public CI workflow did not enforce either result. A future shell regression or vulnerable runtime dependency could therefore pass CI and be discovered only during packaging.
