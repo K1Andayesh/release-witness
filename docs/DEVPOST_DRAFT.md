@@ -54,7 +54,7 @@ The hardest part was keeping model assistance useful without letting it become t
 - Bound the exact release, immutable Git commit and downloadable source-archive SHA-256 into a responsive, printable benchmark receipt with direct links to both comparisons and all four source run-receipt digests.
 - Published a fail-closed readiness receipt that returns 200 only when live release provenance and the complete workflow, screenshot, model and Chrome evidence chains verify; otherwise it returns 503 with specific failures.
 - Designed a one-click judge path from bounded model risk to browser observations, side-by-side repair evidence, explicit unknowns and the source-bound portfolio receipt, verified on desktop and at 390 × 844 without horizontal overflow.
-- Covered model schemas, provider failures, tampering, unsafe targets, concurrency, restart and deployment recovery, paired execution, public-demo isolation and the real-Chrome judge journey with 24 passing tests. Public CI also parses the deployment script, audits production dependencies and runs both workflow smokes in Chrome.
+- Covered model schemas, provider failures, tampering, unsafe targets, concurrency, restart and deployment recovery, paired execution, public-demo isolation and the real-Chrome judge journey with 25 passing tests. Public CI also parses the deployment script, audits production dependencies and runs both workflow smokes in Chrome.
 
 ## What we learned
 
