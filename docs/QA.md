@@ -1,5 +1,10 @@
 # Release Witness QA record
 
+## Release-reference consistency guard — 13 October 2026
+
+- The release version was duplicated across browser contracts and three judge-facing documents. A version bump could leave a stale source link while the application tests still exercised the new package version; the v0.1.67 bump exposed this when one escaped test literal survived the first replacement pass.
+- Contracts now derive every runtime, report and release-asset expectation from `package.json`. A dedicated check also requires README, judging guidance and the Devpost draft to point at that same release tag, and requires the changelog to contain the current version heading.
+
 ## Announced portfolio-receipt context change — 12 October 2026
 
 - Actual public Chrome exposed the fifth judge-tour link as **05 · Portfolio receipt** but did not tell keyboard or screen-reader users that following it would open a new tab. The visible description also omitted that context change.

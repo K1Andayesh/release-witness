@@ -24,6 +24,11 @@ import { loadManifests, validateManifest } from "../lib/manifests.mjs";
 import { startServer } from "../server.mjs";
 import { cliExitCode, parseCliArgs } from "../lib/cli.mjs";
 
+const packageMetadata = JSON.parse(
+  await readFile(new URL("../package.json", import.meta.url), "utf8"),
+);
+const packageVersion = packageMetadata.version;
+
 async function directory() {
   const base = await mkdtemp(join(tmpdir(), "witness-qa-"));
   const runs = join(base, "runs");
@@ -56,6 +61,31 @@ async function accessibilityViolations(page, base) {
     targets: violation.nodes.map((node) => node.target),
   }));
 }
+
+test("judge-facing release references match the package version", async () => {
+  const releaseUrl = `https://github.com/K1Andayesh/release-witness/releases/tag/v${packageVersion}`;
+  const references = [
+    ["README", new URL("../README.md", import.meta.url)],
+    ["judging guide", new URL("../docs/JUDGING.md", import.meta.url)],
+    ["Devpost draft", new URL("../docs/DEVPOST_DRAFT.md", import.meta.url)],
+  ];
+  for (const [label, url] of references) {
+    const content = await readFile(url, "utf8");
+    assert.ok(
+      content.includes(releaseUrl),
+      `${label} has a stale release link`,
+    );
+  }
+  const changelog = await readFile(
+    new URL("../CHANGELOG.md", import.meta.url),
+    "utf8",
+  );
+  assert.ok(
+    changelog.includes(`## ${packageVersion} —`),
+    "changelog is missing the current package version",
+  );
+});
+
 test("advice is restricted to real check actions, never invented features", () => {
   const checks = [
     { id: "persistence", title: "Persistence" },
@@ -349,7 +379,7 @@ test("benchmark receipts bind the exact release source, commit and archive", () 
 });
 
 test("deployment readiness requires exact provenance and complete evidence", () => {
-  const expectedVersion = "0.1.67";
+  const expectedVersion = packageVersion;
   const expectedCommit = "a".repeat(40);
   const expectedArchiveSha256 = "b".repeat(64);
   const status = {
@@ -799,7 +829,7 @@ test("server-managed pairs persist their relationship and comparison", async (t)
   );
   const comparisonReceipt = await comparisonExport.text();
   assert.match(comparisonReceipt, /# Release Witness comparison receipt/);
-  assert.match(comparisonReceipt, /Release: 0\.1\.67/);
+  assert.ok(comparisonReceipt.includes(`Release: ${packageVersion}`));
   assert.match(
     comparisonReceipt,
     /Source: https:\/\/github\.com\/K1Andayesh\/release-witness\/tree\/0123456789abcdef0123456789abcdef01234567 \| Commit 0123456789abcdef0123456789abcdef01234567/,
@@ -837,10 +867,10 @@ test("server-managed pairs persist their relationship and comparison", async (t)
       "The benchmark is not certified.",
     ),
   );
-  assert.equal(benchmark.release.version, "0.1.67");
+  assert.equal(benchmark.release.version, packageVersion);
   assert.equal(
     benchmark.release.source,
-    "https://github.com/K1Andayesh/release-witness/releases/tag/v0.1.67",
+    `https://github.com/K1Andayesh/release-witness/releases/tag/v${packageVersion}`,
   );
   assert.equal(
     benchmark.release.commit,
@@ -856,7 +886,7 @@ test("server-managed pairs persist their relationship and comparison", async (t)
   );
   assert.equal(
     benchmark.release.archiveSource,
-    "https://github.com/K1Andayesh/release-witness/releases/download/v0.1.67/release-witness-publication-ready-v0.1.67-r1.tar.gz",
+    `https://github.com/K1Andayesh/release-witness/releases/download/v${packageVersion}/release-witness-publication-ready-v${packageVersion}-r1.tar.gz`,
   );
   assert.equal(bookingBenchmark.verified, true);
   assert.equal(bookingBenchmark.defectsDetected, 2);
@@ -901,7 +931,7 @@ test("server-managed pairs persist their relationship and comparison", async (t)
     benchmarkReportText,
     /<span class="eyebrow">VERIFIED NEMOTRON CONTRIBUTION<\/span>/,
   );
-  assert.match(benchmarkReportText, /Release 0\.1\.67 source/);
+  assert.ok(benchmarkReportText.includes(`Release ${packageVersion} source`));
   assert.match(benchmarkReportText, /Commit 01234567/);
   assert.match(benchmarkReportText, /Source archive SHA-256 abcdefabcdef/);
   assert.match(benchmarkReportText, /Google Chrome runs verified: 2/);
@@ -1638,9 +1668,9 @@ test("the judge-tour comparison survives a browser reload", async (t) => {
   );
   assert.equal(
     await benchmarkPage
-      .getByRole("link", { name: "Release 0.1.67 source ↗" })
+      .getByRole("link", { name: `Release ${packageVersion} source ↗` })
       .getAttribute("href"),
-    "https://github.com/K1Andayesh/release-witness/releases/tag/v0.1.67",
+    `https://github.com/K1Andayesh/release-witness/releases/tag/v${packageVersion}`,
   );
   assert.equal(
     await benchmarkPage
@@ -1802,7 +1832,7 @@ test("public demo mode excludes local projects and model spending", async (t) =>
   );
   const status = await (await fetch(`${base}/api/status`)).json();
   assert.equal(status.modelConfigured, false);
-  assert.equal(status.version, "0.1.67");
+  assert.equal(status.version, packageVersion);
   assert.equal(status.publicDemo, true);
   const integrity = await (
     await fetch(`${base}/api/runs/${receiptId}/integrity`)
