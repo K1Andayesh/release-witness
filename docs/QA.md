@@ -1,5 +1,10 @@
 # Release Witness QA record
 
+## Announced competition-resource context changes — 14 October 2026
+
+- Actual public Chrome exposed the first-screen source, video, benchmark and readiness links with only the visible `↗` glyph in their accessible names, even though each opens a new tab. A screen-reader user had no plain-language advance warning while navigating the competition resources.
+- v0.1.68 gives all four links destination-specific accessible names that announce the new tab. The source label continues to update to the exact deployed commit after benchmark verification, and the same actual-Chrome contract checks every destination.
+
 ## Release-reference consistency guard — 13 October 2026
 
 - The release version was duplicated across browser contracts and three judge-facing documents. A version bump could leave a stale source link while the application tests still exercised the new package version; the v0.1.67 bump exposed this when one escaped test literal survived the first replacement pass.

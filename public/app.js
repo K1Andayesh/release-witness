@@ -61,6 +61,10 @@ function renderBenchmark(benchmark) {
   if (exactSource) {
     $("#source-link").href = exactSource;
     $("#source-link").textContent = "Exact deployed source ↗";
+    $("#source-link").setAttribute(
+      "aria-label",
+      "Exact deployed source — opens in a new tab",
+    );
   }
   const fieldnotes = benchmark.suites?.find(
     (suite) => suite.id === "notes-v1" && suite.verified,

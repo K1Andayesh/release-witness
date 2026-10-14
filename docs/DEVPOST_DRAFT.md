@@ -26,7 +26,7 @@ The included appointment demo starts with two seeded defects: a booking disappea
 
 The first users are small product teams reviewing pull requests without a dedicated QA function. The product gives the reviewer a compact answer to three questions: what risk did the change create, what did Chrome actually observe, and which claims remain untested? A one-click judge tour opens the strongest saved Nemotron-backed comparison without requiring credentials or spending credits.
 
-Judge quick path: open the [credential-free demo](https://release-witness.139-99-135-89.sslip.io), choose **Start 90-second tour** and follow its five steps through the recorded model risk map, Chrome observations, bounded advice, verified delta and portfolio receipt. The final step announces its new-tab transition before opening the certified two-workflow aggregate with returned-model verification and the exact release source. The hosted tour replays saved real Nebius calls; it makes no fresh inference request.
+Judge quick path: open the [credential-free demo](https://release-witness.139-99-135-89.sslip.io), choose **Start 90-second tour** and follow its five steps through the recorded model risk map, Chrome observations, bounded advice, verified delta and portfolio receipt. The final step announces its new-tab transition before opening the certified two-workflow aggregate with returned-model verification and the exact release source. The first-screen source, video, receipt and readiness resources also announce their new-tab transitions. The hosted tour replays saved real Nebius calls; it makes no fresh inference request.
 
 ## Why the idea is different
 
@@ -79,7 +79,7 @@ Release Witness was created during the hackathon submission period. The applicat
 ## Public links
 
 - Source repository: https://github.com/K1Andayesh/release-witness
-- Verified source release: https://github.com/K1Andayesh/release-witness/releases/tag/v0.1.67
+- Verified source release: https://github.com/K1Andayesh/release-witness/releases/tag/v0.1.68
 - Working demo: https://release-witness.139-99-135-89.sslip.io
 - Certified benchmark receipt: https://release-witness.139-99-135-89.sslip.io/api/benchmark/report
 - Demo video, under three minutes: https://youtu.be/O8Ijn85__6U

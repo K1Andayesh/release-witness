@@ -1,5 +1,10 @@
 # Changelog
 
+## 0.1.68 — 2026-10-14
+
+- Announce the new-tab transition for every first-screen competition resource in its accessible name.
+- Keep the dynamic exact-source label and verify all four destinations in the actual-Chrome contract.
+
 ## 0.1.67 — 2026-10-12
 
 - Announce the guided portfolio receipt's new-tab transition in both its visible description and accessible name.

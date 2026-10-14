@@ -1427,7 +1427,9 @@ test("the judge-tour comparison survives a browser reload", async (t) => {
   await page.goto(base);
   assert.equal(
     await page
-      .getByRole("link", { name: "Exact deployed source ↗" })
+      .getByRole("link", {
+        name: /Exact deployed source.*opens in a new tab/i,
+      })
       .getAttribute("href"),
     `https://github.com/K1Andayesh/release-witness/commit/${sourceCommit}`,
   );
@@ -1628,15 +1630,21 @@ test("the judge-tour comparison survives a browser reload", async (t) => {
   await page.emulateMedia({ forcedColors: "none" });
   assert.equal(
     await page
-      .getByRole("link", { name: "Benchmark receipt ↗" })
+      .getByRole("link", { name: /Benchmark receipt.*opens in a new tab/i })
       .getAttribute("href"),
     "/api/benchmark/report",
   );
   assert.equal(
     await page
-      .getByRole("link", { name: "Live readiness ↗" })
+      .getByRole("link", { name: /Live readiness.*opens in a new tab/i })
       .getAttribute("href"),
     "/api/readiness",
+  );
+  assert.equal(
+    await page
+      .getByRole("link", { name: /1:47 demo.*opens in a new tab/i })
+      .getAttribute("href"),
+    "https://youtu.be/O8Ijn85__6U",
   );
   assert.equal(
     await page.locator("#portfolio-status").getAttribute("aria-live"),
