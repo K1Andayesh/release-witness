@@ -52,7 +52,7 @@ sudo -u releasewitness ln -s ../../shared/artifacts "$release/artifacts"
 cd "$release"
 sudo -u releasewitness npm ci --omit=dev
 sudo install -d /etc/systemd/system/release-witness.service.d
-printf '[Service]\nEnvironment=RELEASE_COMMIT=%s\nEnvironment=RELEASE_ARCHIVE_SHA256=%s\n' "$source_commit" "$expected_source_sha" | sudo tee /etc/systemd/system/release-witness.service.d/release.conf >/dev/null
+printf '[Service]\nEnvironment=RELEASE_COMMIT=%s\nEnvironment=RELEASE_ARCHIVE_SHA256=%s\nEnvironment=RELEASE_EVIDENCE_ARCHIVE_SHA256=%s\n' "$source_commit" "$expected_source_sha" "$expected_evidence_sha" | sudo tee /etc/systemd/system/release-witness.service.d/release.conf >/dev/null
 sudo systemctl daemon-reload
 sudo ln -sfn "$release" /srv/release-witness/current.new
 sudo mv -Tf /srv/release-witness/current.new /srv/release-witness/current
@@ -62,7 +62,7 @@ if ! sudo systemctl restart release-witness; then
   exit 4
 fi
 
-if ! sudo -u releasewitness node scripts/verify-deployment.mjs http://127.0.0.1:4317 "$source_commit" "$expected_source_sha"; then
+if ! sudo -u releasewitness node scripts/verify-deployment.mjs http://127.0.0.1:4317 "$source_commit" "$expected_source_sha" "$expected_evidence_sha"; then
   echo "Release verification failed; restoring the previous release." >&2
   restore_previous
   exit 4

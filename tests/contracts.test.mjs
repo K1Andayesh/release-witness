@@ -334,7 +334,7 @@ test("model certification and v3 receipts require returned provider identity", (
   );
 });
 
-test("benchmark receipts bind the exact release source, commit and archive", () => {
+test("benchmark receipts bind the exact release source, commit and archives", () => {
   const certification = {
     complete: true,
     suites: [{ id: "booking-v1", verified: true }],
@@ -350,6 +350,9 @@ test("benchmark receipts bind the exact release source, commit and archive", () 
       "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
     archiveSource:
       "https://github.com/example/release-witness/releases/download/v0.1.28/source.tar.gz",
+    evidenceArchiveSha256: "c".repeat(64),
+    evidenceArchiveSource:
+      "https://github.com/example/release-witness/releases/download/v0.1.28/evidence.tar.gz",
   });
   const changedCommit = attestBenchmark(certification, {
     version: "0.1.28",
@@ -361,6 +364,9 @@ test("benchmark receipts bind the exact release source, commit and archive", () 
       "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
     archiveSource:
       "https://github.com/example/release-witness/releases/download/v0.1.28/source.tar.gz",
+    evidenceArchiveSha256: "c".repeat(64),
+    evidenceArchiveSource:
+      "https://github.com/example/release-witness/releases/download/v0.1.28/evidence.tar.gz",
   });
   const changedArchive = attestBenchmark(certification, {
     version: "0.1.28",
@@ -372,21 +378,42 @@ test("benchmark receipts bind the exact release source, commit and archive", () 
       "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
     archiveSource:
       "https://github.com/example/release-witness/releases/download/v0.1.28/source.tar.gz",
+    evidenceArchiveSha256: "c".repeat(64),
+    evidenceArchiveSource:
+      "https://github.com/example/release-witness/releases/download/v0.1.28/evidence.tar.gz",
+  });
+  const changedEvidenceArchive = attestBenchmark(certification, {
+    version: "0.1.28",
+    source: "https://github.com/example/release-witness/releases/tag/v0.1.28",
+    commit: "1111111111111111111111111111111111111111",
+    commitSource:
+      "https://github.com/example/release-witness/commit/1111111111111111111111111111111111111111",
+    archiveSha256:
+      "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+    archiveSource:
+      "https://github.com/example/release-witness/releases/download/v0.1.28/source.tar.gz",
+    evidenceArchiveSha256: "d".repeat(64),
+    evidenceArchiveSource:
+      "https://github.com/example/release-witness/releases/download/v0.1.28/evidence.tar.gz",
   });
   assert.notEqual(first.digest, changedCommit.digest);
   assert.notEqual(first.digest, changedArchive.digest);
+  assert.notEqual(first.digest, changedEvidenceArchive.digest);
   assert.match(first.scope, /source archive hash/);
+  assert.match(first.scope, /evidence archive hash/);
 });
 
 test("deployment readiness requires exact provenance and complete evidence", () => {
   const expectedVersion = packageVersion;
   const expectedCommit = "a".repeat(40);
   const expectedArchiveSha256 = "b".repeat(64);
+  const expectedEvidenceArchiveSha256 = "d".repeat(64);
   const status = {
     publicDemo: true,
     version: expectedVersion,
     releaseCommit: expectedCommit,
     releaseArchiveSha256: expectedArchiveSha256,
+    releaseEvidenceArchiveSha256: expectedEvidenceArchiveSha256,
   };
   const suite = {
     verified: true,
@@ -399,6 +426,7 @@ test("deployment readiness requires exact provenance and complete evidence", () 
       version: expectedVersion,
       commit: expectedCommit,
       archiveSha256: expectedArchiveSha256,
+      evidenceArchiveSha256: expectedEvidenceArchiveSha256,
     },
     attestation: { digest: "c".repeat(64) },
     totals: {
@@ -419,14 +447,22 @@ test("deployment readiness requires exact provenance and complete evidence", () 
     expectedVersion,
     expectedCommit,
     expectedArchiveSha256,
+    expectedEvidenceArchiveSha256,
   };
   const ready = validateDeployment(input);
   assert.equal(ready.ready, true);
   assert.equal(ready.summary.workflowsVerified, 2);
+  assert.equal(
+    ready.summary.evidenceArchiveSha256,
+    expectedEvidenceArchiveSha256,
+  );
 
   const wrongCommit = structuredClone(input);
   wrongCommit.status.releaseCommit = "d".repeat(40);
   assert.equal(validateDeployment(wrongCommit).ready, false);
+  const wrongEvidenceArchive = structuredClone(input);
+  wrongEvidenceArchive.benchmark.release.evidenceArchiveSha256 = "e".repeat(64);
+  assert.equal(validateDeployment(wrongEvidenceArchive).ready, false);
   const incompleteEvidence = structuredClone(input);
   incompleteEvidence.benchmark.suites[0].browserEvidence.verified = false;
   assert.equal(validateDeployment(incompleteEvidence).ready, false);
@@ -772,6 +808,8 @@ test("server-managed pairs persist their relationship and comparison", async (t)
     sourceCommit: "0123456789abcdef0123456789abcdef01234567",
     sourceArchiveSha256:
       "abcdefabcdefabcdefabcdefabcdefabcdefabcdefabcdefabcdefabcdefabcd",
+    evidenceArchiveSha256:
+      "fedcbafedcbafedcbafedcbafedcbafedcbafedcbafedcbafedcbafedcbafedc",
     runnerOptions: { providerOptions: { transport } },
   });
   t.after(() => {
@@ -840,6 +878,10 @@ test("server-managed pairs persist their relationship and comparison", async (t)
   );
   assert.match(
     comparisonReceipt,
+    /Evidence archive SHA-256: fedcbafedcbafedcbafedcbafedcbafedcbafedcbafedcbafedcbafedcbafedc/,
+  );
+  assert.match(
+    comparisonReceipt,
     /Live readiness: http:\/\/127\.0\.0\.1:\d+\/api\/readiness/,
   );
   assert.match(
@@ -854,6 +896,11 @@ test("server-managed pairs persist their relationship and comparison", async (t)
     /Authentication, payments and other browsers: unverified/,
   );
   const benchmark = await (await fetch(`${base}/api/benchmark`)).json();
+  const status = await (await fetch(`${base}/api/status`)).json();
+  assert.equal(
+    status.releaseEvidenceArchiveSha256,
+    "fedcbafedcbafedcbafedcbafedcbafedcbafedcbafedcbafedcbafedcbafedc",
+  );
   const bookingBenchmark = benchmark.suites.find(
     (suite) => suite.id === "booking-v1",
   );
@@ -887,6 +934,14 @@ test("server-managed pairs persist their relationship and comparison", async (t)
   assert.equal(
     benchmark.release.archiveSource,
     `https://github.com/K1Andayesh/release-witness/releases/download/v${packageVersion}/release-witness-publication-ready-v${packageVersion}-r1.tar.gz`,
+  );
+  assert.equal(
+    benchmark.release.evidenceArchiveSha256,
+    "fedcbafedcbafedcbafedcbafedcbafedcbafedcbafedcbafedcbafedcbafedc",
+  );
+  assert.equal(
+    benchmark.release.evidenceArchiveSource,
+    `https://github.com/K1Andayesh/release-witness/releases/download/v${packageVersion}/release-witness-benchmark-evidence-v${packageVersion}-r1.tar.gz`,
   );
   assert.equal(bookingBenchmark.verified, true);
   assert.equal(bookingBenchmark.defectsDetected, 2);
@@ -934,6 +989,8 @@ test("server-managed pairs persist their relationship and comparison", async (t)
   assert.ok(benchmarkReportText.includes(`Release ${packageVersion} source`));
   assert.match(benchmarkReportText, /Commit 01234567/);
   assert.match(benchmarkReportText, /Source archive SHA-256 abcdefabcdef/);
+  assert.match(benchmarkReportText, /Evidence archive SHA-256 fedcbafedcba/);
+  assert.match(benchmarkReportText, />Evidence archive ↗<\/a>/);
   assert.match(benchmarkReportText, /Google Chrome runs verified: 2/);
   assert.match(
     benchmarkReportText,

@@ -20,6 +20,7 @@ export async function verifyDeployment({
   expectedVersion,
   expectedCommit,
   expectedArchiveSha256,
+  expectedEvidenceArchiveSha256,
   attempts = 15,
   retryDelayMs = 1_000,
 }) {
@@ -36,6 +37,7 @@ export async function verifyDeployment({
         expectedVersion,
         expectedCommit,
         expectedArchiveSha256,
+        expectedEvidenceArchiveSha256,
       });
       if (result.ready) return result;
       lastFailure = result.failures.join(" ");
@@ -51,15 +53,21 @@ if (
   process.argv[1] &&
   import.meta.url === pathToFileURL(resolve(process.argv[1])).href
 ) {
-  const [baseUrl, expectedCommit, expectedArchiveSha256, versionOverride] =
-    process.argv.slice(2);
+  const [
+    baseUrl,
+    expectedCommit,
+    expectedArchiveSha256,
+    expectedEvidenceArchiveSha256,
+    versionOverride,
+  ] = process.argv.slice(2);
   if (
     !/^https?:\/\//.test(baseUrl || "") ||
     !/^[a-f0-9]{40}$/.test(expectedCommit || "") ||
-    !/^[a-f0-9]{64}$/i.test(expectedArchiveSha256 || "")
+    !/^[a-f0-9]{64}$/i.test(expectedArchiveSha256 || "") ||
+    !/^[a-f0-9]{64}$/i.test(expectedEvidenceArchiveSha256 || "")
   ) {
     console.error(
-      "Usage: node scripts/verify-deployment.mjs <base-url> <commit> <archive-sha256> [version]",
+      "Usage: node scripts/verify-deployment.mjs <base-url> <commit> <source-archive-sha256> <evidence-archive-sha256> [version]",
     );
     process.exitCode = 2;
   } else {
@@ -72,6 +80,7 @@ if (
         expectedVersion: versionOverride || packageMetadata.version,
         expectedCommit,
         expectedArchiveSha256,
+        expectedEvidenceArchiveSha256,
       });
       console.log(JSON.stringify(result.summary));
     } catch (error) {

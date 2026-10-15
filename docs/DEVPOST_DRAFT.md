@@ -47,11 +47,11 @@ The hardest part was keeping model assistance useful without letting it become t
 - Detected 3/3 declared seeded defects and classified 3/3 repairs across two controlled workflows, while preserving three passing invariants, reporting zero observed regressions and keeping both excluded-coverage boundaries unverified.
 - Verified the required NVIDIA/Nebius runtime across both applications: four receipted Nemotron 3.5 Lightning runs through Nebius Token Factory, 12 grounded risk hypotheses, four allow-listed advisories, 2,848 tokens and 7.49 seconds of measured model work.
 - Demonstrated reuse on Harbour Appointments and Fieldnotes through validated manifests; the same model contract, browser runner and receipt path execute both without scenario-specific runner branches.
-- Added a server-derived portfolio verifier that checks declared ground truth, durable pair relationships, four versioned run receipts, all 16 screenshot files and four receipt-bound Google Chrome execution records before certifying the public 3/3 result. Its verified workflow cards directly download pair receipts bound to the running version, immutable source commit, source-archive hash, live readiness decision and current portfolio digest; other saved comparisons are explicitly not portfolio-certified.
+- Added a server-derived portfolio verifier that checks declared ground truth, durable pair relationships, four versioned run receipts, all 16 screenshot files and four receipt-bound Google Chrome execution records before certifying the public 3/3 result. Its verified workflow cards directly download pair receipts bound to the running version, immutable source commit, source-archive hash, evidence-archive hash, live readiness decision and current portfolio digest; other saved comparisons are explicitly not portfolio-certified.
 - Bound the homepage's judge-facing outcome totals to a visible certification row with the exact current portfolio SHA-256 and a direct receipt link; incomplete evidence shows `PORTFOLIO NOT CERTIFIED` in the same place.
 - Kept incomplete model evidence honest: a verified subset is labeled partial with its exact workflow count, while a no-model state explicitly claims no model result. Neither state can enable the certified judge tour.
 - Extended the same fail-closed language to the printable benchmark receipt, which changes both its portfolio heading and Nemotron summary when evidence is incomplete.
-- Bound the exact release, immutable Git commit and downloadable source-archive SHA-256 into a responsive, printable benchmark receipt with direct links to both comparisons and all four source run-receipt digests.
+- Bound the exact release, immutable Git commit and both downloadable archive SHA-256 digests into a responsive, printable benchmark receipt with direct links to both comparisons and all four source run-receipt digests.
 - Published a fail-closed readiness receipt that returns 200 only when live release provenance and the complete workflow, screenshot, model and Chrome evidence chains verify; otherwise it returns 503 with specific failures.
 - Designed a one-click judge path from bounded model risk to browser observations, side-by-side repair evidence, explicit unknowns and the source-bound portfolio receipt, verified on desktop and at 390 × 844 without horizontal overflow.
 - Covered model schemas, provider failures, tampering, unsafe targets, concurrency, restart and deployment recovery, paired execution, public-demo isolation and the real-Chrome judge journey with 25 passing tests. Public CI also parses the deployment script, audits production dependencies and runs both workflow smokes in Chrome.
@@ -79,7 +79,7 @@ Release Witness was created during the hackathon submission period. The applicat
 ## Public links
 
 - Source repository: https://github.com/K1Andayesh/release-witness
-- Verified source release: https://github.com/K1Andayesh/release-witness/releases/tag/v0.1.68
+- Verified source release: https://github.com/K1Andayesh/release-witness/releases/tag/v0.1.69
 - Working demo: https://release-witness.139-99-135-89.sslip.io
 - Certified benchmark receipt: https://release-witness.139-99-135-89.sslip.io/api/benchmark/report
 - Demo video, under three minutes: https://youtu.be/O8Ijn85__6U

@@ -1,5 +1,10 @@
 # Changelog
 
+## 0.1.69 — 2026-10-15
+
+- Persist and publicly expose the exact evidence-archive SHA-256 alongside the source archive, release commit and benchmark receipt.
+- Require both archive hashes in the post-restart deployment gate, readiness receipt, printable benchmark report and downloadable comparison receipts.
+
 ## 0.1.68 — 2026-10-14
 
 - Announce the new-tab transition for every first-screen competition resource in its accessible name.

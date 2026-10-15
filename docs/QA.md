@@ -1,5 +1,10 @@
 # Release Witness QA record
 
+## Evidence-archive provenance gate — 15 October 2026
+
+- The deployment helper verified the evidence archive before extraction, but the running service persisted and published only the source-archive digest. A judge could verify the installed benchmark receipt without independently matching the exact downloadable evidence transport artifact.
+- v0.1.69 persists the evidence-archive SHA-256 in the service provenance, requires it in the post-restart and public readiness gates, binds it into the aggregate receipt, and exposes its download plus digest in the printable benchmark and pair receipts.
+
 ## Announced competition-resource context changes — 14 October 2026
 
 - Actual public Chrome exposed the first-screen source, video, benchmark and readiness links with only the visible `↗` glyph in their accessible names, even though each opens a new tab. A screen-reader user had no plain-language advance warning while navigating the competition resources.

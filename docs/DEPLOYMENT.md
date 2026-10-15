@@ -29,6 +29,8 @@ PUBLIC_DEMO_MODE=true
 NEBIUS_INFERENCE_APPROVED=false
 ```
 
+Verified archive deployments also inject `RELEASE_COMMIT`, `RELEASE_ARCHIVE_SHA256` and `RELEASE_EVIDENCE_ARCHIVE_SHA256` into the systemd service. The post-restart gate rejects the release unless the running status and benchmark receipt match all three values.
+
 Terminate TLS at the hosting platform or reverse proxy. `PUBLIC_BASE_URL` is also the only extra host and browser origin accepted by the server, so use the exact externally visible origin without a path.
 
 ## Verification
