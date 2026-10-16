@@ -991,6 +991,32 @@ test("server-managed pairs persist their relationship and comparison", async (t)
   assert.match(benchmarkReportText, /Source archive SHA-256 abcdefabcdef/);
   assert.match(benchmarkReportText, /Evidence archive SHA-256 fedcbafedcba/);
   assert.match(benchmarkReportText, />Evidence archive ↗<\/a>/);
+  assert.match(
+    benchmarkReportText,
+    new RegExp(
+      `aria-label="Open Release Witness ${packageVersion.replaceAll(".", "\\.")} source release on GitHub \\(opens in a new tab\\)"`,
+    ),
+  );
+  assert.match(
+    benchmarkReportText,
+    /aria-label="Open source commit 01234567 on GitHub \(opens in a new tab\)"/,
+  );
+  assert.match(
+    benchmarkReportText,
+    new RegExp(
+      `aria-label="Download source archive for Release Witness ${packageVersion.replaceAll(".", "\\.")} \\(opens in a new tab\\)"`,
+    ),
+  );
+  assert.match(
+    benchmarkReportText,
+    new RegExp(
+      `aria-label="Download evidence archive for Release Witness ${packageVersion.replaceAll(".", "\\.")} \\(opens in a new tab\\)"`,
+    ),
+  );
+  assert.equal(
+    [...benchmarkReportText.matchAll(/target="_blank" rel="noopener"/g)].length,
+    4,
+  );
   assert.match(benchmarkReportText, /Google Chrome runs verified: 2/);
   assert.match(
     benchmarkReportText,
@@ -1473,6 +1499,8 @@ test("the judge-tour comparison survives a browser reload", async (t) => {
     directory: dir,
     publicDemo: true,
     sourceCommit,
+    sourceArchiveSha256: "a".repeat(64),
+    evidenceArchiveSha256: "b".repeat(64),
   });
   const browser = await chromium.launch({ channel: "chrome", headless: true });
   t.after(async () => {
@@ -1733,10 +1761,20 @@ test("the judge-tour comparison survives a browser reload", async (t) => {
   );
   assert.equal(
     await benchmarkPage
-      .getByRole("link", { name: `Release ${packageVersion} source ↗` })
+      .getByRole("link", {
+        name: `Open Release Witness ${packageVersion} source release on GitHub (opens in a new tab)`,
+      })
       .getAttribute("href"),
     `https://github.com/K1Andayesh/release-witness/releases/tag/v${packageVersion}`,
   );
+  for (const name of [
+    `Download source archive for Release Witness ${packageVersion} (opens in a new tab)`,
+    `Download evidence archive for Release Witness ${packageVersion} (opens in a new tab)`,
+  ]) {
+    const link = benchmarkPage.getByRole("link", { name });
+    assert.equal(await link.getAttribute("target"), "_blank");
+    assert.equal(await link.getAttribute("rel"), "noopener");
+  }
   assert.equal(
     await benchmarkPage
       .locator(

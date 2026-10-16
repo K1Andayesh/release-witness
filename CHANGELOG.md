@@ -1,5 +1,10 @@
 # Changelog
 
+## 0.1.70 — 2026-10-16
+
+- Make every external provenance link in the printable benchmark receipt open consistently in a new tab.
+- Give the release, commit, source-archive and evidence-archive links explicit accessible names that announce the new-tab transition.
+
 ## 0.1.69 — 2026-10-15
 
 - Persist and publicly expose the exact evidence-archive SHA-256 alongside the source archive, release commit and benchmark receipt.

@@ -1,5 +1,10 @@
 # Release Witness QA record
 
+## Benchmark provenance-link context — 16 October 2026
+
+- Actual public Chrome showed four external provenance links in the printable benchmark header. The release and commit opened new tabs, while both archive links replaced the receipt despite displaying the same `↗` cue; none announced the context change in plain language.
+- v0.1.70 makes all four links open consistently in new tabs and gives each a destination-specific accessible name that announces the transition. The archive downloads retain their exact release-bound URLs and hashes.
+
 ## Evidence-archive provenance gate — 15 October 2026
 
 - The deployment helper verified the evidence archive before extraction, but the running service persisted and published only the source-archive digest. A judge could verify the installed benchmark receipt without independently matching the exact downloadable evidence transport artifact.
