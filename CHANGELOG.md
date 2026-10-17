@@ -1,5 +1,10 @@
 # Changelog
 
+## 0.1.71 — 2026-10-17
+
+- Announce the new-tab transition in the accessible name of every remaining judge-facing report, JSON, test-app, screenshot and portfolio-receipt link.
+- Remove the external-link arrow from the same-tab second-workflow proof and enforce the complete new-tab naming rule in the actual-Chrome contract.
+
 ## 0.1.70 — 2026-10-16
 
 - Make every external provenance link in the printable benchmark receipt open consistently in a new tab.

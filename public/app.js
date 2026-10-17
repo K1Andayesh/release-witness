@@ -8,7 +8,7 @@ const esc = (value) =>
       ],
   );
 const screenshotLink = (url, accessibleLabel, visibleLabel) =>
-  `<a href="${esc(url)}" target="_blank" rel="noopener" aria-label="${esc(accessibleLabel)}"><img src="${esc(url)}" alt="" loading="lazy"><span aria-hidden="true">${esc(visibleLabel)} ↗</span></a>`;
+  `<a href="${esc(url)}" target="_blank" rel="noopener" aria-label="${esc(accessibleLabel)} (opens in a new tab)"><img src="${esc(url)}" alt="" loading="lazy"><span aria-hidden="true">${esc(visibleLabel)} ↗</span></a>`;
 function routeState() {
   const [runId = "", baselineId = ""] = location.hash.slice(1).split("~", 2);
   return { runId, baselineId };
@@ -105,7 +105,7 @@ function renderBenchmark(benchmark) {
     portfolioCertification.dataset.status = "not-certified";
     portfolioCertification.setAttribute(
       "aria-label",
-      "Portfolio not certified. Open the benchmark receipt for the failed evidence checks.",
+      "Portfolio not certified. Open the benchmark receipt for the failed evidence checks (opens in a new tab).",
     );
     $("#portfolio-certification-label").textContent = "PORTFOLIO NOT CERTIFIED";
     $("#portfolio-certification-scope").textContent =
@@ -134,7 +134,7 @@ function renderBenchmark(benchmark) {
   portfolioCertification.dataset.status = "certified";
   portfolioCertification.setAttribute(
     "aria-label",
-    `Certified portfolio receipt SHA-256 ${benchmark.attestation.digest}. Open the traceable benchmark receipt.`,
+    `Certified portfolio receipt SHA-256 ${benchmark.attestation.digest}. Open the traceable benchmark receipt (opens in a new tab).`,
   );
   $("#portfolio-certification-label").textContent =
     "CERTIFIED PORTFOLIO · EXACT CURRENT EVIDENCE";
@@ -436,7 +436,7 @@ function render() {
         `<option value="${r.id}">${esc(r.buildLabel || r.build)} · ${esc(new Date(r.createdAt).toLocaleString())} · ${r.id.slice(0, 8)}</option>`,
     )
     .join("")}</select><div id="comparison-result"></div></section>
-  <div class="report-actions"><a href="/api/runs/${run.id}/report" target="_blank" rel="noopener">View report ↗</a><a href="/api/runs/${run.id}/export" download>Download report</a><a href="/api/runs/${run.id}" target="_blank" rel="noopener">Open JSON ↗</a><span>${busy(run) ? "Evidence is being captured." : currentStatus.publicDemo ? "Saved in demo evidence store · available after reload" : "Saved locally · available after reload"}</span></div>`;
+  <div class="report-actions"><a href="/api/runs/${run.id}/report" target="_blank" rel="noopener" aria-label="View run report (opens in a new tab)">View report ↗</a><a href="/api/runs/${run.id}/export" download>Download report</a><a href="/api/runs/${run.id}" target="_blank" rel="noopener" aria-label="Open run JSON (opens in a new tab)">Open JSON ↗</a><span>${busy(run) ? "Evidence is being captured." : currentStatus.publicDemo ? "Saved in demo evidence store · available after reload" : "Saved locally · available after reload"}</span></div>`;
   const waitForComparisonEvidence = (target) =>
     new Promise((resolve) => {
       const result = target.querySelector("#comparison-result");

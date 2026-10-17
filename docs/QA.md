@@ -1,5 +1,11 @@
 # Release Witness QA record
 
+## Judge-facing new-tab context — 17 October 2026
+
+- Actual public Chrome exposed remaining `_blank` links for the controlled test app, portfolio certification, run report, run JSON and evidence screenshots without plain-language advance warning; the same-tab second-workflow proof still displayed the external-link glyph.
+- v0.1.71 gives every judge-facing `_blank` link a destination-specific accessible name ending with `opens in a new tab`, removes the misleading external glyph from the same-tab workflow proof and adds one actual-Chrome assertion that fails if any new-tab link lacks the warning.
+- Syntax, formatting, the full contract suite, clean-archive checks, deployment and public Chrome verification are required before calling the improvement published.
+
 ## Benchmark provenance-link context — 16 October 2026
 
 - Actual public Chrome showed four external provenance links in the printable benchmark header. The release and commit opened new tabs, while both archive links replaced the receipt despite displaying the same `↗` cue; none announced the context change in plain language.

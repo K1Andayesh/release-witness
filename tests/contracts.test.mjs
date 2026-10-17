@@ -1554,6 +1554,25 @@ test("the judge-tour comparison survives a browser reload", async (t) => {
     await page.locator(".report-actions").innerText(),
     /Saved in demo evidence store · available after reload/,
   );
+  assert.deepEqual(
+    await page
+      .locator('a[target="_blank"]')
+      .evaluateAll((links) =>
+        links
+          .filter(
+            (link) =>
+              !/opens in a new tab/i.test(
+                link.getAttribute("aria-label") || "",
+              ),
+          )
+          .map((link) => (link.textContent || "").trim()),
+      ),
+    [],
+  );
+  assert.equal(
+    await page.locator("#portfolio-proof").innerText(),
+    "Second workflow proof →",
+  );
   await page.keyboard.press("Tab");
   assert.equal(await page.locator(":focus").getAttribute("id"), "skip-report");
   await page.keyboard.press("Enter");
@@ -1715,7 +1734,10 @@ test("the judge-tour comparison survives a browser reload", async (t) => {
   await page.emulateMedia({ forcedColors: "none" });
   assert.equal(
     await page
-      .getByRole("link", { name: /Benchmark receipt.*opens in a new tab/i })
+      .getByRole("link", {
+        name: "Benchmark receipt — opens in a new tab",
+        exact: true,
+      })
       .getAttribute("href"),
     "/api/benchmark/report",
   );
@@ -1820,7 +1842,7 @@ test("the judge-tour comparison survives a browser reload", async (t) => {
   );
   await benchmarkPage.close();
   const portfolioProof = page.getByRole("link", {
-    name: "Second workflow proof ↗",
+    name: "Second workflow proof →",
   });
   assert.equal(await portfolioProof.isVisible(), true);
   await portfolioProof.click();
