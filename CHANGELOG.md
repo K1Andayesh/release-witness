@@ -1,5 +1,10 @@
 # Changelog
 
+## 0.1.72 — 2026-10-18
+
+- Derive a receipt-gated release posture from comparison evidence: supported within tested scope, hold within tested scope, or review required.
+- Keep every posture bounded by explicit unverified coverage and include the same deterministic decision in the downloadable comparison receipt.
+
 ## 0.1.71 — 2026-10-17
 
 - Announce the new-tab transition in the accessible name of every remaining judge-facing report, JSON, test-app, screenshot and portfolio-receipt link.

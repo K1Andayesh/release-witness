@@ -8,6 +8,7 @@ import {
   compareRuns,
   measureBrowserEvidence,
   measureModelContribution,
+  releasePosture,
   verifyAttestation,
   verifyPairRelationship,
   verdict,
@@ -843,6 +844,10 @@ ${metric(benchmark.totals.browserRunsVerified, "Chrome runs verified", `Google C
             after.attestation ? verifyEvidence(after) : null,
           ]);
           const changes = compareRuns(before, after);
+          const decision = releasePosture(
+            changes,
+            [beforeReceipt, afterReceipt].filter(Boolean),
+          );
           if (url.pathname.endsWith("/export")) {
             const benchmark = await benchmarkSummary();
             const certifiedPair = benchmark.complete
@@ -873,6 +878,7 @@ ${metric(benchmark.totals.browserRunsVerified, "Chrome runs verified", `Google C
               `Candidate: ${after.buildLabel || after.build} | Run ${after.id} | Created ${after.createdAt}`,
               `Browsers: baseline ${before.browser ? `Google Chrome ${before.browser}` : "not recorded"} | candidate ${after.browser ? `Google Chrome ${after.browser}` : "not recorded"}`,
               `Release delta: ${total("resolved")} resolved | ${total("regression")} regressions | ${total("unchanged")} unchanged | ${total("still-failing")} still failing | ${total("unverified")} unverified`,
+              `Release posture: ${decision.label} — ${decision.reason}`,
               receiptLine("Baseline", before, beforeReceipt),
               receiptLine("Candidate", after, afterReceipt),
               "",
@@ -910,6 +916,7 @@ ${metric(benchmark.totals.browserRunsVerified, "Chrome runs verified", `Google C
             before: before.id,
             after: after.id,
             changes,
+            decision,
             receipts: {
               before: beforeReceipt,
               after: afterReceipt,

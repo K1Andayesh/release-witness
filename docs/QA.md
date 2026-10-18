@@ -1,5 +1,11 @@
 # Release Witness QA record
 
+## Receipt-gated release posture — 18 October 2026
+
+- The verified comparison exposed resolutions, regressions, unchanged checks, unverified boundaries and receipt status but still left the practical release posture for each reviewer to reconstruct.
+- v0.1.72 derives one bounded posture from those existing facts: support requires both receipts plus zero regressions and zero remaining failures; an observed blocker produces hold, and missing receipt evidence produces review required. Every state retains the unverified boundary count, and the downloadable receipt carries the same decision.
+- Unit contracts cover all three states. The actual-Chrome contract requires the supported label and explicit unverified boundary on the saved judge comparison. Clean-archive, deployment and public-browser verification remain required before publication.
+
 ## Judge-facing new-tab context — 17 October 2026
 
 - Actual public Chrome exposed remaining `_blank` links for the controlled test app, portfolio certification, run report, run JSON and evidence screenshots without plain-language advance warning; the same-tab second-workflow proof still displayed the external-link glyph.

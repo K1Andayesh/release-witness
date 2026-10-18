@@ -12,6 +12,7 @@ import {
   compareRuns,
   measureBrowserEvidence,
   measureModelContribution,
+  releasePosture,
   verdict,
   verifyAttestation,
   verifyPairRelationship,
@@ -154,6 +155,34 @@ test("comparison exposes fixes and regressions independently", () => {
   assert.equal(resolved.afterObserved, "The booking remained.");
   assert.equal(resolved.beforeScreenshots[0].url, "/before.png");
   assert.equal(resolved.afterScreenshots[0].url, "/now.png");
+});
+
+test("release posture is receipt-gated and keeps unverified scope explicit", () => {
+  const receipts = [{ verified: true }, { verified: true }];
+  assert.deepEqual(
+    releasePosture(
+      [
+        { change: "resolved" },
+        { change: "unchanged" },
+        { change: "unverified" },
+      ],
+      receipts,
+    ),
+    {
+      state: "supported",
+      label: "SUPPORTED WITHIN TESTED SCOPE",
+      reason:
+        "No observed regressions or remaining failures across matching checks. 1 boundary remains unverified.",
+    },
+  );
+  assert.equal(
+    releasePosture([{ change: "regression" }], receipts).state,
+    "hold",
+  );
+  assert.equal(
+    releasePosture([{ change: "resolved" }], [{ verified: true }]).state,
+    "review-required",
+  );
 });
 test("model plans cannot omit, duplicate or invent checks", () => {
   for (const order of [["x"], ["x", "x"], ["x", "shell"]])
@@ -857,6 +886,12 @@ test("server-managed pairs persist their relationship and comparison", async (t)
   assert.equal(comparison.receipts.after.verified, true);
   assert.equal(comparison.receipts.before.fileCount, 4);
   assert.equal(comparison.receipts.after.fileCount, 4);
+  assert.deepEqual(comparison.decision, {
+    state: "supported",
+    label: "SUPPORTED WITHIN TESTED SCOPE",
+    reason:
+      "No observed regressions or remaining failures across matching checks. 1 boundary remains unverified.",
+  });
   const comparisonExport = await fetch(
     `${base}/api/compare/export?before=${baseline.id}&after=${candidate.id}`,
   );
@@ -867,6 +902,10 @@ test("server-managed pairs persist their relationship and comparison", async (t)
   );
   const comparisonReceipt = await comparisonExport.text();
   assert.match(comparisonReceipt, /# Release Witness comparison receipt/);
+  assert.match(
+    comparisonReceipt,
+    /Release posture: SUPPORTED WITHIN TESTED SCOPE — No observed regressions or remaining failures across matching checks\. 1 boundary remains unverified\./,
+  );
   assert.ok(comparisonReceipt.includes(`Release: ${packageVersion}`));
   assert.match(
     comparisonReceipt,
@@ -1537,6 +1576,10 @@ test("the judge-tour comparison survives a browser reload", async (t) => {
     /2 receipt-verified runs across 1 of 2 workflows · portfolio claim withheld/,
   );
   await page.locator("#comparison-result .comparison-callout").waitFor();
+  assert.match(
+    await page.locator(".release-posture").innerText(),
+    /RECEIPT-GATED RELEASE POSTURE[\s\S]*SUPPORTED WITHIN TESTED SCOPE[\s\S]*1 boundary remains unverified/,
+  );
   assert.equal(new URL(page.url()).hash, `#${candidateId}~${baselineId}`);
   assert.equal(await page.locator("#baseline").inputValue(), baselineId);
   assert.equal(await page.locator("#build").inputValue(), "candidate");

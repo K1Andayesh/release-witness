@@ -1039,6 +1039,33 @@ footer {
 .pair-receipts span {
   color: var(--muted);
 }
+.release-posture {
+  display: grid;
+  gap: 6px;
+  padding: 14px;
+  margin-top: 12px;
+  border: 1px solid #bcd5c4;
+  background: #f4f8f2;
+}
+.release-posture strong {
+  color: var(--green);
+  font-size: 13px;
+  letter-spacing: 0.06em;
+}
+.release-posture p {
+  margin: 0;
+  color: var(--muted);
+  font-size: 11px;
+}
+.release-posture.hold,
+.release-posture.review-required {
+  border-color: #dcb9ae;
+  background: #fff7f4;
+}
+.release-posture.hold strong,
+.release-posture.review-required strong {
+  color: var(--red);
+}
 .comparison-evidence {
   margin-top: 10px;
   border: 1px solid var(--line);
@@ -1128,6 +1155,7 @@ footer {
   .runtime-proof,
   .comparison-callout,
   .pair-receipts,
+  .release-posture,
   .release-delta {
     align-items: stretch;
     flex-direction: column;
@@ -1634,6 +1662,7 @@ footer {
   .receipt,
   .comparison-callout,
   .pair-receipts,
+  .release-posture,
   .comparison-evidence,
   .certification-status,
   .certification-chip,

@@ -22,7 +22,7 @@ Small teams often review a pull request with a mix of intuition, stale checklist
 
 Release Witness turns a developer's change description into a bounded risk map, then runs a baseline and candidate build as one release-review action using reviewed JSON workflow manifests. Each check runs in a fresh Chrome context and records the risk hypothesis, reproduction steps, expected and observed behavior, screenshots and console errors. The resulting report distinguishes pass, fail and not-tested coverage. It opens a comparison that classifies each check as resolved, regressed, unchanged or unverified, places changed evidence side by side, and freshly verifies both SHA-256 receipts against the reports and every screenshot on disk.
 
-The included appointment demo starts with two seeded defects: a booking disappears after reload and a sold-out time can still be selected. The candidate repairs both while preserving required-name validation. A smaller Fieldnotes workflow demonstrates that the same model contract and runner execute another reviewed application without scenario-specific branches.
+The included appointment demo starts with two seeded defects: a booking disappears after reload and a sold-out time can still be selected. The candidate repairs both while preserving required-name validation. A smaller Fieldnotes workflow demonstrates that the same model contract and runner execute another reviewed application without scenario-specific branches. Each comparison now ends in a deterministic, receipt-gated posture: supported within tested scope, hold within tested scope, or review required. The rule cannot approve missing evidence and always repeats how much coverage remains unverified.
 
 The first users are small product teams reviewing pull requests without a dedicated QA function. The product gives the reviewer a compact answer to three questions: what risk did the change create, what did Chrome actually observe, and which claims remain untested? A one-click judge tour opens the strongest saved Nemotron-backed comparison without requiring credentials or spending credits.
 
@@ -54,7 +54,8 @@ The hardest part was keeping model assistance useful without letting it become t
 - Bound the exact release, immutable Git commit and both downloadable archive SHA-256 digests into a responsive, printable benchmark receipt with direct links to both comparisons and all four source run-receipt digests. Its four external provenance links consistently open in new tabs and announce that transition for assistive technology.
 - Published a fail-closed readiness receipt that returns 200 only when live release provenance and the complete workflow, screenshot, model and Chrome evidence chains verify; otherwise it returns 503 with specific failures.
 - Designed a one-click judge path from bounded model risk to browser observations, side-by-side repair evidence, explicit unknowns and the source-bound portfolio receipt, verified on desktop and at 390 × 844 without horizontal overflow.
-- Covered model schemas, provider failures, tampering, unsafe targets, concurrency, restart and deployment recovery, paired execution, public-demo isolation and the real-Chrome judge journey with 25 passing tests. Public CI also parses the deployment script, audits production dependencies and runs both workflow smokes in Chrome.
+- Added a deterministic, receipt-gated release posture to the comparison and downloadable receipt: support requires two verified evidence receipts with no regression or remaining failure; incomplete evidence requires review, and every state preserves the unverified boundary count.
+- Covered model schemas, provider failures, tampering, unsafe targets, concurrency, restart and deployment recovery, paired execution, receipt-gated release posture, public-demo isolation and the real-Chrome judge journey with 26 passing tests. Public CI also parses the deployment script, audits production dependencies and runs both workflow smokes in Chrome.
 
 ## What we learned
 
@@ -79,7 +80,7 @@ Release Witness was created during the hackathon submission period. The applicat
 ## Public links
 
 - Source repository: https://github.com/K1Andayesh/release-witness
-- Verified source release: https://github.com/K1Andayesh/release-witness/releases/tag/v0.1.71
+- Verified source release: https://github.com/K1Andayesh/release-witness/releases/tag/v0.1.72
 - Working demo: https://release-witness.139-99-135-89.sslip.io
 - Certified benchmark receipt: https://release-witness.139-99-135-89.sslip.io/api/benchmark/report
 - Demo video, under three minutes: https://youtu.be/O8Ijn85__6U
