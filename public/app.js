@@ -414,7 +414,7 @@ function render() {
     tourActive &&
     tourPair?.candidate.id === run.id &&
     tourPair.baseline.id === routeBaseline
-      ? `<nav class="tour-guide" aria-label="90-second evidence trail"><p class="eyebrow">JUDGE PATH · ABOUT 90 SECONDS</p><h3>Follow the evidence to the release decision.</h3><div class="tour-steps"><button type="button" data-tour-target="risk-map"><strong>01 · Model risk</strong><small>See what Nemotron mapped to the reviewed checks.</small></button><button type="button" data-tour-target="browser-checks"><strong>02 · Browser observation</strong><small>Open a check to see expected and observed behavior.</small></button><button type="button" data-tour-target="model-advice"><strong>03 · Bounded advice</strong><small>See the next action tied to recorded evidence.</small></button><button type="button" data-tour-target="before-after"><strong>04 · Verified delta</strong><small>Inspect the baseline and repair side by side.</small></button><a href="/api/benchmark/report" target="_blank" rel="noopener" aria-label="05 · Portfolio receipt — opens the certified two-workflow report in a new tab"><strong>05 · Portfolio receipt</strong><small>Verify both workflows, exact source, receipts and remaining limits. Opens in a new tab.</small></a></div><p class="fine-print">These are saved real Nemotron calls; this public demo makes no fresh model calls. Browser assertions own the verdicts.</p></nav>`
+      ? `<nav class="tour-guide" aria-label="90-second evidence trail"><p class="eyebrow">JUDGE PATH · ABOUT 90 SECONDS</p><h3>Follow the evidence to the release decision.</h3><div class="tour-steps"><button type="button" data-tour-target="risk-map"><strong>01 · Model risk</strong><small>See what Nemotron mapped to the reviewed checks.</small></button><button type="button" data-tour-target="browser-checks"><strong>02 · Browser observation</strong><small>Open a check to see expected and observed behavior.</small></button><button type="button" data-tour-target="model-advice"><strong>03 · Bounded advice</strong><small>See the next action tied to recorded evidence.</small></button><button type="button" data-tour-target="before-after"><strong>04 · Verified delta</strong><small>Inspect the baseline and repair side by side.</small></button><button type="button" data-tour-target="release-posture"><strong>05 · Release posture</strong><small>Read the receipt-gated decision and its exact unverified boundary.</small></button><a href="/api/benchmark/report" target="_blank" rel="noopener" aria-label="06 · Portfolio receipt — opens the certified two-workflow report in a new tab"><strong>06 · Portfolio receipt</strong><small>Verify both workflows, exact source, receipts and remaining limits. Opens in a new tab.</small></a></div><p class="fine-print">These are saved real Nemotron calls; this public demo makes no fresh model calls. Browser assertions own the verdicts.</p></nav>`
       : "";
   $("#report").innerHTML =
     `<div class="report-heading"><p class="eyebrow">02 / WITNESS REPORT <span>${esc(run.id.slice(0, 8))}</span></p><h2>${verdict}</h2><p class="muted">${esc(run.targetName || "Fieldnotes")} · ${esc(run.buildLabel || run.build)} <span> / ${esc(run.suite)} / ${esc(new Date(run.createdAt).toLocaleTimeString())}${run.browser ? ` / Chrome ${esc(run.browser)}` : ""}</span></p></div>
@@ -440,7 +440,12 @@ function render() {
   const waitForComparisonEvidence = (target) =>
     new Promise((resolve) => {
       const result = target.querySelector("#comparison-result");
-      if (!result || result.querySelector("details")) return resolve();
+      if (
+        !result ||
+        result.querySelector("details") ||
+        result.textContent.trim()
+      )
+        return resolve();
       let timer;
       const finish = () => {
         observer.disconnect();
@@ -458,7 +463,13 @@ function render() {
     "#report [data-tour-target]",
   )) {
     button.onclick = async () => {
-      const target = document.getElementById(button.dataset.tourTarget);
+      let target = document.getElementById(button.dataset.tourTarget);
+      if (!target && button.dataset.tourTarget === "release-posture") {
+        const comparison = document.getElementById("before-after");
+        if (!comparison) return;
+        await waitForComparisonEvidence(comparison);
+        target = document.getElementById(button.dataset.tourTarget);
+      }
       if (!target) return;
       if (target.id === "before-after" && !target.querySelector("details")) {
         target.tabIndex = -1;
@@ -520,7 +531,7 @@ function render() {
         reason:
           "A receipt-gated release posture is unavailable for this comparison.",
       };
-      const decisionCard = `<section class="release-posture ${esc(decision.state)}" aria-label="Deterministic release posture"><span class="eyebrow">RECEIPT-GATED RELEASE POSTURE</span><strong>${esc(decision.label)}</strong><p>${esc(decision.reason)}</p></section>`;
+      const decisionCard = `<section class="release-posture ${esc(decision.state)}" id="release-posture" aria-label="Deterministic release posture"><span class="eyebrow">RECEIPT-GATED RELEASE POSTURE</span><strong>${esc(decision.label)}</strong><p>${esc(decision.reason)}</p></section>`;
       summary.innerHTML = `<section class="release-delta"><div><span class="eyebrow">CONTROLLED BENCHMARK · RELEASE DELTA</span><strong>${resolvedLabel}</strong></div><span>${total("regression")} regressions · ${total("unchanged")} unchanged · ${total("unverified")} unverified</span></section>`;
       target.innerHTML = `<div class="comparison-callout" role="status" aria-live="polite"><strong>${resolvedLabel}</strong><span>${total("regression")} regressions · ${total("unchanged")} unchanged · ${total("unverified")} unverified</span></div>${receiptProof}${decisionCard}<table><thead><tr><th>Check</th><th>Before</th><th>Now</th><th>Change</th></tr></thead><tbody>${diff.changes.map((c) => `<tr><td>${esc(c.title)}</td><td>${esc(c.before)}</td><td>${esc(c.after)}</td><td>${esc(c.change)}</td></tr>`).join("")}</tbody></table>${diff.changes.map(comparisonEvidence).join("")}<div class="comparison-actions"><a href="/api/compare/export?before=${encodeURIComponent(baselineId)}&after=${encodeURIComponent(run.id)}" download>Download comparison receipt</a></div><p class="fine-print">Open a changed check to inspect both observations and screenshots. Only matching checks are comparable; untested coverage stays unverified.</p>`;
     } catch (error) {

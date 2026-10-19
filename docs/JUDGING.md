@@ -2,7 +2,7 @@
 
 Release Witness is entered in **Best Apps and Agents**. This guide maps the shipped evidence to the four equally weighted judging criteria in the official rules.
 
-Verified source release: https://github.com/K1Andayesh/release-witness/releases/tag/v0.1.72
+Verified source release: https://github.com/K1Andayesh/release-witness/releases/tag/v0.1.73
 
 ## Technological implementation
 
@@ -21,7 +21,7 @@ Verified source release: https://github.com/K1Andayesh/release-witness/releases/
 
 ## Design
 
-- A clean public-demo visit opens directly on the strongest saved model-backed comparison without credentials or model spend. **Start 90-second tour** brings that pair's report visibly into view, then gives five direct steps through its saved model risk map, browser observations, bounded advice, verified before/after delta and the portfolio receipt that binds both workflows to the exact source release. The final step visibly and programmatically announces that the certified report opens in a new tab. **Second workflow proof** opens the independent model-backed Fieldnotes comparison, and **Benchmark receipt** also opens the portfolio certification from the judge strip. The entry point links to the public source and natural 1:47 two-workflow walkthrough; every resource that opens another tab announces the transition in its accessible name.
+- A clean public-demo visit opens directly on the strongest saved model-backed comparison without credentials or model spend. **Start 90-second tour** brings that pair's report visibly into view, then gives six direct steps through its saved model risk map, browser observations, bounded advice, verified before/after delta, receipt-gated release posture and the portfolio receipt that binds both workflows to the exact source release. The posture step waits for the comparison response before focusing the decision and exact unverified boundary. The final step visibly and programmatically announces that the certified report opens in a new tab. **Second workflow proof** opens the independent model-backed Fieldnotes comparison, and **Benchmark receipt** also opens the portfolio certification from the judge strip. The entry point links to the public source and natural 1:47 two-workflow walkthrough; every resource that opens another tab announces the transition in its accessible name.
 - The outcome totals connect directly to their evidence: the visible homepage certification row prints the current portfolio SHA-256 and opens the traceable benchmark receipt. If the workflow, receipt or screenshot chain is incomplete, the same row says `PORTFOLIO NOT CERTIFIED` and withholds the digest.
 - Each evidence step keeps its focused item visible on a short or zoomed viewport; selecting **Verified delta** expands and centres the changed check rather than stopping at the comparison section heading.
 - If saved model evidence is unavailable, the public demo disables the judge tour and marks the portfolio and model evidence unavailable. Browser-only checks remain usable without implying an NVIDIA model result.

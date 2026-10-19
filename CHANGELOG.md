@@ -1,5 +1,10 @@
 # Changelog
 
+## 0.1.73 — 2026-10-19
+
+- Add the receipt-gated release posture as a dedicated step in the 90-second judge trail.
+- Wait for comparison evidence before focusing the decision, then keep its bounded scope visible on short viewports.
+
 ## 0.1.72 — 2026-10-18
 
 - Derive a receipt-gated release posture from comparison evidence: supported within tested scope, hold within tested scope, or review required.

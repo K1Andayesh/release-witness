@@ -1,5 +1,11 @@
 # Release Witness QA record
 
+## Guided release posture — 19 October 2026
+
+- The receipt-gated posture existed in the comparison, but the five-step judge trail skipped from the verified delta directly to the portfolio receipt. A judge following the intended route could miss the operational decision added in v0.1.72.
+- v0.1.73 adds a dedicated fifth posture step and makes the portfolio receipt sixth. The guide waits for comparison evidence before focusing the posture, including when the action is selected quickly, and keeps the bounded label plus exact unverified boundary visible on a short viewport.
+- The actual-Chrome contract requires all five buttons, the renumbered receipt link, focus transfer and viewport visibility. Clean-archive, deployment and public-browser verification remain required before publication.
+
 ## Receipt-gated release posture — 18 October 2026
 
 - The verified comparison exposed resolutions, regressions, unchanged checks, unverified boundaries and receipt status but still left the practical release posture for each reviewer to reconstruct.

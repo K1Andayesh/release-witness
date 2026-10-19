@@ -12,11 +12,11 @@ The homepage portfolio figures now come from `/api/benchmark`. The endpoint vali
 
 The judge-tour button now uses that server-verified pair. If a newer model-backed pair loses a screenshot or receipt, the benchmark stays on that pair and fails closed even when an older pair is intact; the open homepage rechecks integrity on a ten-second schedule and withdraws the tour and portfolio claim.
 
-On narrow screens the tour scrolls its focused report heading into view, then offers four links into the saved model risk map, browser observations, bounded advice and verified delta. The public tour makes no fresh model calls.
+On narrow screens the tour scrolls its focused report heading into view, then offers five buttons for the saved model risk map, browser observations, bounded advice, verified delta and receipt-gated release posture, plus the source-bound portfolio receipt. The public tour makes no fresh model calls.
 
 Evidence-step buttons keep their focused check in view on short viewports and actual 200% browser zoom, including the expanded before/after comparison.
 
-When a judge reaches the verified-delta step before its saved comparison response arrives, the guide waits for that evidence and then moves focus to the changed check.
+When a judge reaches the verified-delta or release-posture step before its saved comparison response arrives, the guide waits for that evidence and then moves focus to the changed check or bounded decision.
 
 On a fresh public-demo install without saved model records, browser-only runs remain usable but the homepage labels model evidence unavailable, disables the saved judge tour and withholds the certified portfolio headline. The public demo cannot make live model calls.
 

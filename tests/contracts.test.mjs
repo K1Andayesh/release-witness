@@ -1683,9 +1683,9 @@ test("the judge-tour comparison survives a browser reload", async (t) => {
   const tour = page.getByRole("navigation", {
     name: "90-second evidence trail",
   });
-  assert.equal(await tour.getByRole("button").count(), 4);
+  assert.equal(await tour.getByRole("button").count(), 5);
   const portfolioReceipt = tour.getByRole("link", {
-    name: /05 · Portfolio receipt.*opens.*new tab/i,
+    name: /06 · Portfolio receipt.*opens.*new tab/i,
   });
   assert.equal(await portfolioReceipt.count(), 1);
   assert.match(await portfolioReceipt.innerText(), /Opens in a new tab\./);
@@ -1731,6 +1731,18 @@ test("the judge-tour comparison survives a browser reload", async (t) => {
     });
   assert.equal(deltaFocus.focused, true);
   assert.equal(deltaFocus.visible, true);
+  await tour.getByRole("button", { name: /Release posture/ }).click();
+  const postureFocus = await page
+    .locator("#release-posture .eyebrow")
+    .evaluate((element) => {
+      const rect = element.getBoundingClientRect();
+      return {
+        focused: document.activeElement === element,
+        visible: rect.top >= 0 && rect.bottom <= innerHeight,
+      };
+    });
+  assert.equal(postureFocus.focused, true);
+  assert.equal(postureFocus.visible, true);
   await page.setViewportSize({ width: 390, height: 844 });
   assert.equal(
     await page.evaluate(
