@@ -990,6 +990,15 @@ test("server-managed pairs persist their relationship and comparison", async (t)
   assert.equal(bookingBenchmark.boundariesUnverified, 1);
   assert.equal(bookingBenchmark.receiptsVerified, 2);
   assert.equal(bookingBenchmark.screenshotFilesVerified, 8);
+  assert.equal(bookingBenchmark.decision.state, "supported");
+  assert.equal(
+    bookingBenchmark.decision.label,
+    "SUPPORTED WITHIN TESTED SCOPE",
+  );
+  assert.match(
+    bookingBenchmark.decision.reason,
+    /1 boundary remains unverified/,
+  );
   assert.equal(bookingBenchmark.modelBacked, true);
   assert.equal(bookingBenchmark.modelEvidence.runsVerified, 2);
   assert.equal(bookingBenchmark.modelEvidence.riskHypothesesVerified, 6);
@@ -1028,6 +1037,10 @@ test("server-managed pairs persist their relationship and comparison", async (t)
   assert.ok(benchmarkReportText.includes(`Release ${packageVersion} source`));
   assert.match(benchmarkReportText, /Commit 01234567/);
   assert.match(benchmarkReportText, /Source archive SHA-256 abcdefabcdef/);
+  assert.match(
+    benchmarkReportText,
+    /Harbour Appointments release posture[\s\S]*SUPPORTED WITHIN TESTED SCOPE[\s\S]*1 boundary remains unverified/,
+  );
   assert.match(benchmarkReportText, /Evidence archive SHA-256 fedcbafedcba/);
   assert.match(benchmarkReportText, />Evidence archive ↗<\/a>/);
   assert.match(

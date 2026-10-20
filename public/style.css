@@ -1441,6 +1441,9 @@ footer {
   font-size: 11px;
   line-height: 1.7;
 }
+.benchmark-suite-card > .release-posture {
+  margin-bottom: 18px;
+}
 .evidence-identifiers {
   display: grid;
   gap: 8px;

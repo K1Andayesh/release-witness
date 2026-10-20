@@ -294,6 +294,7 @@ export async function startServer({
           verified: false,
           reason: "A completed server-managed benchmark pair is unavailable.",
           knownDefects: groundTruth.knownDefectIds.length,
+          decision: releasePosture([], []),
         });
         continue;
       }
@@ -326,6 +327,10 @@ export async function startServer({
       const receiptsVerified = [baselineReceipt, candidateReceipt].filter(
         (receipt) => receipt.verified,
       ).length;
+      const decision = releasePosture(changes, [
+        baselineReceipt,
+        candidateReceipt,
+      ]);
       const screenshotFilesVerified = [baselineReceipt, candidateReceipt]
         .filter((receipt) => receipt.verified)
         .reduce((total, receipt) => total + receipt.fileCount, 0);
@@ -380,6 +385,7 @@ export async function startServer({
         boundariesUnverified,
         receiptsVerified,
         screenshotFilesVerified,
+        decision,
         receiptDigests: {
           baseline: baselineReceipt.digest || null,
           candidate: candidateReceipt.digest || null,
@@ -476,6 +482,7 @@ export async function startServer({
           boundariesUnverified,
           receiptsVerified,
           screenshotFilesVerified,
+          decision,
           receiptDigests,
           modelEvidence,
           browserEvidence,
@@ -493,6 +500,7 @@ export async function startServer({
           boundariesUnverified,
           receiptsVerified,
           screenshotFilesVerified,
+          decision,
           receiptDigests,
           modelEvidence,
           browserEvidence,
@@ -761,6 +769,11 @@ export async function startServer({
             return `<article class="benchmark-suite-card" data-suite-id="${escapeHtml(suite.id)}" data-pair-id="${escapeHtml(suite.pairId || "")}">
   <header><div><span class="eyebrow">WORKFLOW EVIDENCE</span><h3>${escapeHtml(suite.name)}</h3></div><span class="certification-chip ${suite.verified ? "verified" : "invalid"}">${suite.verified ? "Verified" : "Not verified"}</span></header>
   <p class="suite-reason">${escapeHtml(suite.reason)}</p>
+  <section class="release-posture ${escapeHtml(suite.decision?.state || "review-required")}" aria-label="${escapeHtml(suite.name)} release posture">
+    <span class="eyebrow">RECEIPT-GATED RELEASE POSTURE</span>
+    <strong>${escapeHtml(suite.decision?.label || "REVIEW REQUIRED")}</strong>
+    <p>${escapeHtml(suite.decision?.reason || "A receipt-gated release posture is unavailable for this workflow.")}</p>
+  </section>
   <dl class="evidence-identifiers">
     <div><dt>Pair</dt><dd><code>${escapeHtml(suite.pairId || "Unavailable")}</code></dd></div>
     <div><dt>Baseline</dt><dd><code>${escapeHtml(suite.baselineId || "Unavailable")}</code></dd></div>

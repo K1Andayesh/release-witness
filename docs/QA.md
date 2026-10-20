@@ -1,5 +1,11 @@
 # Release Witness QA record
 
+## Portfolio workflow postures — 20 October 2026
+
+- The source-bound portfolio receipt proved workflow metrics and receipts but required a judge to open each pair comparison to recover the operational release posture.
+- v0.1.74 publishes each workflow's deterministic receipt-gated posture and exact unverified boundary inside its portfolio card, and binds both decisions into the aggregate attestation.
+- Contract coverage verifies both workflow postures and their report rendering; public Chrome verification covers the final desktop and 390 px layouts.
+
 ## Guided release posture — 19 October 2026
 
 - The receipt-gated posture existed in the comparison, but the five-step judge trail skipped from the verified delta directly to the portfolio receipt. A judge following the intended route could miss the operational decision added in v0.1.72.

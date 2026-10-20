@@ -1,5 +1,10 @@
 # Changelog
 
+## 0.1.74 — 2026-10-20
+
+- Publish each benchmark workflow's receipt-gated release posture on the source-bound portfolio receipt.
+- Bind those pair-specific decisions into the aggregate benchmark attestation while retaining explicit unverified boundaries.
+
 ## 0.1.73 — 2026-10-19
 
 - Add the receipt-gated release posture as a dedicated step in the 90-second judge trail.
