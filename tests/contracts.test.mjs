@@ -366,7 +366,17 @@ test("model certification and v3 receipts require returned provider identity", (
 test("benchmark receipts bind the exact release source, commit and archives", () => {
   const certification = {
     complete: true,
-    suites: [{ id: "booking-v1", verified: true }],
+    suites: [
+      {
+        id: "booking-v1",
+        verified: true,
+        decision: {
+          state: "supported",
+          label: "SUPPORTED WITHIN TESTED SCOPE",
+          boundariesUnverified: 1,
+        },
+      },
+    ],
     totals: { repairsResolved: 2 },
   };
   const first = attestBenchmark(certification, {
@@ -425,11 +435,43 @@ test("benchmark receipts bind the exact release source, commit and archives", ()
     evidenceArchiveSource:
       "https://github.com/example/release-witness/releases/download/v0.1.28/evidence.tar.gz",
   });
+  const changedDecision = attestBenchmark(
+    {
+      ...certification,
+      suites: [
+        {
+          ...certification.suites[0],
+          decision: {
+            state: "hold",
+            label: "HOLD WITHIN TESTED SCOPE",
+            boundariesUnverified: 1,
+          },
+        },
+      ],
+    },
+    {
+      version: "0.1.28",
+      source: "https://github.com/example/release-witness/releases/tag/v0.1.28",
+      commit: "1111111111111111111111111111111111111111",
+      commitSource:
+        "https://github.com/example/release-witness/commit/1111111111111111111111111111111111111111",
+      archiveSha256:
+        "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      archiveSource:
+        "https://github.com/example/release-witness/releases/download/v0.1.28/source.tar.gz",
+      evidenceArchiveSha256: "c".repeat(64),
+      evidenceArchiveSource:
+        "https://github.com/example/release-witness/releases/download/v0.1.28/evidence.tar.gz",
+    },
+  );
   assert.notEqual(first.digest, changedCommit.digest);
   assert.notEqual(first.digest, changedArchive.digest);
   assert.notEqual(first.digest, changedEvidenceArchive.digest);
+  assert.notEqual(first.digest, changedDecision.digest);
   assert.match(first.scope, /source archive hash/);
   assert.match(first.scope, /evidence archive hash/);
+  assert.match(first.scope, /workflow release postures/);
+  assert.match(first.scope, /unverified boundaries/);
 });
 
 test("deployment readiness requires exact provenance and complete evidence", () => {

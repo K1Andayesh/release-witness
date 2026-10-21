@@ -1,5 +1,10 @@
 # Changelog
 
+## 0.1.75 — 2026-10-21
+
+- State explicitly that the portfolio SHA-256 covers workflow release postures and unverified boundaries.
+- Add a regression proving that changing a workflow decision changes the aggregate attestation.
+
 ## 0.1.74 — 2026-10-20
 
 - Publish each benchmark workflow's receipt-gated release posture on the source-bound portfolio receipt.

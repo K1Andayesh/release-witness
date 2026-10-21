@@ -1,5 +1,11 @@
 # Release Witness QA record
 
+## Decision-bound portfolio scope — 21 October 2026
+
+- v0.1.74 bound workflow postures into the aggregate digest, but the human-readable scope beside that digest did not name those decisions or their unverified boundaries.
+- v0.1.75 makes that scope explicit and adds a regression proving that changing a workflow decision changes the aggregate SHA-256.
+- Contract coverage verifies the scope copy and decision-sensitive digest; public Chrome verification covers the final receipt at desktop and 390 px.
+
 ## Portfolio workflow postures — 20 October 2026
 
 - The source-bound portfolio receipt proved workflow metrics and receipts but required a judge to open each pair comparison to recover the operational release posture.
