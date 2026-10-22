@@ -1,5 +1,11 @@
 # Release Witness QA record
 
+## Posture-gated deployment readiness — 22 October 2026
+
+- The benchmark and deployment gates verified defects, invariants, regressions, receipts and browser evidence, but did not independently require each derived workflow posture to be `supported`.
+- v0.1.76 makes that decision an explicit portfolio and deployment condition. Public readiness now reports supported-workflow and unverified-boundary totals beside the evidence counts.
+- A contract changes one workflow to `hold` while leaving its other evidence flags intact and verifies that deployment readiness fails closed.
+
 ## Decision-bound portfolio scope — 21 October 2026
 
 - v0.1.74 bound workflow postures into the aggregate digest, but the human-readable scope beside that digest did not name those decisions or their unverified boundaries.

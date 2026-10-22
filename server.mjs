@@ -350,6 +350,7 @@ export async function startServer({
         regressions === 0 &&
         boundariesUnverified === 1 &&
         receiptsVerified === 2 &&
+        decision.state === "supported" &&
         browserEvidence.verified;
       const failures = [];
       if (defectsDetected !== groundTruth.knownDefectIds.length)
@@ -364,6 +365,8 @@ export async function startServer({
         failures.push("The coverage boundary was not retained as unverified.");
       if (receiptsVerified !== 2)
         failures.push("Both evidence receipts did not verify.");
+      if (decision.state !== "supported")
+        failures.push("The receipt-gated release posture is not supported.");
       if (!browserEvidence.verified)
         failures.push("Both receipt-bound Chrome versions did not verify.");
       suites.push({

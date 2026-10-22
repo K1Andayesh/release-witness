@@ -488,6 +488,7 @@ test("deployment readiness requires exact provenance and complete evidence", () 
   };
   const suite = {
     verified: true,
+    decision: { state: "supported" },
     modelEvidence: { verified: true },
     browserEvidence: { verified: true },
   };
@@ -505,6 +506,7 @@ test("deployment readiness requires exact provenance and complete evidence", () 
       defectsDetected: 3,
       repairsResolved: 3,
       regressions: 0,
+      boundariesUnverified: 2,
       receiptsVerified: 4,
       screenshotFilesVerified: 16,
       modelRunsVerified: 4,
@@ -523,6 +525,8 @@ test("deployment readiness requires exact provenance and complete evidence", () 
   const ready = validateDeployment(input);
   assert.equal(ready.ready, true);
   assert.equal(ready.summary.workflowsVerified, 2);
+  assert.equal(ready.summary.workflowsSupported, 2);
+  assert.equal(ready.summary.unverifiedBoundaries, 2);
   assert.equal(
     ready.summary.evidenceArchiveSha256,
     expectedEvidenceArchiveSha256,
@@ -540,6 +544,14 @@ test("deployment readiness requires exact provenance and complete evidence", () 
   const regression = structuredClone(input);
   regression.benchmark.totals.regressions = 1;
   assert.equal(validateDeployment(regression).ready, false);
+  const heldDecision = structuredClone(input);
+  heldDecision.benchmark.suites[0].decision.state = "hold";
+  const heldResult = validateDeployment(heldDecision);
+  assert.equal(heldResult.ready, false);
+  assert.match(
+    heldResult.failures.join(" "),
+    /receipt-gated release posture is incomplete/,
+  );
 });
 
 test("benchmark pairs require a matching persisted relationship", () => {

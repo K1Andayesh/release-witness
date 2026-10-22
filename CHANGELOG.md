@@ -1,5 +1,10 @@
 # Changelog
 
+## 0.1.76 — 2026-10-22
+
+- Require every workflow's receipt-gated posture to be supported before certifying the portfolio or accepting a deployment.
+- Expose supported-workflow and unverified-boundary counts in the public readiness receipt.
+
 ## 0.1.75 — 2026-10-21
 
 - State explicitly that the portfolio SHA-256 covers workflow release postures and unverified boundaries.
