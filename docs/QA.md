@@ -1,5 +1,11 @@
 # Release Witness QA record
 
+## Aggregate supported-workflow receipt — 23 October 2026
+
+- The portfolio receipt showed every workflow posture in its evidence cards, but its top-line metrics reported only how many workflows verified. A judge had to scan both cards to recover the aggregate operational decision.
+- v0.1.77 publishes an attested supported-workflow total beside the verified-workflow total and makes deployment readiness reject a mismatch between that total and the certified suite set.
+- Contract coverage verifies the aggregate total, its report label and the mismatch failure path.
+
 ## Posture-gated deployment readiness — 22 October 2026
 
 - The benchmark and deployment gates verified defects, invariants, regressions, receipts and browser evidence, but did not independently require each derived workflow posture to be `supported`.

@@ -430,6 +430,9 @@ export async function startServer({
         browserRunsVerified:
           summary.browserRunsVerified +
           (suite.browserEvidence?.runsVerified || 0),
+        workflowsSupported:
+          summary.workflowsSupported +
+          (suite.decision?.state === "supported" ? 1 : 0),
       }),
       {
         knownDefects: 0,
@@ -446,6 +449,7 @@ export async function startServer({
         modelTokensVerified: 0,
         modelDurationMsVerified: 0,
         browserRunsVerified: 0,
+        workflowsSupported: 0,
       },
     );
     const complete =
@@ -824,6 +828,7 @@ ${metric(benchmark.totals.boundariesUnverified, "boundaries unverified", `Unveri
 ${metric(benchmark.totals.receiptsVerified, "run receipts", `Run receipts verified: ${benchmark.totals.receiptsVerified}`)}
 ${metric(benchmark.totals.screenshotFilesVerified, "screenshots", `Screenshot files verified: ${benchmark.totals.screenshotFilesVerified}`)}
 ${metric(`${workflowsVerified}/${benchmark.suites.length}`, "workflows verified", `Workflows verified: ${workflowsVerified}/${benchmark.suites.length}`)}
+${metric(`${benchmark.totals.workflowsSupported}/${benchmark.suites.length}`, "workflows supported", `Workflows supported: ${benchmark.totals.workflowsSupported}/${benchmark.suites.length}`)}
 </div></section><section class="benchmark-model-summary" aria-labelledby="model-summary"><div><span class="eyebrow">${escapeHtml(modelSummary.eyebrow)}</span><h2 id="model-summary">${escapeHtml(modelSummary.heading)}</h2><p>${escapeHtml(modelSummary.description)}</p></div><div class="model-summary-metrics">
 ${metric(benchmark.totals.modelRunsVerified, "Nemotron runs verified", `Nemotron runs verified: ${benchmark.totals.modelRunsVerified}`)}
 ${metric(benchmark.totals.riskHypothesesVerified, "grounded hypotheses", `Grounded risk hypotheses verified: ${benchmark.totals.riskHypothesesVerified}`)}

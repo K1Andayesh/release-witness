@@ -1,5 +1,10 @@
 # Changelog
 
+## 0.1.77 — 2026-10-23
+
+- Publish the aggregate supported-workflow total beside the verified-workflow total on the portfolio receipt.
+- Require that attested total to match the certified workflow set before deployment readiness can pass.
+
 ## 0.1.76 — 2026-10-22
 
 - Require every workflow's receipt-gated posture to be supported before certifying the portfolio or accepting a deployment.

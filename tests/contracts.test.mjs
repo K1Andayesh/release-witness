@@ -511,6 +511,7 @@ test("deployment readiness requires exact provenance and complete evidence", () 
       screenshotFilesVerified: 16,
       modelRunsVerified: 4,
       browserRunsVerified: 4,
+      workflowsSupported: 2,
     },
     suites: [suite, structuredClone(suite)],
   };
@@ -551,6 +552,16 @@ test("deployment readiness requires exact provenance and complete evidence", () 
   assert.match(
     heldResult.failures.join(" "),
     /receipt-gated release posture is incomplete/,
+  );
+  const mismatchedSupportedTotal = structuredClone(input);
+  mismatchedSupportedTotal.benchmark.totals.workflowsSupported = 1;
+  const mismatchedSupportedResult = validateDeployment(
+    mismatchedSupportedTotal,
+  );
+  assert.equal(mismatchedSupportedResult.ready, false);
+  assert.match(
+    mismatchedSupportedResult.failures.join(" "),
+    /supported-workflow total does not match/,
   );
 });
 
@@ -1067,6 +1078,7 @@ test("server-managed pairs persist their relationship and comparison", async (t)
     /^\d+\.\d+\.\d+\.\d+$/,
   );
   assert.equal(benchmark.totals.browserRunsVerified, 2);
+  assert.equal(benchmark.totals.workflowsSupported, 1);
   assert.match(benchmark.attestation.digest, /^[a-f0-9]{64}$/);
   const benchmarkReport = await fetch(`${base}/api/benchmark/report`);
   assert.equal(benchmarkReport.status, 200);
@@ -1076,6 +1088,7 @@ test("server-managed pairs persist their relationship and comparison", async (t)
   assert.match(benchmarkReportText, /data-status="not-certified"/);
   assert.match(benchmarkReportText, /CONTROLLED RESULT · NOT CERTIFIED/);
   assert.match(benchmarkReportText, /Portfolio evidence incomplete/);
+  assert.match(benchmarkReportText, /Workflows supported: 1\/2/);
   assert.match(
     benchmarkReportText,
     /PARTIAL NEMOTRON EVIDENCE · PORTFOLIO NOT CERTIFIED/,
