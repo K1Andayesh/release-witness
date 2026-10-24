@@ -1,5 +1,11 @@
 # Release Witness QA record
 
+## Aggregate portfolio release posture — 24 October 2026
+
+- The receipt exposed every workflow posture and the aggregate supported-workflow count, but still left a judge to translate those signals into one portfolio-level operational decision.
+- v0.1.78 derives one attested portfolio posture: support only for the complete certified workflow set, hold when any workflow has an observed blocker, and review when portfolio evidence is incomplete. Every state repeats the aggregate unverified-boundary count.
+- Deployment readiness requires that aggregate posture to be supported and its boundary count to match the attested totals; contract coverage verifies an inconsistent-decision failure path.
+
 ## Aggregate supported-workflow receipt — 23 October 2026
 
 - The portfolio receipt showed every workflow posture in its evidence cards, but its top-line metrics reported only how many workflows verified. A judge had to scan both cards to recover the aggregate operational decision.

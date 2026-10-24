@@ -494,6 +494,7 @@ test("deployment readiness requires exact provenance and complete evidence", () 
   };
   const benchmark = {
     complete: true,
+    decision: { state: "supported", boundariesUnverified: 2 },
     release: {
       version: expectedVersion,
       commit: expectedCommit,
@@ -527,6 +528,7 @@ test("deployment readiness requires exact provenance and complete evidence", () 
   assert.equal(ready.ready, true);
   assert.equal(ready.summary.workflowsVerified, 2);
   assert.equal(ready.summary.workflowsSupported, 2);
+  assert.equal(ready.summary.portfolioPosture, "supported");
   assert.equal(ready.summary.unverifiedBoundaries, 2);
   assert.equal(
     ready.summary.evidenceArchiveSha256,
@@ -562,6 +564,16 @@ test("deployment readiness requires exact provenance and complete evidence", () 
   assert.match(
     mismatchedSupportedResult.failures.join(" "),
     /supported-workflow total does not match/,
+  );
+  const mismatchedPortfolioDecision = structuredClone(input);
+  mismatchedPortfolioDecision.benchmark.decision.boundariesUnverified = 1;
+  const mismatchedPortfolioResult = validateDeployment(
+    mismatchedPortfolioDecision,
+  );
+  assert.equal(mismatchedPortfolioResult.ready, false);
+  assert.match(
+    mismatchedPortfolioResult.failures.join(" "),
+    /aggregate receipt-gated release posture is incomplete or inconsistent/,
   );
 });
 
@@ -1079,6 +1091,8 @@ test("server-managed pairs persist their relationship and comparison", async (t)
   );
   assert.equal(benchmark.totals.browserRunsVerified, 2);
   assert.equal(benchmark.totals.workflowsSupported, 1);
+  assert.equal(benchmark.decision.state, "review-required");
+  assert.equal(benchmark.decision.boundariesUnverified, 1);
   assert.match(benchmark.attestation.digest, /^[a-f0-9]{64}$/);
   const benchmarkReport = await fetch(`${base}/api/benchmark/report`);
   assert.equal(benchmarkReport.status, 200);
@@ -1089,6 +1103,10 @@ test("server-managed pairs persist their relationship and comparison", async (t)
   assert.match(benchmarkReportText, /CONTROLLED RESULT · NOT CERTIFIED/);
   assert.match(benchmarkReportText, /Portfolio evidence incomplete/);
   assert.match(benchmarkReportText, /Workflows supported: 1\/2/);
+  assert.match(
+    benchmarkReportText,
+    /Portfolio release posture[\s\S]*REVIEW REQUIRED[\s\S]*Portfolio certification is incomplete\. 1 boundary remains unverified\./,
+  );
   assert.match(
     benchmarkReportText,
     /PARTIAL NEMOTRON EVIDENCE · PORTFOLIO NOT CERTIFIED/,

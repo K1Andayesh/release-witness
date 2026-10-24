@@ -1,5 +1,10 @@
 # Changelog
 
+## 0.1.78 — 2026-10-24
+
+- Derive one aggregate portfolio release posture from the complete certified workflow set.
+- Bind that bounded decision and its unverified-boundary count into the portfolio receipt and deployment gate.
+
 ## 0.1.77 — 2026-10-23
 
 - Publish the aggregate supported-workflow total beside the verified-workflow total on the portfolio receipt.

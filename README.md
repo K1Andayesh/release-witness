@@ -12,7 +12,7 @@ A PR-preview QA agent that turns a change description into a bounded risk map, e
 
 **Natural-narration demo video:** https://youtu.be/O8Ijn85__6U
 
-**Verified source release:** https://github.com/K1Andayesh/release-witness/releases/tag/v0.1.77
+**Verified source release:** https://github.com/K1Andayesh/release-witness/releases/tag/v0.1.78
 
 **Submission readiness:** [verified Devpost finalization gate](docs/SUBMISSION-READINESS.md)
 
@@ -33,7 +33,7 @@ Across two included ground-truth workflows, Release Witness detected **3/3 known
 
 Every rendered baseline-to-candidate comparison includes a downloadable Markdown receipt, and the certified benchmark page exposes both verified workflow receipts directly. Each receipt records the pair identities, release delta, both run-receipt verification results, per-check observations, evidence links and explicit unverified boundaries so a reviewer can attach the exact decision artifact to a pull request or release record. It also binds the running version, immutable source commit, source-archive SHA-256 and evidence-archive SHA-256, links back to the live fail-closed readiness decision, and states whether that exact pair belongs to the current certified portfolio. Certified pairs include the portfolio receipt digest; other saved comparisons say they are not portfolio-certified. If only part of the portfolio's model evidence verifies, both the homepage and printable benchmark report label its exact workflow count as partial and withhold the portfolio claim; if none verifies, they explicitly claim no model result.
 
-The source-bound portfolio receipt publishes that deterministic posture and exact unverified boundary for each workflow card, states that both are covered by the aggregate SHA-256, binds both decisions into its attestation and reports the aggregate supported-workflow total beside the verified-workflow total. The comparison also derives one deterministic, receipt-gated release posture. It shows **SUPPORTED WITHIN TESTED SCOPE** only when both evidence receipts verify and no matching check regresses or remains failing. Any regression or remaining failure produces **HOLD WITHIN TESTED SCOPE**; missing receipt evidence produces **REVIEW REQUIRED**. Every state repeats the number of unverified coverage boundaries, and the downloadable comparison receipt carries the same decision.
+The source-bound portfolio receipt publishes that deterministic posture and exact unverified boundary for each workflow card, states that both are covered by the aggregate SHA-256, binds both decisions into its attestation and reports the aggregate supported-workflow total beside the verified-workflow total and derives one portfolio-level posture with the exact unverified-boundary count. The comparison also derives one deterministic, receipt-gated release posture. It shows **SUPPORTED WITHIN TESTED SCOPE** only when both evidence receipts verify and no matching check regresses or remains failing. Any regression or remaining failure produces **HOLD WITHIN TESTED SCOPE**; missing receipt evidence produces **REVIEW REQUIRED**. Every state repeats the number of unverified coverage boundaries, and the downloadable comparison receipt carries the same decision.
 
 The competition case is mapped directly to the four equally weighted judging criteria in [`docs/JUDGING.md`](docs/JUDGING.md).
 

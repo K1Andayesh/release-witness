@@ -456,6 +456,30 @@ export async function startServer({
       definitions.length > 0 &&
       suites.length === definitions.length &&
       suites.every((suite) => suite.verified && suite.modelEvidence.verified);
+    const heldWorkflows = suites.filter(
+      (suite) => suite.decision?.state === "hold",
+    ).length;
+    const boundaryLabel = `${totals.boundariesUnverified} ${totals.boundariesUnverified === 1 ? "boundary remains" : "boundaries remain"} unverified.`;
+    const portfolioDecision = heldWorkflows
+      ? {
+          state: "hold",
+          label: "HOLD WITHIN TESTED SCOPE",
+          reason: `${heldWorkflows} ${heldWorkflows === 1 ? "workflow has" : "workflows have"} an observed blocking result. ${boundaryLabel}`,
+          boundariesUnverified: totals.boundariesUnverified,
+        }
+      : complete
+        ? {
+            state: "supported",
+            label: "SUPPORTED WITHIN TESTED SCOPE",
+            reason: `${totals.workflowsSupported}/${suites.length} workflows are receipt-supported. ${boundaryLabel}`,
+            boundariesUnverified: totals.boundariesUnverified,
+          }
+        : {
+            state: "review-required",
+            label: "REVIEW REQUIRED",
+            reason: `Portfolio certification is incomplete. ${boundaryLabel}`,
+            boundariesUnverified: totals.boundariesUnverified,
+          };
     const release = {
       version: packageMetadata.version,
       source: `${sourceRepository}/releases/tag/v${packageMetadata.version}`,
@@ -474,6 +498,7 @@ export async function startServer({
     };
     const certification = {
       complete,
+      decision: portfolioDecision,
       suites: suites.map(
         ({
           id,
@@ -829,7 +854,7 @@ ${metric(benchmark.totals.receiptsVerified, "run receipts", `Run receipts verifi
 ${metric(benchmark.totals.screenshotFilesVerified, "screenshots", `Screenshot files verified: ${benchmark.totals.screenshotFilesVerified}`)}
 ${metric(`${workflowsVerified}/${benchmark.suites.length}`, "workflows verified", `Workflows verified: ${workflowsVerified}/${benchmark.suites.length}`)}
 ${metric(`${benchmark.totals.workflowsSupported}/${benchmark.suites.length}`, "workflows supported", `Workflows supported: ${benchmark.totals.workflowsSupported}/${benchmark.suites.length}`)}
-</div></section><section class="benchmark-model-summary" aria-labelledby="model-summary"><div><span class="eyebrow">${escapeHtml(modelSummary.eyebrow)}</span><h2 id="model-summary">${escapeHtml(modelSummary.heading)}</h2><p>${escapeHtml(modelSummary.description)}</p></div><div class="model-summary-metrics">
+</div><section class="release-posture ${escapeHtml(benchmark.decision?.state || "review-required")}" aria-label="Portfolio release posture"><span class="eyebrow">PORTFOLIO RELEASE POSTURE</span><strong>${escapeHtml(benchmark.decision?.label || "REVIEW REQUIRED")}</strong><p>${escapeHtml(benchmark.decision?.reason || "A portfolio release posture is unavailable.")}</p></section></section><section class="benchmark-model-summary" aria-labelledby="model-summary"><div><span class="eyebrow">${escapeHtml(modelSummary.eyebrow)}</span><h2 id="model-summary">${escapeHtml(modelSummary.heading)}</h2><p>${escapeHtml(modelSummary.description)}</p></div><div class="model-summary-metrics">
 ${metric(benchmark.totals.modelRunsVerified, "Nemotron runs verified", `Nemotron runs verified: ${benchmark.totals.modelRunsVerified}`)}
 ${metric(benchmark.totals.riskHypothesesVerified, "grounded hypotheses", `Grounded risk hypotheses verified: ${benchmark.totals.riskHypothesesVerified}`)}
 ${metric(benchmark.totals.advisoriesVerified, "allow-listed advisories", `Allow-listed advisories verified: ${benchmark.totals.advisoriesVerified}`)}
